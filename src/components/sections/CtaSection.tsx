@@ -2,17 +2,35 @@ import { CtaSectionData } from '@/types/section';
 
 type Props = {
   data: CtaSectionData;
+  styleOverrides?: Record<string, string>;
 };
 
-export default function CtaSection({ data }: Props) {
+export default function CtaSection({ data, styleOverrides }: Props) {
   return (
-    <section className="py-24 px-6 text-center">
-      <h2 className="mb-4 text-4xl font-bold">{data.headline}</h2>
-      {data.subheadline && <p className="mb-8 text-lg text-gray-600">{data.subheadline}</p>}
+    <section
+      className="py-24 px-6 text-center"
+      style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)', ...styleOverrides }}
+    >
+      <h2
+        className="mb-4 text-4xl font-bold"
+        style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+      >
+        {data.headline}
+      </h2>
+      {data.subheadline && (
+        <p className="mb-8 text-lg" style={{ color: 'var(--text)', opacity: 0.7 }}>
+          {data.subheadline}
+        </p>
+      )}
       {data.ctaText && (
         <a
           href={data.ctaUrl ?? '#'}
-          className="inline-block rounded-full bg-[var(--accent)] px-10 py-4 font-semibold text-white"
+          className="inline-block font-semibold text-white"
+          style={{
+            backgroundColor: 'var(--accent)',
+            borderRadius: 'var(--radius)',
+            padding: '1rem 2.5rem',
+          }}
         >
           {data.ctaText}
         </a>

@@ -59,7 +59,7 @@ export default function LoginForm() {
           placeholder="you@example.com"
           value={form.email}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 
@@ -78,7 +78,7 @@ export default function LoginForm() {
           placeholder="••••••••"
           value={form.password}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 

@@ -3,7 +3,7 @@ import { defineConfig } from 'prisma/config';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 
-config({ path: '.env' });
+config({ path: '.env.local' });
 
 const databaseUrl = process.env.DIRECT_URL!;
 

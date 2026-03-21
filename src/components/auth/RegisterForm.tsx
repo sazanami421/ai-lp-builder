@@ -71,7 +71,7 @@ export default function RegisterForm() {
           placeholder="山田 太郎"
           value={form.name}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 
@@ -88,7 +88,7 @@ export default function RegisterForm() {
           placeholder="you@example.com"
           value={form.email}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 
@@ -105,7 +105,7 @@ export default function RegisterForm() {
           placeholder="8文字以上"
           value={form.password}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 
@@ -122,7 +122,7 @@ export default function RegisterForm() {
           placeholder="もう一度入力"
           value={form.confirm}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 

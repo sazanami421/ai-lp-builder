@@ -84,11 +84,31 @@ ai-lp-builder/
 
 - **users**: アカウント、プラン（free/pro/enterprise）
 - **projects**: LP プロジェクト（slug で公開 URL 生成）
-- **pages**: LP ページ（global_config に JSONB でテーマ設定）
+- **pages**: LP ページ（global_config に JSONB でテーマ設定、is_published で公開/下書きをBoolean管理）
 - **sections**: セクションブロック（data に JSONB でコンテンツ、type で hero/features/testimonials/pricing/faq/cta/footer を識別）
 - **section_history**: 変更履歴（data_before/data_after で Undo 実現、change_source で manual/ai_chat 識別）
 - **form_submissions**: 公開 LP からのフォーム送信
 - **assets**: ユーザーアップロード画像
+
+### 公開ステータス管理
+
+- 公開状態は `pages.is_published`（Boolean）で管理。`projects.status` は持たない
+- エディターのツールバーにドロップダウン:「下書き」/「公開中」
+- 「公開中」→ `is_published = true`, `published_at = now()`
+- 「下書き」に戻す → `is_published = false`（`published_at` はリセットしない）
+- 公開LP（`/p/[slug]`）は `is_published = true` のみ表示、false なら 404
+
+### 公開フロー（静的ファイル書き出し方式）
+
+公開中のLPを編集しても、「更新を公開」ボタンを押すまで公開LPには反映されない。DB設計の変更は不要で、アプリケーションロジックで実現する。
+
+1. **エディターで編集** → `sections.data` がDB上で更新される（下書き状態）
+2. **「更新を公開」ボタン** → APIがDBから最新データを取得 → HTMLを生成 → ストレージに書き出し（`/sites/[slug]/index.html`）、`published_at` を更新
+3. **公開LP（`/p/[slug]`）** → 書き出し済みの静的HTMLを返却（ボタンを押すまで前回の内容が表示され続ける）
+4. **「下書き」に戻す** → 静的ファイルを削除、`/p/[slug]` は 404
+
+保存先: Supabase Storage（MVP）または自社サーバーのファイルシステム（移行後）
+メリット: 公開LPが超高速（静的配信）、CDNキャッシュと相性良好、DB設計変更不要
 
 詳細は `docs/concept.docx` セクション 5.2 参照。
 

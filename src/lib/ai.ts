@@ -6,20 +6,46 @@ const anthropic = new Anthropic({
 
 const MODEL = 'claude-sonnet-4-20250514';
 
+export type SectionEditResult = {
+  data: Record<string, unknown>;
+  styleOverrides: Record<string, string>;
+};
+
 /**
- * セクションデータを AI で生成・編集する
+ * セクションのコンテンツ・スタイルを AI で編集する
  */
-export async function generateSectionContent(
+export async function generateSectionEdit(
   prompt: string,
-  currentData: Record<string, unknown>
-): Promise<Record<string, unknown>> {
+  currentData: Record<string, unknown>,
+  currentStyleOverrides: Record<string, string>
+): Promise<SectionEditResult> {
   const response = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 2048,
+    system: [
+      'あなたはLPのセクションを編集するアシスタントです。',
+      'ユーザーの指示に従い、以下の形式のJSONのみを返してください。説明文・コードブロック記号は不要です。',
+      '',
+      '```',
+      '{',
+      '  "data": { /* コンテンツデータ（テキスト・項目など）*/ },',
+      '  "styleOverrides": { /* CSSプロパティ（camelCase）例: "background", "padding", "borderRadius" */ }',
+      '}',
+      '```',
+      '',
+      '変更不要なフィールドは現在の値をそのまま返してください。',
+      'styleOverrides にはセクション全体に適用したいCSSプロパティを入れてください。',
+      '例: グラデーション背景 → { "background": "linear-gradient(135deg, #667eea, #764ba2)" }',
+      '例: 上下余白変更 → { "paddingTop": "60px", "paddingBottom": "60px" }',
+    ].join('\n'),
     messages: [
       {
         role: 'user',
-        content: `現在のセクションデータ:\n${JSON.stringify(currentData, null, 2)}\n\n指示: ${prompt}\n\n変更後のセクションデータをJSONのみで返してください。`,
+        content: [
+          `現在のコンテンツ:\n${JSON.stringify(currentData, null, 2)}`,
+          `現在のスタイル上書き:\n${JSON.stringify(currentStyleOverrides, null, 2)}`,
+          `指示: ${prompt}`,
+        ].join('\n\n'),
       },
     ],
   });
@@ -27,5 +53,10 @@ export async function generateSectionContent(
   const text = response.content[0].type === 'text' ? response.content[0].text : '';
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('AI レスポンスから JSON を抽出できませんでした');
-  return JSON.parse(jsonMatch[0]);
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  return {
+    data: parsed.data ?? currentData,
+    styleOverrides: parsed.styleOverrides ?? currentStyleOverrides,
+  };
 }

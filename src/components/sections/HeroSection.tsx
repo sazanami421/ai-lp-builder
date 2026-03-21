@@ -2,11 +2,15 @@ import { HeroSectionData } from '@/types/section';
 
 type Props = {
   data: HeroSectionData;
+  styleOverrides?: Record<string, string>;
 };
 
-export default function HeroSection({ data }: Props) {
+export default function HeroSection({ data, styleOverrides }: Props) {
   return (
-    <section className="relative flex min-h-[80vh] flex-col items-center justify-center text-center">
+    <section
+      className="relative flex min-h-[80vh] flex-col items-center justify-center text-center"
+      style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)', ...styleOverrides }}
+    >
       {data.backgroundImage && (
         <img
           src={data.backgroundImage}
@@ -15,12 +19,26 @@ export default function HeroSection({ data }: Props) {
         />
       )}
       <div className="relative z-10 px-6">
-        <h1 className="text-5xl font-bold">{data.headline}</h1>
-        {data.subheadline && <p className="mt-4 text-xl">{data.subheadline}</p>}
+        <h1
+          className="text-5xl font-bold"
+          style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+        >
+          {data.headline}
+        </h1>
+        {data.subheadline && (
+          <p className="mt-4 text-xl" style={{ color: 'var(--text)', opacity: 0.75 }}>
+            {data.subheadline}
+          </p>
+        )}
         {data.ctaText && (
           <a
             href={data.ctaUrl ?? '#'}
-            className="mt-8 inline-block rounded-full bg-[var(--accent)] px-8 py-4 font-semibold text-white"
+            className="mt-8 inline-block font-semibold text-white"
+            style={{
+              backgroundColor: 'var(--accent)',
+              borderRadius: 'var(--radius)',
+              padding: '1rem 2rem',
+            }}
           >
             {data.ctaText}
           </a>

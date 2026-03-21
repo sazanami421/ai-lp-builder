@@ -6,6 +6,7 @@ export type SectionType =
   | 'pricing'
   | 'faq'
   | 'cta'
+  | 'form'
   | 'footer';
 
 // ページ全体のグローバル設定（テーマ）
@@ -61,6 +62,7 @@ export type PricingPlan = {
   price: string;
   period: string;
   features: string[];
+  note?: string;
   highlighted?: boolean;
   ctaText?: string;
   ctaUrl?: string;
@@ -88,6 +90,22 @@ export type CtaSectionData = {
   ctaUrl?: string;
 };
 
+export type FormField = {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'textarea';
+  placeholder?: string;
+  required: boolean;
+};
+
+export type FormSectionData = {
+  title?: string;
+  description?: string;
+  fields: FormField[];
+  submitText: string;
+  successMessage: string;
+};
+
 export type FooterLink = {
   label: string;
   url: string;
@@ -107,6 +125,7 @@ export type SectionData =
   | PricingSectionData
   | FaqSectionData
   | CtaSectionData
+  | FormSectionData
   | FooterSectionData;
 
 // セクション完全型
