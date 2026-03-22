@@ -13,7 +13,7 @@ export default function PricingSection({ data, styleOverrides }: Props) {
     >
       <h2
         className="mb-12 text-center text-3xl font-bold"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+        style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
@@ -31,11 +31,11 @@ export default function PricingSection({ data, styleOverrides }: Props) {
           >
             <h3
               className="mb-2 text-xl font-bold"
-              style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+              style={{ fontFamily: 'var(--font-heading)' }}
             >
               {plan.name}
             </h3>
-            <p className="mb-4 text-3xl font-bold" style={{ color: 'var(--text)' }}>
+            <p className="mb-4 text-3xl font-bold">
               {plan.price}
               <span className="text-base font-normal" style={{ opacity: 0.6 }}>/{plan.period}</span>
             </p>
@@ -43,12 +43,12 @@ export default function PricingSection({ data, styleOverrides }: Props) {
               {plan.features.map((f, j) => (
                 <li key={j} className="flex items-center gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span style={{ color: 'var(--text)', opacity: 0.85 }}>{f}</span>
+                  <span style={{ opacity: 0.85 }}>{f}</span>
                 </li>
               ))}
             </ul>
             {plan.note && (
-              <p className="mb-4 text-xs" style={{ color: 'var(--text)', opacity: 0.55 }}>{plan.note}</p>
+              <p className="mb-4 text-xs" style={{ opacity: 0.55 }}>{plan.note}</p>
             )}
             {plan.ctaText && (
               <a
