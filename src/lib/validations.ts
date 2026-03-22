@@ -50,7 +50,7 @@ export const sectionTypeEnum = z.enum([
 ]);
 
 export const createSectionSchema = z.object({
-  pageId: z.string().uuid('pageId の形式が不正です'),
+  pageId: z.string().cuid('pageId の形式が不正です'),
   type: sectionTypeEnum,
 });
 
@@ -69,7 +69,7 @@ export const reorderSchema = z.object({
   orders: z
     .array(
       z.object({
-        id: z.string().uuid('セクションIDの形式が不正です'),
+        id: z.string().cuid('セクションIDの形式が不正です'),
         order: z.number().int().min(0, 'order は0以上の整数にしてください'),
       })
     )
@@ -95,7 +95,7 @@ export const updatePageSchema = z
 // フォーム送信（公開LP）
 // ========================================
 export const formSubmissionSchema = z.object({
-  pageId: z.string().uuid('pageId の形式が不正です'),
+  pageId: z.string().cuid('pageId の形式が不正です'),
   data: z.record(z.string(), z.unknown()).refine((obj) => Object.keys(obj).length > 0, {
     message: 'フォームデータが空です',
   }),

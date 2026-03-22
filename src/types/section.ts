@@ -11,7 +11,7 @@ export type SectionType =
 
 // ページ全体のグローバル設定（テーマ）
 export type GlobalConfig = {
-  template: 'simple' | 'premium' | 'pop' | 'business';
+  template: 'simple' | 'premium' | 'pop' | 'business' | 'natural';
   cssVars?: Record<string, string>;
 };
 
