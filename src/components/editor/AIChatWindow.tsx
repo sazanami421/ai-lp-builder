@@ -15,11 +15,13 @@ type Message =
 type Props = {
   selectedSection: SectionItem | null;
   onApply: (sectionId: string, data: unknown, styleOverrides: Record<string, string>) => void;
+  onPreview: (sectionId: string, data: unknown, styleOverrides: Record<string, string>) => void;
+  onClearPreview: () => void;
   open: boolean;
   onOpenChange: (v: boolean) => void;
 };
 
-export default function AIChatWindow({ selectedSection, onApply, open, onOpenChange }: Props) {
+export default function AIChatWindow({ selectedSection, onApply, onPreview, onClearPreview, open, onOpenChange }: Props) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,7 @@ export default function AIChatWindow({ selectedSection, onApply, open, onOpenCha
 
     const userText = input.trim();
     setInput('');
+    onClearPreview();
     setMessages((prev) => [...prev, { role: 'user', text: userText }]);
     setLoading(true);
 
@@ -62,12 +65,16 @@ export default function AIChatWindow({ selectedSection, onApply, open, onOpenCha
         return;
       }
 
+      const suggestion = { data: json.data, styleOverrides: json.styleOverrides ?? {} };
+      if (selectedSection) {
+        onPreview(selectedSection.id, suggestion.data, suggestion.styleOverrides);
+      }
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          text: '変更案を作成しました。適用しますか？',
-          suggested: { data: json.data, styleOverrides: json.styleOverrides ?? {} },
+          text: 'プレビューに反映しました。適用しますか？',
+          suggested: suggestion,
         },
       ]);
     } catch {
@@ -78,7 +85,7 @@ export default function AIChatWindow({ selectedSection, onApply, open, onOpenCha
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && (e.metaKey || e.shiftKey)) {
       e.preventDefault();
       handleSend();
     }
@@ -132,19 +139,34 @@ export default function AIChatWindow({ selectedSection, onApply, open, onOpenCha
                   {msg.text}
                 </div>
                 {msg.role === 'assistant' && msg.suggested && selectedSection && (
-                  <button
-                    onClick={() => {
-                      onApply(selectedSection.id, msg.suggested!.data, msg.suggested!.styleOverrides);
-                      setMessages((prev) =>
-                        prev.map((m, j) =>
-                          j === i ? { ...m, text: '適用しました！', suggested: undefined } : m
-                        )
-                      );
-                    }}
-                    className="mt-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-700"
-                  >
-                    適用する
-                  </button>
+                  <div className="mt-1.5 flex gap-2">
+                    <button
+                      onClick={() => {
+                        onApply(selectedSection.id, msg.suggested!.data, msg.suggested!.styleOverrides);
+                        setMessages((prev) =>
+                          prev.map((m, j) =>
+                            j === i ? { ...m, text: '適用しました！', suggested: undefined } : m
+                          )
+                        );
+                      }}
+                      className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-700"
+                    >
+                      適用する
+                    </button>
+                    <button
+                      onClick={() => {
+                        onClearPreview();
+                        setMessages((prev) =>
+                          prev.map((m, j) =>
+                            j === i ? { ...m, text: 'キャンセルしました', suggested: undefined } : m
+                          )
+                        );
+                      }}
+                      className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50"
+                    >
+                      元に戻す
+                    </button>
+                  </div>
                 )}
               </div>
             ))}
@@ -167,7 +189,7 @@ export default function AIChatWindow({ selectedSection, onApply, open, onOpenCha
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={selectedSection ? 'AIに指示を入力…' : 'セクションを選択してください'}
+              placeholder={selectedSection ? '⌘Enter or Shift+Enter で送信' : 'セクションを選択してください'}
               disabled={!selectedSection || loading}
               className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-900 outline-none transition focus:border-blue-400 disabled:bg-gray-50 disabled:text-gray-400"
             />

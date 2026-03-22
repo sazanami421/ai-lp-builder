@@ -36,7 +36,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'ファイルサイズは5MB以下にしてください' }, { status: 400 });
     }
 
-    const ext = file.name.split('.').pop() ?? 'jpg';
+    // ファイル拡張子をサニタイズ（英数字のみ許可）
+    const rawExt = file.name.split('.').pop() ?? 'jpg';
+    const ext = rawExt.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10) || 'jpg';
     const path = `${session.user.id}/${Date.now()}.${ext}`;
 
     const supabase = getServiceClient();

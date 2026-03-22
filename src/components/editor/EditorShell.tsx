@@ -29,6 +29,11 @@ export default function EditorShell({ project, page, initialSections }: Props) {
   const [addingSection, setAddingSection] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
   const [chatOpen, setChatOpen] = useState(false);
+  const [previewSuggestion, setPreviewSuggestion] = useState<{
+    sectionId: string;
+    data: unknown;
+    styleOverrides: Record<string, string>;
+  } | null>(null);
 
   const initialConfig = page.globalConfig as { template?: string; cssVars?: Record<string, string> } | null;
   const initialTemplate = (() => {
@@ -292,6 +297,7 @@ export default function EditorShell({ project, page, initialSections }: Props) {
               setSelectedId(sectionId);
               setChatOpen(true);
             }}
+            previewSuggestion={previewSuggestion}
             projectName={project.name}
             template={template}
             cssVars={cssVars}
@@ -301,7 +307,14 @@ export default function EditorShell({ project, page, initialSections }: Props) {
           />
           <AIChatWindow
             selectedSection={selectedSection}
-            onApply={applyAISuggestion}
+            onApply={(sectionId, data, styleOverrides) => {
+              applyAISuggestion(sectionId, data, styleOverrides);
+              setPreviewSuggestion(null);
+            }}
+            onPreview={(sectionId, data, styleOverrides) =>
+              setPreviewSuggestion({ sectionId, data, styleOverrides })
+            }
+            onClearPreview={() => setPreviewSuggestion(null)}
             open={chatOpen}
             onOpenChange={setChatOpen}
           />

@@ -38,7 +38,10 @@ export default async function EditorPage({ params }: Props) {
         title: project.name,
         globalConfig: {},
       },
-      include: { sections: true },
+      include: {
+        sections: { orderBy: { order: 'asc' } },
+        _count: { select: { formSubmissions: true } },
+      },
     });
   }
 
