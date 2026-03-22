@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { updateSectionSchema, formatZodError } from '@/lib/validations';
+import { handleApiError, NotFound } from '@/lib/errors';
 
 type Params = { params: Promise<{ sectionId: string }> };
 
@@ -34,7 +35,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     });
 
     if (!section) {
-      return NextResponse.json({ error: 'セクションが見つかりません' }, { status: 404 });
+      throw NotFound('セクションが見つかりません');
     }
 
     const updateFields: Prisma.SectionUpdateInput = {};
@@ -49,8 +50,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     return NextResponse.json({ section: updated });
   } catch (err) {
-    console.error('[PATCH /api/sections/:id]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'PATCH /api/sections/:id');
   }
 }
 
@@ -71,14 +71,13 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     });
 
     if (!section) {
-      return NextResponse.json({ error: 'セクションが見つかりません' }, { status: 404 });
+      throw NotFound('セクションが見つかりません');
     }
 
     await prisma.section.delete({ where: { id: sectionId } });
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('[DELETE /api/sections/:id]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'DELETE /api/sections/:id');
   }
 }

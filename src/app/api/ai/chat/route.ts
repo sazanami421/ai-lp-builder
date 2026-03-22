@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { generateSectionEdit } from '@/lib/ai';
 import { aiChatSchema, formatZodError } from '@/lib/validations';
+import { handleApiError } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -31,7 +32,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (err) {
-    console.error('[POST /api/ai/chat]', err);
-    return NextResponse.json({ error: 'AI 生成に失敗しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/ai/chat');
   }
 }

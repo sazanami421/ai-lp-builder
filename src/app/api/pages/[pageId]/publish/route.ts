@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { handleApiError, NotFound, BadRequest } from '@/lib/errors';
 
 type Params = { params: Promise<{ pageId: string }> };
 
@@ -22,11 +23,11 @@ export async function POST(req: NextRequest, { params }: Params) {
     });
 
     if (!page) {
-      return NextResponse.json({ error: 'ページが見つかりません' }, { status: 404 });
+      throw NotFound('ページが見つかりません');
     }
 
     if (!page.isPublished) {
-      return NextResponse.json({ error: 'ページが公開されていません' }, { status: 400 });
+      throw BadRequest('ページが公開されていません。先に公開ステータスを「公開中」に変更してください');
     }
 
     // published_at を現在時刻に更新してキャッシュを無効化
@@ -39,7 +40,6 @@ export async function POST(req: NextRequest, { params }: Params) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('[POST /api/pages/:id/publish]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/pages/:id/publish');
   }
 }

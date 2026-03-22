@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { createProjectSchema, formatZodError } from '@/lib/validations';
+import { handleApiError } from '@/lib/errors';
 
 // スラッグ生成：日本語も含む名前をローマ字 or ランダム文字列に変換
 function generateSlug(name: string): string {
@@ -54,7 +55,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ project }, { status: 201 });
   } catch (err) {
-    console.error('[POST /api/projects]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/projects');
   }
 }

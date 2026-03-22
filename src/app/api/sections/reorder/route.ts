@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { reorderSchema, formatZodError } from '@/lib/validations';
+import { handleApiError, Forbidden } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (sections.length !== orders.length) {
-      return NextResponse.json({ error: '不正なセクションIDが含まれています' }, { status: 403 });
+      throw Forbidden('不正なセクションIDが含まれています');
     }
 
     await prisma.$transaction(
@@ -44,7 +45,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('[POST /api/sections/reorder]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/sections/reorder');
   }
 }

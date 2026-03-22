@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { updatePageSchema, formatZodError } from '@/lib/validations';
+import { handleApiError, NotFound } from '@/lib/errors';
 
 type Params = { params: Promise<{ pageId: string }> };
 
@@ -32,7 +33,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     });
 
     if (!page) {
-      return NextResponse.json({ error: 'ページが見つかりません' }, { status: 404 });
+      throw NotFound('ページが見つかりません');
     }
 
     const updateFields: Record<string, unknown> = {};
@@ -57,8 +58,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     return NextResponse.json({ page: updated });
   } catch (err) {
-    console.error('[PATCH /api/pages/:id]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'PATCH /api/pages/:id');
   }
 }
 
@@ -76,13 +76,12 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     });
 
     if (!page) {
-      return NextResponse.json({ error: 'ページが見つかりません' }, { status: 404 });
+      throw NotFound('ページが見つかりません');
     }
 
     await prisma.page.delete({ where: { id: pageId } });
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('[DELETE /api/pages/:id]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'DELETE /api/pages/:id');
   }
 }

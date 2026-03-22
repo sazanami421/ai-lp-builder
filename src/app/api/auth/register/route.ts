@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { registerSchema, formatZodError } from '@/lib/validations';
+import { handleApiError, Conflict } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,10 +20,7 @@ export async function POST(req: NextRequest) {
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      return NextResponse.json(
-        { error: 'このメールアドレスはすでに登録されています' },
-        { status: 409 }
-      );
+      throw Conflict('このメールアドレスはすでに登録されています');
     }
 
     const hashedPassword = await hash(password, 12);
@@ -34,11 +32,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ user }, { status: 201 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error('[register]', message);
-    return NextResponse.json(
-      { error: process.env.NODE_ENV === 'development' ? message : 'サーバーエラーが発生しました' },
-      { status: 500 }
-    );
+    return handleApiError(err, 'POST /api/auth/register');
   }
 }
