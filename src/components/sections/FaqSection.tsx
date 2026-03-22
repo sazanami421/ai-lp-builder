@@ -23,7 +23,7 @@ export default function FaqSection({ data, styleOverrides }: Props) {
     >
       <h2
         className="mb-12 text-center text-3xl font-bold"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+        style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
@@ -40,7 +40,6 @@ export default function FaqSection({ data, styleOverrides }: Props) {
           >
             <button
               className="flex w-full items-center justify-between px-5 py-4 text-left font-medium"
-              style={{ color: 'var(--text)' }}
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
             >
               {item.question}
@@ -51,7 +50,6 @@ export default function FaqSection({ data, styleOverrides }: Props) {
                 className="border-t px-5 py-4 text-sm"
                 style={{
                   borderColor: 'color-mix(in srgb, var(--text) 10%, transparent)',
-                  color: 'var(--text)',
                   opacity: 0.75,
                 }}
               >

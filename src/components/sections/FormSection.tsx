@@ -43,13 +43,13 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
         {data.title && (
           <h2
             className="mb-3 text-center text-3xl font-bold"
-            style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+            style={{ fontFamily: 'var(--font-heading)' }}
           >
             {data.title}
           </h2>
         )}
         {data.description && (
-          <p className="mb-8 text-center" style={{ color: 'var(--text)', opacity: 0.7 }}>
+          <p className="mb-8 text-center" style={{ opacity: 0.7 }}>
             {data.description}
           </p>
         )}
@@ -59,7 +59,6 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
             className="rounded-lg p-6 text-center text-sm"
             style={{
               backgroundColor: 'color-mix(in srgb, var(--accent) 10%, transparent)',
-              color: 'var(--text)',
               borderRadius: 'var(--radius)',
             }}
           >
@@ -71,7 +70,6 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
               <div key={field.name}>
                 <label
                   className="mb-1 block text-sm font-medium"
-                  style={{ color: 'var(--text)' }}
                 >
                   {field.label}
                   {field.required && <span style={{ color: 'var(--accent)' }}> *</span>}

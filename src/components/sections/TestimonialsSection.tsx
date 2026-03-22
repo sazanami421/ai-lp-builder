@@ -18,7 +18,7 @@ export default function TestimonialsSection({ data, styleOverrides }: Props) {
     >
       <h2
         className="mb-12 text-center text-3xl font-bold"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+        style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
@@ -30,10 +30,9 @@ export default function TestimonialsSection({ data, styleOverrides }: Props) {
             style={{
               backgroundColor: 'var(--bg)',
               borderRadius: 'var(--radius)',
-              color: 'var(--text)',
             }}
           >
-            <p className="mb-4" style={{ color: 'var(--text)', opacity: 0.8 }}>
+            <p className="mb-4" style={{ opacity: 0.8 }}>
               &ldquo;{item.body}&rdquo;
             </p>
             <div className="flex items-center gap-3">
@@ -41,9 +40,9 @@ export default function TestimonialsSection({ data, styleOverrides }: Props) {
                 <img src={item.avatarUrl} alt={item.name} className="h-10 w-10 rounded-full object-cover" />
               )}
               <div>
-                <p className="font-semibold" style={{ color: 'var(--text)' }}>{item.name}</p>
+                <p className="font-semibold">{item.name}</p>
                 {item.role && (
-                  <p className="text-sm" style={{ color: 'var(--text)', opacity: 0.6 }}>{item.role}</p>
+                  <p className="text-sm" style={{ opacity: 0.6 }}>{item.role}</p>
                 )}
               </div>
             </div>

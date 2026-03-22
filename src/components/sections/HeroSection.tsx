@@ -21,12 +21,12 @@ export default function HeroSection({ data, styleOverrides }: Props) {
       <div className="relative z-10 px-6">
         <h1
           className="text-5xl font-bold"
-          style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+          style={{ fontFamily: 'var(--font-heading)' }}
         >
           {data.headline}
         </h1>
         {data.subheadline && (
-          <p className="mt-4 text-xl" style={{ color: 'var(--text)', opacity: 0.75 }}>
+          <p className="mt-4 text-xl" style={{ opacity: 0.75 }}>
             {data.subheadline}
           </p>
         )}

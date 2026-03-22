@@ -13,7 +13,7 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
     >
       <h2
         className="mb-12 text-center text-3xl font-bold"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+        style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
@@ -31,11 +31,11 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
             {item.icon && <div className="mb-3 text-3xl">{item.icon}</div>}
             <h3
               className="mb-2 font-semibold"
-              style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+              style={{ fontFamily: 'var(--font-heading)' }}
             >
               {item.title}
             </h3>
-            <p className="text-sm" style={{ color: 'var(--text)', opacity: 0.7 }}>
+            <p className="text-sm" style={{ opacity: 0.7 }}>
               {item.description}
             </p>
           </div>

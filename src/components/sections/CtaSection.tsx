@@ -13,12 +13,12 @@ export default function CtaSection({ data, styleOverrides }: Props) {
     >
       <h2
         className="mb-4 text-4xl font-bold"
-        style={{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }}
+        style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.headline}
       </h2>
       {data.subheadline && (
-        <p className="mb-8 text-lg" style={{ color: 'var(--text)', opacity: 0.7 }}>
+        <p className="mb-8 text-lg" style={{ opacity: 0.7 }}>
           {data.subheadline}
         </p>
       )}
