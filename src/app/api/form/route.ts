@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { formSubmissionSchema, formatZodError } from '@/lib/validations';
 
 export async function POST(req: NextRequest) {
   try {
-    const { pageId, data } = await req.json();
+    const body = await req.json();
+    const parsed = formSubmissionSchema.safeParse(body);
 
-    if (!pageId || !data || typeof data !== 'object') {
-      return NextResponse.json({ error: 'パラメータが不足しています' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: formatZodError(parsed.error) },
+        { status: 400 }
+      );
     }
+
+    const { pageId, data } = parsed.data;
 
     // ページが公開中か確認
     const page = await prisma.page.findFirst({
@@ -19,7 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     await prisma.formSubmission.create({
-      data: { pageId, data },
+      data: { pageId, data: data as Prisma.InputJsonValue },
     });
 
     return NextResponse.json({ success: true }, { status: 201 });

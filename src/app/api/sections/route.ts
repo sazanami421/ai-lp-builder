@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { createSectionSchema, formatZodError } from '@/lib/validations';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -10,11 +11,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { pageId, type } = await req.json();
+    const body = await req.json();
+    const parsed = createSectionSchema.safeParse(body);
 
-    if (!pageId || !type) {
-      return NextResponse.json({ error: 'pageId と type は必須です' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: formatZodError(parsed.error) },
+        { status: 400 }
+      );
     }
+
+    const { pageId, type } = parsed.data;
 
     // ページがログインユーザーのものか確認
     const page = await prisma.page.findFirst({

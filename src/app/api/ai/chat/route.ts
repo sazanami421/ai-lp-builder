@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { generateSectionEdit } from '@/lib/ai';
+import { aiChatSchema, formatZodError } from '@/lib/validations';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -10,16 +11,22 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { sectionType, currentData, currentStyleOverrides, message } = await req.json();
+    const body = await req.json();
+    const parsed = aiChatSchema.safeParse(body);
 
-    if (!sectionType || !currentData || !message?.trim()) {
-      return NextResponse.json({ error: 'パラメータが不足しています' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: formatZodError(parsed.error) },
+        { status: 400 }
+      );
     }
+
+    const { currentData, currentStyleOverrides, message } = parsed.data;
 
     const result = await generateSectionEdit(
       message,
       currentData,
-      currentStyleOverrides ?? {}
+      currentStyleOverrides as Record<string, string>
     );
 
     return NextResponse.json(result);

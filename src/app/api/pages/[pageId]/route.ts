@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { updatePageSchema, formatZodError } from '@/lib/validations';
 
 type Params = { params: Promise<{ pageId: string }> };
 
@@ -15,6 +16,14 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { pageId } = await params;
     const body = await req.json();
+    const parsed = updatePageSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: formatZodError(parsed.error) },
+        { status: 400 }
+      );
+    }
 
     // ページがログインユーザーのものか確認（プロジェクトのslugも取得）
     const page = await prisma.page.findFirst({
@@ -27,12 +36,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     }
 
     const updateFields: Record<string, unknown> = {};
-    if ('globalConfig' in body) updateFields.globalConfig = body.globalConfig;
-    if ('title' in body) updateFields.title = body.title;
-    if ('publishedAt' in body) updateFields.publishedAt = body.publishedAt;
-    if ('isPublished' in body) {
-      updateFields.isPublished = body.isPublished;
-      if (body.isPublished && !page.publishedAt) {
+    if (parsed.data.globalConfig !== undefined) updateFields.globalConfig = parsed.data.globalConfig;
+    if (parsed.data.title !== undefined) updateFields.title = parsed.data.title;
+    if (parsed.data.isPublished !== undefined) {
+      updateFields.isPublished = parsed.data.isPublished;
+      if (parsed.data.isPublished && !page.publishedAt) {
         updateFields.publishedAt = new Date();
       }
     }
@@ -43,7 +51,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     });
 
     // 公開状態の変更時はキャッシュを無効化
-    if ('isPublished' in body) {
+    if (parsed.data.isPublished !== undefined) {
       revalidatePath(`/p/${page.project.slug}`);
     }
 

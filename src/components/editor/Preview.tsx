@@ -11,6 +11,7 @@ type Props = {
   selectedId: string | null;
   onSelect: (id: string) => void;
   onAIClick: (sectionId: string) => void;
+  previewSuggestion: { sectionId: string; data: unknown; styleOverrides: Record<string, string> } | null;
   projectName: string;
   template: GlobalConfig['template'];
   cssVars: Record<string, string>;
@@ -19,7 +20,7 @@ type Props = {
   initialIsPublished: boolean;
 };
 
-export default function Preview({ sections, selectedId, onSelect, onAIClick, projectName, template, cssVars, pageId, projectSlug, initialIsPublished }: Props) {
+export default function Preview({ sections, selectedId, onSelect, onAIClick, previewSuggestion, projectName, template, cssVars, pageId, projectSlug, initialIsPublished }: Props) {
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [isPublished, setIsPublished] = useState(initialIsPublished);
   const [updating, setUpdating] = useState(false);
@@ -141,20 +142,29 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pro
               セクションを追加してください
             </div>
           ) : (
-            visible.map((section) => (
+            visible.map((section) => {
+              const isPreviewing = previewSuggestion?.sectionId === section.id;
+              return (
               <div
                 key={section.id}
                 onClick={() => onSelect(section.id)}
                 className={`group relative cursor-pointer outline outline-2 outline-offset-[-2px] transition ${
-                  selectedId === section.id
+                  isPreviewing
+                    ? 'outline-amber-400'
+                    : selectedId === section.id
                     ? 'outline-blue-500'
                     : 'outline-transparent hover:outline-blue-200'
                 }`}
               >
+                {isPreviewing && (
+                  <div className="absolute left-3 top-2 z-10 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-semibold text-white shadow">
+                    プレビュー中
+                  </div>
+                )}
                 <SectionRenderer
                   type={section.type as SectionType}
-                  data={section.data}
-                  styleOverrides={section.styleOverrides}
+                  data={isPreviewing ? previewSuggestion!.data : section.data}
+                  styleOverrides={isPreviewing ? previewSuggestion!.styleOverrides : section.styleOverrides}
                 />
                 {/* セクションごとの AI ボタン */}
                 <button
@@ -172,7 +182,8 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pro
                   </svg>
                 </button>
               </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

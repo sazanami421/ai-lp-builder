@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { Prisma } from '@prisma/client';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { updateSectionSchema, formatZodError } from '@/lib/validations';
 
 type Params = { params: Promise<{ sectionId: string }> };
 
@@ -14,6 +16,14 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { sectionId } = await params;
     const body = await req.json();
+    const parsed = updateSectionSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: formatZodError(parsed.error) },
+        { status: 400 }
+      );
+    }
 
     // セクションがログインユーザーのものか確認
     const section = await prisma.section.findFirst({
@@ -27,9 +37,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: 'セクションが見つかりません' }, { status: 404 });
     }
 
-    const updateFields: Record<string, unknown> = {};
-    if ('data' in body) updateFields.data = body.data;
-    if ('visible' in body) updateFields.visible = body.visible;
+    const updateFields: Prisma.SectionUpdateInput = {};
+    if (parsed.data.data !== undefined) updateFields.data = parsed.data.data as Prisma.InputJsonValue;
+    if (parsed.data.visible !== undefined) updateFields.visible = parsed.data.visible;
+    if (parsed.data.styleOverrides !== undefined) updateFields.styleOverrides = parsed.data.styleOverrides as Prisma.InputJsonValue;
 
     const updated = await prisma.section.update({
       where: { id: sectionId },

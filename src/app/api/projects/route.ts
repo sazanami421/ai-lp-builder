@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { createProjectSchema, formatZodError } from '@/lib/validations';
 
 // スラッグ生成：日本語も含む名前をローマ字 or ランダム文字列に変換
 function generateSlug(name: string): string {
@@ -24,11 +25,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { name, description } = await req.json();
+    const body = await req.json();
+    const parsed = createProjectSchema.safeParse(body);
 
-    if (!name?.trim()) {
-      return NextResponse.json({ error: 'プロジェクト名は必須です' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: formatZodError(parsed.error) },
+        { status: 400 }
+      );
     }
+
+    const { name, description } = parsed.data;
 
     // スラッグの重複を避けるためリトライ
     let slug = generateSlug(name);
@@ -38,9 +45,9 @@ export async function POST(req: NextRequest) {
     const project = await prisma.project.create({
       data: {
         userId: session.user.id,
-        name: name.trim(),
+        name,
         slug,
-        description: description?.trim() || null,
+        description: description ?? null,
       },
       select: { id: true, name: true, slug: true, description: true, updatedAt: true },
     });
