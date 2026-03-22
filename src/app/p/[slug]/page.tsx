@@ -13,6 +13,7 @@ const FONT_URLS: Record<GlobalConfig['template'], string> = {
   premium:  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap',
   pop:      'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap',
   business: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap',
+  natural:  'https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap',
 };
 
 export default async function PublicLPPage({ params }: Props) {
