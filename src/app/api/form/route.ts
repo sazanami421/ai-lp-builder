@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { formSubmissionSchema, formatZodError } from '@/lib/validations';
+import { handleApiError, NotFound } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!page) {
-      return NextResponse.json({ error: 'ページが見つかりません' }, { status: 404 });
+      throw NotFound('ページが見つかりません');
     }
 
     await prisma.formSubmission.create({
@@ -32,7 +33,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
-    console.error('[POST /api/form]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/form');
   }
 }

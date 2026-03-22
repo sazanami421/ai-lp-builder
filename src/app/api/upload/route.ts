@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import { prisma } from '@/lib/prisma';
+import { handleApiError, BadRequest } from '@/lib/errors';
 
 // サービスロールクライアント（Storage の RLS をバイパス）
 function getServiceClient() {
@@ -27,13 +28,13 @@ export async function POST(req: NextRequest) {
     const file = formData.get('file') as File | null;
 
     if (!file) {
-      return NextResponse.json({ error: 'ファイルが必要です' }, { status: 400 });
+      throw BadRequest('ファイルが必要です');
     }
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json({ error: 'JPEG / PNG / WebP / GIF のみアップロードできます' }, { status: 400 });
+      throw BadRequest('JPEG / PNG / WebP / GIF のみアップロードできます');
     }
     if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: 'ファイルサイズは5MB以下にしてください' }, { status: 400 });
+      throw BadRequest('ファイルサイズは5MB以下にしてください');
     }
 
     // ファイル拡張子をサニタイズ（英数字のみ許可）
@@ -50,8 +51,8 @@ export async function POST(req: NextRequest) {
       });
 
     if (uploadError) {
-      console.error('[upload]', uploadError);
-      return NextResponse.json({ error: 'アップロードに失敗しました' }, { status: 500 });
+      console.error('[upload] Supabase Storage error:', uploadError);
+      throw new Error(`ストレージへのアップロードに失敗しました: ${uploadError.message}`);
     }
 
     const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path);
@@ -69,7 +70,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: publicUrl }, { status: 201 });
   } catch (err) {
-    console.error('[POST /api/upload]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/upload');
   }
 }

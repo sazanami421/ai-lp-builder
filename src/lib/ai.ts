@@ -54,9 +54,17 @@ export async function generateSectionEdit(
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('AI レスポンスから JSON を抽出できませんでした');
 
-  const parsed = JSON.parse(jsonMatch[0]);
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(jsonMatch[0]);
+  } catch {
+    throw new Error(
+      `AI レスポンスの JSON パースに失敗しました: ${jsonMatch[0].slice(0, 200)}`
+    );
+  }
+
   return {
-    data: parsed.data ?? currentData,
-    styleOverrides: parsed.styleOverrides ?? currentStyleOverrides,
+    data: (parsed.data as Record<string, unknown>) ?? currentData,
+    styleOverrides: (parsed.styleOverrides as Record<string, string>) ?? currentStyleOverrides,
   };
 }

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { createSectionSchema, formatZodError } from '@/lib/validations';
+import { handleApiError, NotFound } from '@/lib/errors';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!page) {
-      return NextResponse.json({ error: 'ページが見つかりません' }, { status: 404 });
+      throw NotFound('ページが見つかりません');
     }
 
     // 末尾に追加
@@ -52,7 +53,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ section }, { status: 201 });
   } catch (err) {
-    console.error('[POST /api/sections]', err);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return handleApiError(err, 'POST /api/sections');
   }
 }
