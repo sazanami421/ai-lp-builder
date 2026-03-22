@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import CreateProjectModal from './CreateProjectModal';
+import SiteThumbnail from './SiteThumbnail';
 
 type Project = {
   id: string;
@@ -90,11 +91,14 @@ function ProjectCard({ project }: { project: Project }) {
     (sum, p) => sum + p._count.formSubmissions,
     0
   );
+  const isPublished = project.pages.some((p) => p.isPublished);
 
   return (
     <div className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-5 transition hover:border-gray-300 hover:shadow-sm">
       {/* サムネイル */}
-      <div className="mb-4 h-28 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200" />
+      <div className="mb-4 h-28 overflow-hidden rounded-lg bg-gradient-to-br from-gray-100 to-gray-200">
+        {isPublished && <SiteThumbnail slug={project.slug} />}
+      </div>
 
       {/* プロジェクト情報 */}
       <div className="flex-1">
