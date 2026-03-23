@@ -155,7 +155,7 @@ variant（レイアウト）     → どう配置するか（centered, split, gr
 
 - **type**: 8種（hero, features, testimonials, pricing, faq, cta, form, footer）
 - **variant**: 各 type に2種程度。純粋にHTML構造・配置だけが異なる
-- **テーマ**: CSS変数（--accent, --bg, --text, --font-heading, --font-body, --radius）
+- **テーマ**: CSS変数（--accent, --bg, --text, --font-heading, --font-body, --radius, --texture）
 
 グラデーション・影・透明度などの装飾的な見た目は variant ではなく `styleOverrides`（CSS）で制御する。variant はあくまで**配置の違い**のみを担う。
 
@@ -215,12 +215,13 @@ variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 
 ```
 ① テンプレートCSS変数（グローバル）
-   └─ .lp-preview { --text: #333; --bg: #fff; --accent: ...; --font-heading: ...; }
+   └─ .lp-preview { --text: #333; --bg: #fff; --accent: ...; --font-heading: ...; --texture: url(...); }
        ページの globalConfig.cssVars でカスタム上書き可能
 
 ② セクションルート <section> の style 属性
-   └─ { backgroundColor: 'var(--bg)', color: 'var(--text)', ...styleOverrides }
+   └─ { backgroundColor: 'var(--bg)', color: 'var(--text)', backgroundImage: 'var(--texture)', ...styleOverrides }
        styleOverrides は AI チャットで設定
+       テクスチャー無効化: styleOverrides に { backgroundImage: 'none' }
 
 ③ 子要素は CSS の自然な継承で色を受け取る
    └─ <h1>, <p> 等は color を直接指定しない（inherit）
@@ -272,7 +273,7 @@ variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 テンプレートは **プロジェクトの初期状態を決める完全プリセット**。作成後の変更は不可（カラーカスタマイズを除く）。
 
 テンプレートが定義するもの:
-1. **CSS変数のデフォルト値**（色・フォント・角丸）
+1. **CSS変数のデフォルト値**（色・フォント・角丸・テクスチャー）
 2. **各セクションのデフォルト variant**（どの配置をデフォルトにするか）
 3. **デフォルトのセクション構成**（どの type をどの順で並べるか）
 
@@ -281,13 +282,13 @@ variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 
 ### テンプレート一覧（5種類）
 
-| テンプレート | トーン | アクセント色 | 見出しフォント | 本文フォント |
-|------------|--------|------------|--------------|------------|
-| simple | ミニマル | #2B2B28 | Outfit | Outfit |
-| premium | 高級感（ダーク） | #C6A96C | Cormorant Garamond | Cormorant Garamond |
-| pop | カラフル | #FF6B35 | DM Sans | DM Sans |
-| business | ビジネス（ブルー） | #1E56A0 | Plus Jakarta Sans | Plus Jakarta Sans |
-| natural | ナチュラル（グリーン） | #2D8A6E | Lora | Raleway |
+| テンプレート | トーン | アクセント色 | 見出しフォント | 本文フォント | テクスチャー |
+|------------|--------|------------|--------------|------------|------------|
+| simple | ミニマル | #2B2B28 | Outfit | Outfit | なし |
+| premium | 高級感（ダーク） | #C6A96C | Cormorant Garamond | Cormorant Garamond | グレイン（高級紙風） |
+| pop | カラフル | #FF6B35 | DM Sans | DM Sans | ドットパターン |
+| business | ビジネス（ブルー） | #1E56A0 | Plus Jakarta Sans | Plus Jakarta Sans | 斜線パターン |
+| natural | ナチュラル（グリーン） | #2D8A6E | Lora | Raleway | 和紙風テクスチャー |
 
 ### テンプレート定義の構造
 

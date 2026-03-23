@@ -10,6 +10,7 @@ export const simpleTemplate = {
     '--font-heading': "'Outfit', sans-serif",
     '--font-body': "'Outfit', sans-serif",
     '--radius': '4px',
+    '--texture': 'none',
   },
   defaultVariants: {
     hero: 'centered',
