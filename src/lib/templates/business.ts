@@ -9,4 +9,14 @@ export const businessTemplate = {
     '--font-body': "'Plus Jakarta Sans', sans-serif",
     '--radius': '6px',
   },
+  defaultVariants: {
+    hero: 'split',
+    features: 'alternating',
+    testimonials: 'cards',
+    pricing: 'table',
+    faq: 'accordion',
+    cta: 'banner',
+    form: 'split',
+    footer: 'columns',
+  },
 } as const;

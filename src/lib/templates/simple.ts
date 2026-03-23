@@ -9,4 +9,14 @@ export const simpleTemplate = {
     '--font-body': "'Outfit', sans-serif",
     '--radius': '4px',
   },
+  defaultVariants: {
+    hero: 'centered',
+    features: 'grid',
+    testimonials: 'cards',
+    pricing: 'cards',
+    faq: 'accordion',
+    cta: 'centered',
+    form: 'simple',
+    footer: 'minimal',
+  },
 } as const;

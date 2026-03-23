@@ -27,20 +27,24 @@ export type SectionBase = {
 // --- セクション固有データ型 ---
 
 export type HeroSectionData = {
+  variant?: 'centered' | 'split';
   headline: string;
   subheadline?: string;
   ctaText?: string;
   ctaUrl?: string;
   backgroundImage?: string;
+  sideImage?: string; // split variant: 右カラム画像
 };
 
 export type FeatureItem = {
   icon?: string;
+  image?: string; // alternating variant: 各アイテムの画像
   title: string;
   description: string;
 };
 
 export type FeaturesSectionData = {
+  variant?: 'grid' | 'alternating';
   title: string;
   items: FeatureItem[];
 };
@@ -53,6 +57,7 @@ export type TestimonialItem = {
 };
 
 export type TestimonialsSectionData = {
+  variant?: 'cards' | 'single';
   title: string;
   items: TestimonialItem[];
 };
@@ -69,6 +74,7 @@ export type PricingPlan = {
 };
 
 export type PricingSectionData = {
+  variant?: 'cards' | 'table';
   title: string;
   plans: PricingPlan[];
 };
@@ -79,11 +85,13 @@ export type FaqItem = {
 };
 
 export type FaqSectionData = {
+  variant?: 'accordion' | 'two-column';
   title: string;
   items: FaqItem[];
 };
 
 export type CtaSectionData = {
+  variant?: 'centered' | 'banner';
   headline: string;
   subheadline?: string;
   ctaText?: string;
@@ -99,6 +107,7 @@ export type FormField = {
 };
 
 export type FormSectionData = {
+  variant?: 'simple' | 'split';
   title?: string;
   description?: string;
   fields: FormField[];
@@ -112,8 +121,10 @@ export type FooterLink = {
 };
 
 export type FooterSectionData = {
+  variant?: 'minimal' | 'columns';
   logo?: string;
   links?: FooterLink[];
+  columns?: { heading: string; links: FooterLink[] }[]; // columns variant
   copyright: string;
 };
 

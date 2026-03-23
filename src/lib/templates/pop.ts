@@ -9,4 +9,14 @@ export const popTemplate = {
     '--font-body': "'DM Sans', sans-serif",
     '--radius': '12px',
   },
+  defaultVariants: {
+    hero: 'centered',
+    features: 'grid',
+    testimonials: 'cards',
+    pricing: 'cards',
+    faq: 'two-column',
+    cta: 'centered',
+    form: 'simple',
+    footer: 'minimal',
+  },
 } as const;

@@ -9,4 +9,14 @@ export const naturalTemplate = {
     '--font-body': "'Raleway', sans-serif",
     '--radius': '16px',
   },
+  defaultVariants: {
+    hero: 'centered',
+    features: 'alternating',
+    testimonials: 'single',
+    pricing: 'cards',
+    faq: 'accordion',
+    cta: 'centered',
+    form: 'simple',
+    footer: 'minimal',
+  },
 } as const;
