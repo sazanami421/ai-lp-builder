@@ -1,3 +1,5 @@
+import type { SectionType } from '@/types/section';
+
 export const simpleTemplate = {
   name: 'simple',
   label: 'シンプル',
@@ -9,4 +11,17 @@ export const simpleTemplate = {
     '--font-body': "'Outfit', sans-serif",
     '--radius': '4px',
   },
+  defaultVariants: {
+    hero: 'centered',
+    features: 'grid',
+    testimonials: 'cards',
+    pricing: 'cards',
+    faq: 'accordion',
+    cta: 'centered',
+    form: 'simple',
+    footer: 'minimal',
+  } satisfies Record<SectionType, string>,
+  defaultSections: [
+    'hero', 'features', 'cta', 'faq', 'form', 'footer',
+  ] satisfies SectionType[],
 } as const;

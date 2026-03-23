@@ -3,13 +3,17 @@ import { premiumTemplate } from './premium';
 import { popTemplate } from './pop';
 import { businessTemplate } from './business';
 import { naturalTemplate } from './natural';
-import type { GlobalConfig } from '@/types/section';
+import type { GlobalConfig, SectionType } from '@/types/section';
 
-export const TEMPLATES: Record<GlobalConfig['template'], {
+export type TemplateDefinition = {
   name: string;
   label: string;
   cssVars: Record<string, string>;
-}> = {
+  defaultVariants: Record<SectionType, string>;
+  defaultSections: readonly SectionType[];
+};
+
+export const TEMPLATES: Record<GlobalConfig['template'], TemplateDefinition> = {
   simple: simpleTemplate,
   premium: premiumTemplate,
   pop: popTemplate,

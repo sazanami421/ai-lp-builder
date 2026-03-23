@@ -1,3 +1,5 @@
+import type { SectionType } from '@/types/section';
+
 export const businessTemplate = {
   name: 'business',
   label: 'ビジネス',
@@ -9,4 +11,17 @@ export const businessTemplate = {
     '--font-body': "'Plus Jakarta Sans', sans-serif",
     '--radius': '6px',
   },
+  defaultVariants: {
+    hero: 'split',
+    features: 'alternating',
+    testimonials: 'cards',
+    pricing: 'table',
+    faq: 'accordion',
+    cta: 'banner',
+    form: 'split',
+    footer: 'columns',
+  } satisfies Record<SectionType, string>,
+  defaultSections: [
+    'hero', 'features', 'testimonials', 'pricing', 'faq', 'cta', 'form', 'footer',
+  ] satisfies SectionType[],
 } as const;

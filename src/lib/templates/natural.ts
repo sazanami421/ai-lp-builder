@@ -1,3 +1,5 @@
+import type { SectionType } from '@/types/section';
+
 export const naturalTemplate = {
   name: 'natural',
   label: 'ナチュラル',
@@ -9,4 +11,17 @@ export const naturalTemplate = {
     '--font-body': "'Raleway', sans-serif",
     '--radius': '16px',
   },
+  defaultVariants: {
+    hero: 'centered',
+    features: 'alternating',
+    testimonials: 'single',
+    pricing: 'cards',
+    faq: 'accordion',
+    cta: 'centered',
+    form: 'simple',
+    footer: 'minimal',
+  } satisfies Record<SectionType, string>,
+  defaultSections: [
+    'hero', 'features', 'testimonials', 'cta', 'form', 'footer',
+  ] satisfies SectionType[],
 } as const;

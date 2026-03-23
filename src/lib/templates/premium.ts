@@ -1,3 +1,5 @@
+import type { SectionType } from '@/types/section';
+
 export const premiumTemplate = {
   name: 'premium',
   label: 'プレミアム',
@@ -9,4 +11,17 @@ export const premiumTemplate = {
     '--font-body': "'Cormorant Garamond', serif",
     '--radius': '2px',
   },
+  defaultVariants: {
+    hero: 'split',
+    features: 'alternating',
+    testimonials: 'single',
+    pricing: 'cards',
+    faq: 'accordion',
+    cta: 'banner',
+    form: 'split',
+    footer: 'columns',
+  } satisfies Record<SectionType, string>,
+  defaultSections: [
+    'hero', 'features', 'testimonials', 'pricing', 'cta', 'form', 'footer',
+  ] satisfies SectionType[],
 } as const;
