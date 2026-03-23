@@ -65,8 +65,8 @@ ai-lp-builder/
 │   │   │       ├── CtaForm.tsx
 │   │   │       └── ...（各セクション type に対応）
 │   │   ├── sections/            # セクションレンダラー
-│   │   │   ├── SectionRenderer.tsx  # type → コンポーネント振り分け
-│   │   │   ├── HeroSection.tsx
+│   │   │   ├── SectionRenderer.tsx  # type + variant → コンポーネント振り分け
+│   │   │   ├── HeroSection.tsx      # variant で内部分岐
 │   │   │   ├── FeaturesSection.tsx
 │   │   │   ├── TestimonialsSection.tsx
 │   │   │   ├── PricingSection.tsx
@@ -88,15 +88,17 @@ ai-lp-builder/
 │   │   ├── ai.ts                # Claude API ラッパー
 │   │   ├── errors.ts            # 共通エラーハンドリング（AppError + handleApiError）
 │   │   ├── validations.ts       # Zod バリデーションスキーマ（全APIルート用）
+│   │   ├── variants.ts          # variant 定義（型・デフォルト値・メタ情報）
 │   │   ├── defaultSectionData.ts # セクション種別ごとのデフォルトデータ
-│   │   └── templates/           # テンプレート CSS 変数定義
+│   │   └── templates/           # テンプレート定義（CSS変数 + デフォルト variant + セクション構成）
 │   │       ├── index.ts
 │   │       ├── simple.ts
 │   │       ├── premium.ts
 │   │       ├── pop.ts
-│   │       └── business.ts
+│   │       ├── business.ts
+│   │       └── natural.ts
 │   └── types/
-│       ├── section.ts           # セクション型定義
+│       ├── section.ts           # セクション型定義（variant 含む）
 │       └── next-auth.d.ts       # NextAuth 型拡張
 ├── ai_lp_builder_concept_v7.docx  # プロダクト構想書
 ├── CLAUDE.md                    # このファイル
@@ -111,7 +113,7 @@ ai-lp-builder/
 - **users**: アカウント、プラン（free/pro/enterprise）
 - **projects**: LP プロジェクト（slug で公開 URL 生成）
 - **pages**: LP ページ（globalConfig に JSONB でテーマ設定、isPublished で公開/下書きをBoolean管理）
-- **sections**: セクションブロック（data に JSONB でコンテンツ、type で 8種を識別）
+- **sections**: セクションブロック（data に JSONB でコンテンツ + variant、type で 8種を識別）
 - **section_history**: 変更履歴（dataBefore/dataAfter で Undo 実現、changeSource で manual/ai_chat 識別）
 - **form_submissions**: 公開 LP からのフォーム送信
 - **assets**: ユーザーアップロード画像
@@ -141,41 +143,85 @@ ai-lp-builder/
 
 ## セクション設計
 
-### セクション種別（8種）
+### 設計思想: type × variant × テーマの直交構造
 
-| type | コンポーネント | データ型 | 概要 |
-|------|-------------|---------|------|
-| `hero` | HeroSection | HeroSectionData | ヒーロー画像・見出し・CTA |
-| `features` | FeaturesSection | FeaturesSectionData | 特徴一覧（アイコン+テキスト） |
-| `testimonials` | TestimonialsSection | TestimonialsSectionData | お客様の声（アバター付き） |
-| `pricing` | PricingSection | PricingSectionData | 料金プラン比較 |
-| `faq` | FaqSection | FaqSectionData | よくある質問（アコーディオン） |
-| `cta` | CtaSection | CtaSectionData | CTA（見出し+ボタン） |
-| `form` | FormSection | FormSectionData | お問い合わせフォーム（送信機能付き） |
-| `footer` | FooterSection | FooterSectionData | フッター（ロゴ+リンク+コピーライト） |
+セクションの見た目を決める3つの要素は独立している:
+
+```
+type（セクション種別）   → 何を表示するか（Hero, Features, Pricing, ...）
+variant（レイアウト）     → どう配置するか（centered, split, grid, alternating, ...）
+テーマ（CSS変数）        → どんな色・フォントで描画するか
+```
+
+- **type**: 8種（hero, features, testimonials, pricing, faq, cta, form, footer）
+- **variant**: 各 type に2種程度。純粋にHTML構造・配置だけが異なる
+- **テーマ**: CSS変数（--accent, --bg, --text, --font-heading, --font-body, --radius, --texture）
+
+グラデーション・影・透明度などの装飾的な見た目は variant ではなく `styleOverrides`（CSS）で制御する。variant はあくまで**配置の違い**のみを担う。
+
+### セクション種別と variant 一覧
+
+| type | variant | 概要 |
+|------|---------|------|
+| `hero` | `centered` | テキスト・CTAを中央配置 |
+| `hero` | `split` | 左テキスト＋右画像の2カラム |
+| `features` | `grid` | カード型グリッド（2-3カラム） |
+| `features` | `alternating` | 左右交互レイアウト（画像+テキスト） |
+| `testimonials` | `cards` | カード型並び |
+| `testimonials` | `single` | 1件ずつ大きく表示 |
+| `pricing` | `cards` | プランカード横並び |
+| `pricing` | `table` | 比較表形式 |
+| `faq` | `accordion` | アコーディオン縦並び |
+| `faq` | `two-column` | 2カラム配置 |
+| `cta` | `centered` | 中央配置 |
+| `cta` | `banner` | 横長バナー形式 |
+| `form` | `simple` | フォームのみ |
+| `form` | `split` | 左テキスト＋右フォームの2カラム |
+| `footer` | `minimal` | 1行シンプル |
+| `footer` | `columns` | 複数カラム |
 
 ### セクション共通構造
 
 ```
 Section
-├── id: string (UUID)
-├── type: SectionType (上記8種)
+├── id: string (CUID)
+├── type: SectionType (8種)
 ├── order: number (表示順)
 ├── visible: boolean (表示/非表示)
-├── data: JSONB (type固有のコンテンツデータ)
+├── data: JSONB (type固有のコンテンツデータ + variant)
+│   └── variant: string (レイアウト種別、未指定時はデフォルト)
 └── styleOverrides: JSONB (セクション単位のCSSオーバーライド)
 ```
+
+### セクションデータ型（variant は data 内に含む）
+
+各 section type のデータ型は **variant に関わらず共通**。variant によって使わないフィールドは無視されるだけで、データは保持される。
+
+```typescript
+type HeroSectionData = {
+  variant?: 'centered' | 'split';
+  headline: string;
+  subheadline?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  backgroundImage?: string;  // centered で使用
+  sideImage?: string;         // split で使用
+};
+```
+
+variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 
 ### スタイル適用の優先順位（CSS カスケード）
 
 ```
 ① テンプレートCSS変数（グローバル）
-   └─ .lp-preview { --text: #333; --bg: #fff; --accent: ...; --font-heading: ...; }
+   └─ .lp-preview { --text: #333; --bg: #fff; --accent: ...; --font-heading: ...; --texture: url(...); }
        ページの globalConfig.cssVars でカスタム上書き可能
 
 ② セクションルート <section> の style 属性
-   └─ { backgroundColor: 'var(--bg)', color: 'var(--text)', ...styleOverrides }
-       styleOverrides は AI チャットや手動編集で設定
+   └─ { backgroundColor: 'var(--bg)', color: 'var(--text)', backgroundImage: 'var(--texture)', ...styleOverrides }
+       styleOverrides は AI チャットで設定
+       テクスチャー無効化: styleOverrides に { backgroundImage: 'none' }
 
 ③ 子要素は CSS の自然な継承で色を受け取る
    └─ <h1>, <p> 等は color を直接指定しない（inherit）
@@ -183,7 +229,7 @@ Section
        opacity で視覚階層を表現（0.75, 0.7, 0.6 等）
 ```
 
-**重要ルール（セクション追加時の注意）:**
+**重要ルール（セクション・variant コンポーネント作成時の注意）:**
 - 子要素に `color: var(--text)` を**直接指定しない**。親 `<section>` からの継承に任せる
 - これにより AI チャットが `styleOverrides: { color: '#ff0000' }` を返した場合、セクション全体に反映される
 - `color` の直接指定が許される例外:
@@ -192,7 +238,7 @@ Section
   - CTA ボタン等の `text-white`（背景色とのコントラスト確保）
   - フォーム入力欄（input/textarea は inherit が効きにくい）
 
-### セクション追加手順
+### セクション種別の追加手順
 
 新しいセクション種別を追加するには:
 
@@ -200,25 +246,61 @@ Section
 2. `src/types/section.ts` にデータ型を追加し、`SectionType` と `SectionData` ユニオンに追加
 3. `src/components/sections/XxxSection.tsx` を作成（上記スタイルルールに従う）
 4. `src/components/sections/SectionRenderer.tsx` に case を追加
-5. `src/lib/defaultSectionData.ts` にデフォルトデータを追加
-6. `src/components/editor/forms/XxxForm.tsx` を作成（EditPanel 用）
-7. `src/components/editor/EditPanel.tsx` に case を追加
-8. `src/components/editor/AddSectionModal.tsx` のセクション一覧に追加
-9. `src/lib/validations.ts` の `sectionTypeEnum` に追加
-10. `npx prisma migrate dev` でマイグレーション
+5. `src/lib/variants.ts` に variant 定義を追加
+6. `src/lib/defaultSectionData.ts` にデフォルトデータを追加
+7. `src/components/editor/forms/XxxForm.tsx` を作成（EditPanel 用）
+8. `src/components/editor/EditPanel.tsx` に case を追加
+9. `src/components/editor/AddSectionModal.tsx` のセクション一覧に追加
+10. `src/lib/validations.ts` の `sectionTypeEnum` に追加
+11. `npx prisma migrate dev` でマイグレーション
+
+### 既存セクションに variant を追加する手順
+
+1. `src/types/section.ts` のデータ型に `variant?` と variant 固有フィールドを追加
+2. `src/lib/variants.ts` の `SECTION_VARIANTS` に variant を登録
+3. `src/components/sections/XxxSection.tsx` 内で variant による分岐を実装
+4. `src/lib/defaultSectionData.ts` を更新（必要に応じて）
+5. 各テンプレートの `defaultVariants` を更新
 
 ### デフォルトデータ
 
 セクション新規追加時、`data` が空オブジェクト `{}` の場合は `SectionRenderer` が `DEFAULT_SECTION_DATA[type]` にフォールバックする。各セクションのデフォルトデータは `src/lib/defaultSectionData.ts` で定義。
 
-## テンプレート（4種類）
+## テンプレート設計
 
-| テンプレート | トーン | アクセント色 | フォント |
-|------------|--------|------------|---------|
-| simple | ミニマル | #2B2B28 | Outfit |
-| premium | 高級感（ダーク） | #C6A96C | Cormorant Garamond |
-| pop | カラフル | #FF6B35 | DM Sans |
-| business | ビジネス（ブルー） | #1E56A0 | Plus Jakarta Sans |
+### テンプレートの役割
+
+テンプレートは **プロジェクトの初期状態を決める完全プリセット**。作成後の変更は不可（カラーカスタマイズを除く）。
+
+テンプレートが定義するもの:
+1. **CSS変数のデフォルト値**（色・フォント・角丸・テクスチャー）
+2. **各セクションのデフォルト variant**（どの配置をデフォルトにするか）
+3. **デフォルトのセクション構成**（どの type をどの順で並べるか）
+
+テンプレート切り替え機能は**廃止**。別のテンプレートを使いたい場合は新規プロジェクトを作成する。
+カラーカスタマイズ（ThemePanel）はエディターでいつでも変更可能。
+
+### テンプレート一覧（5種類）
+
+| テンプレート | トーン | アクセント色 | 見出しフォント | 本文フォント | テクスチャー |
+|------------|--------|------------|--------------|------------|------------|
+| simple | ミニマル | #2B2B28 | Outfit | Outfit | なし |
+| premium | 高級感（ダーク） | #C6A96C | Cormorant Garamond | Cormorant Garamond | グレイン（高級紙風） |
+| pop | カラフル | #FF6B35 | DM Sans | DM Sans | ドットパターン |
+| business | ビジネス（ブルー） | #1E56A0 | Plus Jakarta Sans | Plus Jakarta Sans | 斜線パターン |
+| natural | ナチュラル（グリーン） | #2D8A6E | Lora | Raleway | 和紙風テクスチャー |
+
+### テンプレート定義の構造
+
+```typescript
+type TemplateDefinition = {
+  name: string;
+  label: string;
+  cssVars: Record<string, string>;
+  defaultVariants: Record<SectionType, string>;  // 各 type のデフォルト variant
+  defaultSections: SectionType[];                 // 初期セクション構成
+};
+```
 
 テンプレートの CSS 変数は `src/lib/templates/` で定義。Preview コンポーネントがテンプレートデフォルト変数とページの `globalConfig.cssVars` をマージして適用する。
 
@@ -244,17 +326,26 @@ Section
 └────────────┴──────────────┴──────────────────────────────┘
 ```
 
-- **左パネル**: テーマ色のカスタマイズ + セクション一覧（ドラッグ並び替え・表示/非表示切替・削除）
-- **中央パネル**: 選択中セクションの編集フォーム（テキスト・画像・項目の追加削除）
+- **左パネル**: テーマ色のカスタマイズ（カラーピッカー）+ セクション一覧（ドラッグ並び替え・表示/非表示切替・削除）
+- **中央パネル**: 選択中セクションの編集フォーム（テキスト・画像・項目の追加削除）。将来的に variant セレクターを追加予定
 - **右パネル**: リアルタイムプレビュー + 公開ステータス管理 + 更新を公開ボタン
 - **フローティングチャット**: 右パネル内の右下ボタンで開閉、選択中セクションに対してのみAI指示
+- **テンプレート選択**: エディター内では不可。プロジェクト作成時に確定
 
-### AI チャットフロー（現在の実装）
+### AI チャットフロー
 
 1. ユーザーがセクションを選択し、チャットで指示を入力
-2. AI（Claude）が `data` + `styleOverrides` の完全な JSON を返す
+2. AI（Claude）が `data`（variant 含む）+ `styleOverrides` の完全な JSON を返す
 3. プレビューに「プレビュー中」バッジ付きで即座に反映
 4. 「適用する」ボタンで DB に保存、「元に戻す」で破棄
+
+AI は variant を自由に変更できる。「レイアウトを変えて」「左右交互にして」等の指示で variant を切り替える。variant は配置のみを担うため、AI が誤った判断をするリスクは低い。
+
+### セクション追加フロー
+
+1. AddSectionModal で section type のみ選択（variant は選ばない）
+2. テンプレートの `defaultVariants[type]` で variant が決定
+3. 追加後、AI チャットで variant 変更可能
 
 ## API ルート一覧
 
@@ -304,4 +395,5 @@ Section
 - エラーハンドリングは `handleApiError()` + `AppError` ファクトリ関数
 - バリデーションは Zod スキーマ（`src/lib/validations.ts` に集約）
 - セクションコンポーネントの子要素で `color` を直接指定しない（inherit で親から継承）
+- variant コンポーネントも同じスタイルルールに従う
 - 日本語コメントOK、変数名は英語

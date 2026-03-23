@@ -4,6 +4,9 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { createSectionSchema, formatZodError } from '@/lib/validations';
 import { handleApiError, NotFound } from '@/lib/errors';
+import { TEMPLATES } from '@/lib/templates';
+import { DEFAULT_VARIANTS } from '@/lib/variants';
+import { GlobalConfig, SectionType } from '@/types/section';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -37,6 +40,14 @@ export async function POST(req: NextRequest) {
       throw NotFound('ページが見つかりません');
     }
 
+    // テンプレートの defaultVariants から variant を取得
+    const globalConfig = page.globalConfig as { template?: string } | null;
+    const templateKey = (globalConfig?.template && globalConfig.template in TEMPLATES
+      ? globalConfig.template
+      : 'simple') as GlobalConfig['template'];
+    const defaultVariant = TEMPLATES[templateKey].defaultVariants[type as SectionType]
+      ?? DEFAULT_VARIANTS[type as SectionType];
+
     // 末尾に追加
     const maxOrder = page.sections.reduce((max, s) => Math.max(max, s.order), -1);
 
@@ -46,7 +57,7 @@ export async function POST(req: NextRequest) {
         type,
         order: maxOrder + 1,
         visible: true,
-        data: {},
+        data: { variant: defaultVariant },
         styleOverrides: {},
       },
     });

@@ -1,3 +1,14 @@
+import type {
+  HeroVariant,
+  FeaturesVariant,
+  TestimonialsVariant,
+  PricingVariant,
+  FaqVariant,
+  CtaVariant,
+  FormVariant,
+  FooterVariant,
+} from '@/lib/variants';
+
 // セクション type 識別子
 export type SectionType =
   | 'hero'
@@ -27,20 +38,24 @@ export type SectionBase = {
 // --- セクション固有データ型 ---
 
 export type HeroSectionData = {
+  variant?: HeroVariant;
   headline: string;
   subheadline?: string;
   ctaText?: string;
   ctaUrl?: string;
-  backgroundImage?: string;
+  backgroundImage?: string;  // centered で使用
+  sideImage?: string;         // split で使用
 };
 
 export type FeatureItem = {
   icon?: string;
   title: string;
   description: string;
+  image?: string;             // alternating で使用
 };
 
 export type FeaturesSectionData = {
+  variant?: FeaturesVariant;
   title: string;
   items: FeatureItem[];
 };
@@ -53,6 +68,7 @@ export type TestimonialItem = {
 };
 
 export type TestimonialsSectionData = {
+  variant?: TestimonialsVariant;
   title: string;
   items: TestimonialItem[];
 };
@@ -69,6 +85,7 @@ export type PricingPlan = {
 };
 
 export type PricingSectionData = {
+  variant?: PricingVariant;
   title: string;
   plans: PricingPlan[];
 };
@@ -79,11 +96,13 @@ export type FaqItem = {
 };
 
 export type FaqSectionData = {
+  variant?: FaqVariant;
   title: string;
   items: FaqItem[];
 };
 
 export type CtaSectionData = {
+  variant?: CtaVariant;
   headline: string;
   subheadline?: string;
   ctaText?: string;
@@ -99,6 +118,7 @@ export type FormField = {
 };
 
 export type FormSectionData = {
+  variant?: FormVariant;
   title?: string;
   description?: string;
   fields: FormField[];
@@ -112,6 +132,7 @@ export type FooterLink = {
 };
 
 export type FooterSectionData = {
+  variant?: FooterVariant;
   logo?: string;
   links?: FooterLink[];
   copyright: string;

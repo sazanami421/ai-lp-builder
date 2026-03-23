@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { SECTION_VARIANTS } from '@/lib/variants';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -16,9 +17,16 @@ export type SectionEditResult = {
  */
 export async function generateSectionEdit(
   prompt: string,
+  sectionType: string,
   currentData: Record<string, unknown>,
   currentStyleOverrides: Record<string, string>
 ): Promise<SectionEditResult> {
+  // セクション type の有効な variant 一覧を生成
+  const variants = SECTION_VARIANTS[sectionType as keyof typeof SECTION_VARIANTS];
+  const variantInfo = variants
+    ? variants.map((v) => `"${v.value}" (${v.description})`).join(', ')
+    : '';
+
   const response = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 2048,
@@ -26,22 +34,29 @@ export async function generateSectionEdit(
       'あなたはLPのセクションを編集するアシスタントです。',
       'ユーザーの指示に従い、以下の形式のJSONのみを返してください。説明文・コードブロック記号は不要です。',
       '',
-      '```',
       '{',
       '  "data": { /* コンテンツデータ（テキスト・項目など）*/ },',
       '  "styleOverrides": { /* CSSプロパティ（camelCase）例: "background", "padding", "borderRadius" */ }',
       '}',
-      '```',
       '',
       '変更不要なフィールドは現在の値をそのまま返してください。',
-      'styleOverrides にはセクション全体に適用したいCSSプロパティを入れてください。',
+      '',
+      '## variant（レイアウト）',
+      `このセクション(${sectionType})で使用可能な variant: ${variantInfo}`,
+      'ユーザーがレイアウト変更を指示した場合、data.variant フィールドを適切な値に変更してください。',
+      '例: 「左右に分けて」→ variant を "split" に変更',
+      '',
+      '## styleOverrides',
+      'セクション全体に適用したいCSSプロパティをcamelCaseで指定してください。',
       '例: グラデーション背景 → { "background": "linear-gradient(135deg, #667eea, #764ba2)" }',
       '例: 上下余白変更 → { "paddingTop": "60px", "paddingBottom": "60px" }',
+      '例: テクスチャー無効化 → { "backgroundImage": "none" }',
     ].join('\n'),
     messages: [
       {
         role: 'user',
         content: [
+          `セクションタイプ: ${sectionType}`,
           `現在のコンテンツ:\n${JSON.stringify(currentData, null, 2)}`,
           `現在のスタイル上書き:\n${JSON.stringify(currentStyleOverrides, null, 2)}`,
           `指示: ${prompt}`,

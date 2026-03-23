@@ -22,10 +22,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { currentData, currentStyleOverrides, message } = parsed.data;
+    const { sectionType, currentData, currentStyleOverrides, message } = parsed.data;
 
     const result = await generateSectionEdit(
       message,
+      sectionType,
       currentData,
       currentStyleOverrides as Record<string, string>
     );
