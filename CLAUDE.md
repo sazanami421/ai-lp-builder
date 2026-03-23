@@ -155,7 +155,21 @@ variant（レイアウト）     → どう配置するか（centered, split, gr
 
 - **type**: 8種（hero, features, testimonials, pricing, faq, cta, form, footer）
 - **variant**: 各 type に2種程度。純粋にHTML構造・配置だけが異なる
-- **テーマ**: CSS変数（--accent, --bg, --text, --font-heading, --font-body, --radius, --texture）
+- **テーマ**: CSS変数（--accent, --accent-light, --bg, --bg-secondary, --text, --font-heading, --font-body, --radius, --texture）
+
+### テーマ CSS変数一覧
+
+| 変数 | 用途 | ThemePanel でカスタマイズ |
+|------|------|:---:|
+| `--accent` | アクセント色（ボタン・リンク等） | ○ |
+| `--accent-light` | アクセントの薄い版（バッジ背景・ホバー等） | ○ |
+| `--bg` | メイン背景色 | ○ |
+| `--bg-secondary` | セクション背景の交互色（Features 等で使用） | ○ |
+| `--text` | メイン文字色 | ○ |
+| `--font-heading` | 見出しフォント | ✕ |
+| `--font-body` | 本文フォント | ✕ |
+| `--radius` | 角丸サイズ | ✕ |
+| `--texture` | テクスチャー背景画像（SVGデータURI） | ✕ |
 
 ### variant と装飾の責任分担
 
@@ -305,13 +319,21 @@ variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 
 ### テンプレート一覧（5種類）
 
-| テンプレート | トーン | アクセント色 | 見出しフォント | 本文フォント | テクスチャー |
-|------------|--------|------------|--------------|------------|------------|
-| simple | ミニマル | #2B2B28 | Outfit | Outfit | なし |
-| premium | 高級感（ダーク） | #C6A96C | Cormorant Garamond | Cormorant Garamond | グレイン（高級紙風） |
-| pop | カラフル | #FF6B35 | DM Sans | DM Sans | ドットパターン |
-| business | ビジネス（ブルー） | #1E56A0 | Plus Jakarta Sans | Plus Jakarta Sans | 斜線パターン |
-| natural | ナチュラル（グリーン） | #2D8A6E | Lora | Raleway | 和紙風テクスチャー |
+| テンプレート | トーン | --accent | --accent-light | --bg | --bg-secondary | --text | テクスチャー |
+|------------|--------|---------|---------------|------|---------------|--------|------------|
+| simple | ミニマル | #2B2B28 | ※未定 | #FFFFFF | ※未定 | #2B2B28 | なし |
+| premium | 高級感（ダーク） | #C6A96C | ※未定 | #0F0F0F | ※未定 | #F5F0E8 | グレイン（高級紙風） |
+| pop | カラフル | #FF6B35 | ※未定 | #FFFBF5 | ※未定 | #1A1A1A | ドットパターン |
+| business | ビジネス（ブルー） | #1E56A0 | ※未定 | #FFFFFF | ※未定 | #1A1A2E | 斜線パターン |
+| natural | ナチュラル（グリーン） | #2D8A6E | ※未定 | #FAFAF7 | ※未定 | #2C3E2D | 和紙風テクスチャー |
+
+| テンプレート | 見出しフォント | 本文フォント |
+|------------|--------------|------------|
+| simple | Outfit | Outfit |
+| premium | Cormorant Garamond | Cormorant Garamond |
+| pop | DM Sans | DM Sans |
+| business | Plus Jakarta Sans | Plus Jakarta Sans |
+| natural | Lora | Raleway |
 
 ### テンプレートごとの defaultVariants
 
