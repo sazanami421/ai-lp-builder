@@ -154,7 +154,7 @@ variant（レイアウト）     → どう配置するか（centered, split, gr
 ```
 
 - **type**: 8種（hero, features, testimonials, pricing, faq, cta, form, footer）
-- **variant**: 各 type に2種程度。純粋にHTML構造・配置だけが異なる
+- **variant**: 各 type に1〜2種。純粋にHTML構造・配置だけが異なる
 - **テーマ**: CSS変数（--accent, --accent-light, --bg, --bg-secondary, --text, --font-heading, --font-body, --radius, --texture）
 
 ### テーマ CSS変数一覧
@@ -206,7 +206,6 @@ variant（レイアウト）     → どう配置するか（centered, split, gr
 | `testimonials` | `cards` | カード型並び |
 | `testimonials` | `single` | 1件ずつ大きく表示 |
 | `pricing` | `cards` | プランカード横並び |
-| `pricing` | `table` | 比較表形式 |
 | `faq` | `accordion` | アコーディオン縦並び |
 | `faq` | `two-column` | 2カラム配置 |
 | `cta` | `centered` | 中央配置 |
@@ -341,7 +340,7 @@ variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 simple:   hero=centered, features=grid, testimonials=cards, pricing=cards, faq=accordion, cta=centered, form=simple, footer=minimal
 premium:  hero=split, features=alternating, testimonials=single, pricing=cards, faq=accordion, cta=banner, form=split, footer=columns
 pop:      hero=centered, features=grid, testimonials=cards, pricing=cards, faq=two-column, cta=centered, form=simple, footer=minimal
-business: hero=split, features=alternating, testimonials=cards, pricing=table, faq=accordion, cta=banner, form=split, footer=columns
+business: hero=split, features=alternating, testimonials=cards, pricing=cards, faq=accordion, cta=banner, form=split, footer=columns
 natural:  hero=centered, features=alternating, testimonials=single, pricing=cards, faq=accordion, cta=centered, form=simple, footer=minimal
 ```
 
