@@ -69,6 +69,7 @@ export default function PricingForm({ data, onUpdate }: Props) {
           </button>
         </div>
 
+
         <div className="space-y-4">
           {data.plans.map((plan, i) => (
             <div key={i} className="rounded-lg border border-gray-200 p-3">
@@ -151,10 +152,7 @@ export default function PricingForm({ data, onUpdate }: Props) {
                 <div>
                   <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-xs text-gray-500">含まれる機能</span>
-                    <button
-                      onClick={() => addFeature(i)}
-                      className="text-xs text-blue-500 hover:text-blue-700"
-                    >
+                    <button onClick={() => addFeature(i)} className="text-xs text-blue-500 hover:text-blue-700">
                       + 追加
                     </button>
                   </div>
@@ -168,10 +166,7 @@ export default function PricingForm({ data, onUpdate }: Props) {
                           placeholder={`機能 ${j + 1}`}
                           className={inputClass}
                         />
-                        <button
-                          onClick={() => removeFeature(i, j)}
-                          className="shrink-0 text-xs text-red-400 hover:text-red-600"
-                        >
+                        <button onClick={() => removeFeature(i, j)} className="shrink-0 text-xs text-red-400 hover:text-red-600">
                           ✕
                         </button>
                       </div>

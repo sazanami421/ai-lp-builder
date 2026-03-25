@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FormSectionData } from '@/types/section';
+import { getVariant } from '@/lib/variants';
 
 type Props = {
   data: FormSectionData;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function FormSection({ data, styleOverrides, pageId }: Props) {
+  const variant = getVariant('form', data as Record<string, unknown>);
   const [values, setValues] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -34,11 +36,104 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
     }
   };
 
-  return (
-    <section
-      className="py-20 px-6"
-      style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)', ...styleOverrides }}
+  const sectionStyle = {
+    backgroundColor: 'var(--bg)',
+    backgroundImage: 'var(--texture)',
+    color: 'var(--text)',
+    fontFamily: 'var(--font-body)',
+    ...styleOverrides,
+  };
+
+  const formContent = status === 'success' ? (
+    <div
+      className="rounded-lg p-6 text-center text-sm"
+      style={{
+        backgroundColor: 'color-mix(in srgb, var(--accent) 10%, transparent)',
+        borderRadius: 'var(--radius)',
+      }}
     >
+      {data.successMessage}
+    </div>
+  ) : (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {data.fields.map((field) => (
+        <div key={field.name}>
+          <label className="mb-1 block text-sm font-medium">
+            {field.label}
+            {field.required && <span style={{ color: 'var(--accent)' }}> *</span>}
+          </label>
+          {field.type === 'textarea' ? (
+            <textarea
+              rows={4}
+              placeholder={field.placeholder}
+              required={field.required}
+              value={values[field.name] ?? ''}
+              onChange={(e) => setValues((v) => ({ ...v, [field.name]: e.target.value }))}
+              disabled={!pageId || status === 'submitting'}
+              className="w-full resize-none border px-3 py-2 text-sm outline-none transition focus:ring-2 disabled:opacity-60"
+              style={{
+                borderRadius: 'var(--radius)',
+                borderColor: 'color-mix(in srgb, var(--text) 20%, transparent)',
+                backgroundColor: 'var(--bg)',
+                color: 'var(--text)',
+              }}
+            />
+          ) : (
+            <input
+              type={field.type}
+              placeholder={field.placeholder}
+              required={field.required}
+              value={values[field.name] ?? ''}
+              onChange={(e) => setValues((v) => ({ ...v, [field.name]: e.target.value }))}
+              disabled={!pageId || status === 'submitting'}
+              className="w-full border px-3 py-2 text-sm outline-none transition focus:ring-2 disabled:opacity-60"
+              style={{
+                borderRadius: 'var(--radius)',
+                borderColor: 'color-mix(in srgb, var(--text) 20%, transparent)',
+                backgroundColor: 'var(--bg)',
+                color: 'var(--text)',
+              }}
+            />
+          )}
+        </div>
+      ))}
+      {errorMsg && <p className="text-sm text-red-500">{errorMsg}</p>}
+      <button
+        type="submit"
+        disabled={!pageId || status === 'submitting'}
+        className="w-full py-3 text-sm font-semibold text-white transition disabled:opacity-60"
+        style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--radius)' }}
+      >
+        {status === 'submitting' ? '送信中…' : pageId ? data.submitText : `${data.submitText}（プレビュー）`}
+      </button>
+    </form>
+  );
+
+  if (variant === 'split') {
+    return (
+      <section className="py-20 px-6" style={sectionStyle}>
+        <div className="mx-auto grid max-w-5xl items-start gap-12 md:grid-cols-2">
+          <div className="pt-4">
+            {data.title && (
+              <h2 className="mb-4 text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+                {data.title}
+              </h2>
+            )}
+            {data.description && (
+              <p className="text-base leading-relaxed" style={{ opacity: 0.7 }}>
+                {data.description}
+              </p>
+            )}
+          </div>
+          <div>{formContent}</div>
+        </div>
+      </section>
+    );
+  }
+
+  // simple (default)
+  return (
+    <section className="py-20 px-6" style={sectionStyle}>
       <div className="mx-auto max-w-xl">
         {data.title && (
           <h2
@@ -53,80 +148,7 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
             {data.description}
           </p>
         )}
-
-        {status === 'success' ? (
-          <div
-            className="rounded-lg p-6 text-center text-sm"
-            style={{
-              backgroundColor: 'color-mix(in srgb, var(--accent) 10%, transparent)',
-              borderRadius: 'var(--radius)',
-            }}
-          >
-            {data.successMessage}
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {data.fields.map((field) => (
-              <div key={field.name}>
-                <label
-                  className="mb-1 block text-sm font-medium"
-                >
-                  {field.label}
-                  {field.required && <span style={{ color: 'var(--accent)' }}> *</span>}
-                </label>
-                {field.type === 'textarea' ? (
-                  <textarea
-                    rows={4}
-                    placeholder={field.placeholder}
-                    required={field.required}
-                    value={values[field.name] ?? ''}
-                    onChange={(e) => setValues((v) => ({ ...v, [field.name]: e.target.value }))}
-                    disabled={!pageId || status === 'submitting'}
-                    className="w-full resize-none border px-3 py-2 text-sm outline-none transition focus:ring-2 disabled:opacity-60"
-                    style={{
-                      borderRadius: 'var(--radius)',
-                      borderColor: 'color-mix(in srgb, var(--text) 20%, transparent)',
-                      backgroundColor: 'var(--bg)',
-                      color: 'var(--text)',
-                    }}
-                  />
-                ) : (
-                  <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    required={field.required}
-                    value={values[field.name] ?? ''}
-                    onChange={(e) => setValues((v) => ({ ...v, [field.name]: e.target.value }))}
-                    disabled={!pageId || status === 'submitting'}
-                    className="w-full border px-3 py-2 text-sm outline-none transition focus:ring-2 disabled:opacity-60"
-                    style={{
-                      borderRadius: 'var(--radius)',
-                      borderColor: 'color-mix(in srgb, var(--text) 20%, transparent)',
-                      backgroundColor: 'var(--bg)',
-                      color: 'var(--text)',
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-
-            {errorMsg && (
-              <p className="text-sm text-red-500">{errorMsg}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={!pageId || status === 'submitting'}
-              className="w-full py-3 text-sm font-semibold text-white transition disabled:opacity-60"
-              style={{
-                backgroundColor: 'var(--accent)',
-                borderRadius: 'var(--radius)',
-              }}
-            >
-              {status === 'submitting' ? '送信中…' : pageId ? data.submitText : `${data.submitText}（プレビュー）`}
-            </button>
-          </form>
-        )}
+        {formContent}
       </div>
     </section>
   );

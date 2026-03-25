@@ -6,11 +6,16 @@ type Props = {
 };
 
 export default function PricingSection({ data, styleOverrides }: Props) {
+  const sectionStyle = {
+    backgroundColor: 'var(--bg)',
+    backgroundImage: 'var(--texture)',
+    color: 'var(--text)',
+    fontFamily: 'var(--font-body)',
+    ...styleOverrides,
+  };
+
   return (
-    <section
-      className="py-20 px-6"
-      style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)', ...styleOverrides }}
-    >
+    <section className="py-20 px-6" style={sectionStyle}>
       <h2
         className="mb-12 text-center text-3xl font-bold"
         style={{ fontFamily: 'var(--font-heading)' }}
@@ -29,10 +34,7 @@ export default function PricingSection({ data, styleOverrides }: Props) {
               boxShadow: plan.highlighted ? '0 4px 20px color-mix(in srgb, var(--accent) 25%, transparent)' : undefined,
             }}
           >
-            <h3
-              className="mb-2 text-xl font-bold"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
+            <h3 className="mb-2 text-xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
               {plan.name}
             </h3>
             <p className="mb-4 text-3xl font-bold">
@@ -47,17 +49,12 @@ export default function PricingSection({ data, styleOverrides }: Props) {
                 </li>
               ))}
             </ul>
-            {plan.note && (
-              <p className="mb-4 text-xs" style={{ opacity: 0.55 }}>{plan.note}</p>
-            )}
+            {plan.note && <p className="mb-4 text-xs" style={{ opacity: 0.55 }}>{plan.note}</p>}
             {plan.ctaText && (
               <a
                 href={plan.ctaUrl ?? '#'}
                 className="block py-2 text-center text-sm font-semibold text-white"
-                style={{
-                  backgroundColor: 'var(--accent)',
-                  borderRadius: 'var(--radius)',
-                }}
+                style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--radius)' }}
               >
                 {plan.ctaText}
               </a>

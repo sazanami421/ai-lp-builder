@@ -3,11 +3,14 @@ export const popTemplate = {
   label: 'ポップ',
   cssVars: {
     '--accent': '#FF6B35',
+    '--accent-light': '#FFE4D4',
     '--bg': '#FFFBF5',
+    '--bg-secondary': '#FFF3E8',
     '--text': '#1A1A1A',
     '--font-heading': "'DM Sans', sans-serif",
     '--font-body': "'DM Sans', sans-serif",
     '--radius': '12px',
+    '--texture': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.5' fill='%231A1A1A' opacity='0.07'/%3E%3C/svg%3E\")",
   },
   defaultVariants: {
     hero: 'centered',
