@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import CreateProjectModal from './CreateProjectModal';
+import Link from 'next/link';
 import SiteThumbnail from './SiteThumbnail';
 
 type Project = {
@@ -21,8 +20,6 @@ type Props = {
 };
 
 export default function ProjectList({ projects }: Props) {
-  const [modalOpen, setModalOpen] = useState(false);
-
   return (
     <div>
       {/* ページヘッダー */}
@@ -35,16 +32,16 @@ export default function ProjectList({ projects }: Props) {
               : 'LPプロジェクトを作成して公開しましょう'}
           </p>
         </div>
-        <button
-          onClick={() => setModalOpen(true)}
+        <Link
+          href="/dashboard/new"
           className="rounded-lg bg-gray-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
         >
           + 新規作成
-        </button>
+        </Link>
       </div>
 
       {projects.length === 0 ? (
-        <EmptyState onClickCreate={() => setModalOpen(true)} />
+        <EmptyState />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
@@ -52,13 +49,11 @@ export default function ProjectList({ projects }: Props) {
           ))}
         </div>
       )}
-
-      {modalOpen && <CreateProjectModal onClose={() => setModalOpen(false)} />}
     </div>
   );
 }
 
-function EmptyState({ onClickCreate }: { onClickCreate: () => void }) {
+function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-24 text-center">
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100">
@@ -70,12 +65,12 @@ function EmptyState({ onClickCreate }: { onClickCreate: () => void }) {
       <p className="mt-2 max-w-xs text-sm text-gray-500">
         最初のLPプロジェクトを作成しましょう。AIがあなたのビジネスに合ったLPを自動生成します。
       </p>
-      <button
-        onClick={onClickCreate}
+      <Link
+        href="/dashboard/new"
         className="mt-6 rounded-lg bg-gray-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
       >
         + 最初のプロジェクトを作成
-      </button>
+      </Link>
     </div>
   );
 }

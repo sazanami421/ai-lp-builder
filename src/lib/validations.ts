@@ -116,6 +116,24 @@ export const aiChatSchema = z.object({
 });
 
 // ========================================
+// AI 一括LP生成
+// ========================================
+export const generateLPSchema = z.object({
+  projectName: z
+    .string({ message: 'プロジェクト名は必須です' })
+    .min(1, 'プロジェクト名は必須です')
+    .max(100, 'プロジェクト名は100文字以内で入力してください')
+    .transform((v) => v.trim()),
+  template: z.enum(['simple', 'premium', 'pop', 'business', 'natural']),
+  industry: z.string().min(1),
+  target: z.string().min(1),
+  usp: z.string().min(1).max(500),
+  features: z.array(z.string().min(1)).min(1).max(3),
+  pricingCount: z.enum(['0', '1', '2', '3']),
+  ctaGoal: z.enum(['register', 'document', 'purchase', 'contact']),
+});
+
+// ========================================
 // ヘルパー: Zod エラーを整形して返す
 // ========================================
 export function formatZodError(error: z.ZodError): string {

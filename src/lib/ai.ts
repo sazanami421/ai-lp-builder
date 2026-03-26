@@ -7,6 +7,21 @@ const anthropic = new Anthropic({
 
 const MODEL = 'claude-sonnet-4-20250514';
 
+export type GenerateLPInput = {
+  projectName: string;
+  industry: string;
+  target: string;
+  usp: string;
+  features: string[];
+  pricingCount: number; // 0-3
+  ctaGoal: string;
+};
+
+export type GeneratedSectionData = {
+  type: SectionType;
+  data: Record<string, unknown>;
+};
+
 export type SectionEditResult = {
   data: Record<string, unknown>;
   styleOverrides: Record<string, string>;
@@ -23,6 +38,139 @@ const VARIANT_INFO: Record<SectionType, string> = {
   form:         'simple（フォームのみ中央） | split（左テキスト＋右フォームの2カラム）',
   footer:       'minimal（1行シンプル） | columns（複数カラム＋見出し付きリンク）',
 };
+
+/**
+ * ヒアリング情報を元に全セクションのコンテンツを一括生成する
+ */
+export async function generateLP(input: GenerateLPInput): Promise<GeneratedSectionData[]> {
+  const includePricing = input.pricingCount > 0;
+
+  const pricingSchema = includePricing ? `
+  "pricing": {
+    "title": "料金プラン",
+    "plans": [
+      {
+        "name": "プラン名",
+        "price": "¥X,XXX",
+        "period": "月",
+        "features": ["特徴1", "特徴2", "特徴3"],
+        "ctaText": "ボタンテキスト",
+        "highlighted": false
+      }
+      // pricingCount の数だけ生成
+    ]
+  },` : '';
+
+  const systemPrompt = [
+    'あなたはLPのコンテンツライターです。',
+    '以下のビジネス情報をもとに、各セクションの日本語コンテンツを生成してください。',
+    'JSONのみを返してください。説明文・コードブロック記号（```）は不要です。',
+    '',
+    '## 出力フォーマット',
+    '{',
+    '  "hero": {',
+    '    "headline": "キャッチコピー（20字前後）",',
+    '    "subheadline": "サブ見出し（40-60字）",',
+    '    "ctaText": "CTAボタンのテキスト",',
+    '    "ctaUrl": "#"',
+    '  },',
+    '  "features": {',
+    '    "title": "セクション見出し",',
+    '    "items": [',
+    '      { "icon": "絵文字", "title": "特徴タイトル", "description": "説明文（30-50字）" }',
+    '      // features の数だけ生成（最大3件）',
+    '    ]',
+    '  },',
+    '  "testimonials": {',
+    '    "title": "お客様の声",',
+    '    "items": [',
+    '      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" },',
+    '      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" }',
+    '    ]',
+    '  },',
+    pricingSchema,
+    '  "faq": {',
+    '    "title": "よくある質問",',
+    '    "items": [',
+    '      { "question": "質問文", "answer": "回答文（40-80字）" },',
+    '      { "question": "質問文", "answer": "回答文（40-80字）" },',
+    '      { "question": "質問文", "answer": "回答文（40-80字）" }',
+    '    ]',
+    '  },',
+    '  "cta": {',
+    '    "headline": "行動を促すコピー",',
+    '    "subheadline": "補足テキスト",',
+    '    "ctaText": "CTAボタンのテキスト",',
+    '    "ctaUrl": "#"',
+    '  },',
+    '  "form": {',
+    '    "title": "フォームタイトル",',
+    '    "description": "フォームの説明文",',
+    '    "fields": [',
+    '      { "name": "name",    "label": "お名前",         "type": "text",     "placeholder": "山田 太郎",        "required": true },',
+    '      { "name": "email",   "label": "メールアドレス", "type": "email",    "placeholder": "example@mail.com", "required": true },',
+    '      { "name": "message", "label": "メッセージ",     "type": "textarea", "placeholder": "お問い合わせ内容", "required": true }',
+    '    ],',
+    '    "submitText": "送信する",',
+    '    "successMessage": "送信完了メッセージ"',
+    '  },',
+    '  "footer": {',
+    `    "copyright": "© ${new Date().getFullYear()} ${input.projectName}. All rights reserved.",`,
+    '    "links": [',
+    '      { "label": "利用規約", "url": "#" },',
+    '      { "label": "プライバシーポリシー", "url": "#" }',
+    '    ]',
+    '  }',
+    '}',
+    '',
+    '## 注意事項',
+    '- 全て日本語で生成してください',
+    '- testimonials は実在しない架空のユーザー情報で問題ありません',
+    '- ctaUrl はすべて "#" にしてください',
+    '- hero の headline は短くキャッチーに（20字前後）',
+  ].join('\n');
+
+  const userMessage = [
+    `サービス名: ${input.projectName}`,
+    `業種: ${input.industry}`,
+    `ターゲット: ${input.target}`,
+    `強み: ${input.usp}`,
+    `主な機能・特徴: ${input.features.join('、')}`,
+    `料金プラン数: ${input.pricingCount === 0 ? 'なし' : `${input.pricingCount}プラン`}`,
+    `CTAのゴール: ${input.ctaGoal}`,
+  ].join('\n');
+
+  const response = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: 4096,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: userMessage }],
+  });
+
+  const text = response.content[0].type === 'text' ? response.content[0].text : '';
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('AI レスポンスから JSON を抽出できませんでした');
+
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(jsonMatch[0]);
+  } catch {
+    throw new Error(`AI レスポンスの JSON パースに失敗しました: ${jsonMatch[0].slice(0, 200)}`);
+  }
+
+  const sectionTypes: SectionType[] = [
+    'hero', 'features', 'testimonials',
+    ...(includePricing ? ['pricing' as SectionType] : []),
+    'faq', 'cta', 'form', 'footer',
+  ];
+
+  return sectionTypes
+    .filter((type) => parsed[type] != null)
+    .map((type) => ({
+      type,
+      data: parsed[type] as Record<string, unknown>,
+    }));
+}
 
 /**
  * セクションのコンテンツ・スタイルを AI で編集する
