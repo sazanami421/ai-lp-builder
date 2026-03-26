@@ -19,13 +19,13 @@ export default function CtaSection({ data, styleOverrides }: Props) {
 
   if (variant === 'banner') {
     return (
-      <section className="py-14 px-6" style={sectionStyle}>
+      <section className="py-10 px-4 md:py-14 md:px-6" style={sectionStyle}>
         <div
-          className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 rounded-2xl px-8 py-10 sm:flex-row"
+          className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-5 rounded-2xl px-6 py-8 sm:flex-row md:gap-6 md:px-8 md:py-10"
           style={{ backgroundColor: 'color-mix(in srgb, var(--accent) 10%, var(--bg))' }}
         >
           <div>
-            <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-xl font-bold md:text-2xl" style={{ fontFamily: 'var(--font-heading)' }}>
               {data.headline}
             </h2>
             {data.subheadline && (
@@ -54,15 +54,15 @@ export default function CtaSection({ data, styleOverrides }: Props) {
 
   // centered (default)
   return (
-    <section className="py-24 px-6 text-center" style={sectionStyle}>
+    <section className="py-12 px-4 text-center md:py-24 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-4 text-4xl font-bold"
+        className="mb-3 text-2xl font-bold md:mb-4 md:text-4xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.headline}
       </h2>
       {data.subheadline && (
-        <p className="mb-8 text-lg" style={{ opacity: 0.7 }}>
+        <p className="mb-6 text-base md:mb-8 md:text-lg" style={{ opacity: 0.7 }}>
           {data.subheadline}
         </p>
       )}

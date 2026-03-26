@@ -52,10 +52,10 @@ export default async function PublicLPPage({ params }: Props) {
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="stylesheet" href={FONT_URLS[templateKey]} />
       <style>{`
-        .lp-root { ${cssVarString} }
-        .lp-root * { box-sizing: border-box; }
+        .lp-preview { ${cssVarString} }
+        .lp-preview * { box-sizing: border-box; }
       `}</style>
-      <div className="lp-root">
+      <div className="lp-preview">
         {page.sections.map((section) => (
           <SectionRenderer
             key={section.id}

@@ -4,14 +4,9 @@ import { popTemplate } from './pop';
 import { businessTemplate } from './business';
 import { naturalTemplate } from './natural';
 import type { GlobalConfig, SectionType } from '@/types/section';
-import type { VariantMap } from '@/lib/variants';
+import type { TemplateDefinition } from '@/types/template';
 
-export type TemplateDefinition = {
-  name: string;
-  label: string;
-  cssVars: Record<string, string>;
-  defaultVariants: VariantMap;
-};
+export type { TemplateDefinition };
 
 export const TEMPLATES: Record<GlobalConfig['template'], TemplateDefinition> = {
   simple: simpleTemplate,

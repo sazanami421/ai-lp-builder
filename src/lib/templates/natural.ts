@@ -1,3 +1,5 @@
+import type { TemplateDefinition } from '@/types/template';
+
 export const naturalTemplate = {
   name: 'natural',
   label: 'ナチュラル',
@@ -22,4 +24,4 @@ export const naturalTemplate = {
     form: 'simple',
     footer: 'minimal',
   },
-} as const;
+} as const satisfies TemplateDefinition;

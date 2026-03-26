@@ -1,3 +1,5 @@
+import type { TemplateDefinition } from '@/types/template';
+
 export const businessTemplate = {
   name: 'business',
   label: 'ビジネス',
@@ -22,4 +24,4 @@ export const businessTemplate = {
     form: 'split',
     footer: 'columns',
   },
-} as const;
+} as const satisfies TemplateDefinition;

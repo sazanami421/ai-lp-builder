@@ -1,3 +1,5 @@
+import type { TemplateDefinition } from '@/types/template';
+
 export const premiumTemplate = {
   name: 'premium',
   label: 'プレミアム',
@@ -22,4 +24,4 @@ export const premiumTemplate = {
     form: 'split',
     footer: 'columns',
   },
-} as const;
+} as const satisfies TemplateDefinition;

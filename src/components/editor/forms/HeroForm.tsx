@@ -46,6 +46,7 @@ export default function HeroForm({ data, onUpdate }: Props) {
           {([
             { value: 'centered', label: '中央配置' },
             { value: 'split', label: '左右分割' },
+            { value: 'fullscreen', label: 'フルスクリーン' },
           ] as const).map((v) => (
             <button
               key={v.value}
@@ -102,7 +103,7 @@ export default function HeroForm({ data, onUpdate }: Props) {
         />
       </Field>
 
-      <Field label={variant === 'split' ? '背景画像（centered 用）' : '背景画像'}>
+      <Field label={variant === 'split' || variant === 'fullscreen' ? '背景画像（centered 用）' : '背景画像'}>
         <ImageUploadField
           url={data.backgroundImage}
           uploading={uploading === 'bg'}
@@ -112,8 +113,8 @@ export default function HeroForm({ data, onUpdate }: Props) {
         />
       </Field>
 
-      {variant === 'split' && (
-        <Field label="サイド画像（split 用）">
+      {(variant === 'split' || variant === 'fullscreen') && (
+        <Field label={variant === 'fullscreen' ? 'サイド画像（任意・省略時は装飾表示）' : 'サイド画像（split 用）'}>
           <ImageUploadField
             url={data.sideImage}
             uploading={uploading === 'side'}

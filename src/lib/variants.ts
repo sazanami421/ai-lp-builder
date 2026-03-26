@@ -2,7 +2,7 @@ import { SectionType } from '@/types/section';
 
 // --- variant 型定義 ---
 
-export type HeroVariant       = 'centered' | 'split';
+export type HeroVariant       = 'centered' | 'split' | 'fullscreen';
 export type FeaturesVariant   = 'grid' | 'alternating';
 export type TestimonialsVariant = 'cards' | 'single';
 export type PricingVariant    = 'cards' | 'table';
@@ -29,7 +29,7 @@ export type SectionVariant = VariantMap[SectionType];
 export const SECTION_VARIANTS: {
   [K in SectionType]: { value: VariantMap[K]; label: string }[];
 } = {
-  hero:         [{ value: 'centered', label: '中央配置' }, { value: 'split', label: '左右分割' }],
+  hero:         [{ value: 'centered', label: '中央配置' }, { value: 'split', label: '左右分割' }, { value: 'fullscreen', label: 'フルスクリーン' }],
   features:     [{ value: 'grid', label: 'グリッド' }, { value: 'alternating', label: '交互配置' }],
   testimonials: [{ value: 'cards', label: 'カード' }, { value: 'single', label: '大きく1件' }],
   pricing:      [{ value: 'cards', label: 'カード' }, { value: 'table', label: '比較表' }],

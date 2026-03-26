@@ -1,3 +1,5 @@
+import type { TemplateDefinition } from '@/types/template';
+
 export const popTemplate = {
   name: 'pop',
   label: 'ポップ',
@@ -22,4 +24,4 @@ export const popTemplate = {
     form: 'simple',
     footer: 'minimal',
   },
-} as const;
+} as const satisfies TemplateDefinition;

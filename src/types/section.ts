@@ -27,7 +27,7 @@ export type SectionBase = {
 // --- セクション固有データ型 ---
 
 export type HeroSectionData = {
-  variant?: 'centered' | 'split';
+  variant?: 'centered' | 'split' | 'fullscreen';
   headline: string;
   subheadline?: string;
   ctaText?: string;

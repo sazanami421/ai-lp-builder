@@ -111,11 +111,11 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
 
   if (variant === 'split') {
     return (
-      <section className="py-20 px-6" style={sectionStyle}>
-        <div className="mx-auto grid max-w-5xl items-start gap-12 md:grid-cols-2">
-          <div className="pt-4">
+      <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
+        <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-2 md:gap-12">
+          <div className="pt-0 md:pt-4">
             {data.title && (
-              <h2 className="mb-4 text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2 className="mb-3 text-2xl font-bold md:mb-4 md:text-3xl" style={{ fontFamily: 'var(--font-heading)' }}>
                 {data.title}
               </h2>
             )}
@@ -133,18 +133,18 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
 
   // simple (default)
   return (
-    <section className="py-20 px-6" style={sectionStyle}>
+    <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
       <div className="mx-auto max-w-xl">
         {data.title && (
           <h2
-            className="mb-3 text-center text-3xl font-bold"
+            className="mb-3 text-center text-2xl font-bold md:text-3xl"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {data.title}
           </h2>
         )}
         {data.description && (
-          <p className="mb-8 text-center" style={{ opacity: 0.7 }}>
+          <p className="mb-6 text-center text-sm md:mb-8 md:text-base" style={{ opacity: 0.7 }}>
             {data.description}
           </p>
         )}

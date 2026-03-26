@@ -23,9 +23,9 @@ export default function FaqSection({ data, styleOverrides }: Props) {
 
   if (variant === 'two-column') {
     return (
-      <section className="py-20 px-6" style={sectionStyle}>
+      <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
         <h2
-          className="mb-12 text-center text-3xl font-bold"
+          className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {data.title}
