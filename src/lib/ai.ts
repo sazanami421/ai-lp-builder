@@ -29,14 +29,20 @@ export type SectionEditResult = {
 
 // セクション種別ごとの利用可能 variant
 const VARIANT_INFO: Record<SectionType, string> = {
-  hero:         'centered（中央配置） | split（左テキスト＋右画像の2カラム）',
-  features:     'grid（カードグリッド） | alternating（左右交互レイアウト）',
-  testimonials: 'cards（カード並び） | single（1件を大きく表示）',
-  pricing:      'cards（プランカード横並び）',
-  faq:          'accordion（アコーディオン） | two-column（2カラムグリッド・全件展開）',
-  cta:          'centered（中央配置） | banner（横長バナー・左テキスト＋右ボタン）',
-  form:         'simple（フォームのみ中央） | split（左テキスト＋右フォームの2カラム）',
-  footer:       'minimal（1行シンプル） | columns（複数カラム＋見出し付きリンク）',
+  hero:          'centered（中央配置） | split（左テキスト＋右画像の2カラム）',
+  features:      'grid（カードグリッド） | alternating（左右交互レイアウト）',
+  testimonials:  'cards（カード並び） | single（1件を大きく表示）',
+  pricing:       'cards（プランカード横並び）',
+  pricing_table: 'simple（テーブル形式の機能比較）',
+  faq:           'accordion（アコーディオン） | two-column（2カラムグリッド・全件展開）',
+  cta:           'centered（中央配置） | banner（横長バナー・左テキスト＋右ボタン）',
+  steps:         'horizontal（横並び） | vertical（縦タイムライン）',
+  stats:         'row（横一列） | cards（カード形式）',
+  logo_bar:      'static（静的グリッド） | scroll（横スクロール）',
+  gallery:       'grid（均等グリッド） | masonry（メイソンリー）',
+  divider:       'gradient（グラデーション帯） | ornament（装飾ライン）',
+  form:          'simple（フォームのみ中央） | split（左テキスト＋右フォームの2カラム）',
+  footer:        'minimal（1行シンプル） | columns（複数カラム＋見出し付きリンク）',
 };
 
 /**
@@ -89,6 +95,14 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
     '    ]',
     '  },',
     pricingSchema,
+    '  "steps": {',
+    '    "title": "ご利用の流れ",',
+    '    "items": [',
+    '      { "icon": "絵文字", "title": "ステップタイトル", "description": "説明文（20-40字）" },',
+    '      { "icon": "絵文字", "title": "ステップタイトル", "description": "説明文（20-40字）" },',
+    '      { "icon": "絵文字", "title": "ステップタイトル", "description": "説明文（20-40字）" }',
+    '    ]',
+    '  },',
     '  "faq": {',
     '    "title": "よくある質問",',
     '    "items": [',
@@ -161,7 +175,7 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
   const sectionTypes: SectionType[] = [
     'hero', 'features', 'testimonials',
     ...(includePricing ? ['pricing' as SectionType] : []),
-    'faq', 'cta', 'form', 'footer',
+    'steps', 'faq', 'cta', 'form', 'footer',
   ];
 
   return sectionTypes

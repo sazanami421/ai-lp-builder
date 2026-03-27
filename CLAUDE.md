@@ -156,7 +156,7 @@ variant（レイアウト）     → どう配置するか（centered, split, gr
 テーマ（CSS変数）        → どんな色・フォント・テクスチャーで描画するか
 ```
 
-- **type**: 8種（hero, features, testimonials, pricing, faq, cta, form, footer）
+- **type**: 14種（hero, features, testimonials, pricing, pricing_table, faq, cta, steps, stats, logo_bar, gallery, divider, form, footer）
 - **variant**: 各 type に1〜2種。純粋にHTML構造・配置だけが異なる
 - **テーマ**: CSS変数（--accent, --accent-light, --bg, --bg-secondary, --text, --font-heading, --font-body, --radius, --texture）
 
@@ -219,13 +219,24 @@ variant（レイアウト）     → どう配置するか（centered, split, gr
 | `form` | `split` | 左テキスト＋右フォームの2カラム |
 | `footer` | `minimal` | 1行シンプル |
 | `footer` | `columns` | 複数カラム |
+| `pricing_table` | `simple` | テーブル形式の料金比較（◯/×＋テキスト） |
+| `steps` | `horizontal` | ステップを横並び表示 |
+| `steps` | `vertical` | ステップを縦並び表示 |
+| `stats` | `row` | 数値実績を横一列に表示 |
+| `stats` | `cards` | 数値実績をカード形式で表示 |
+| `logo_bar` | `static` | ロゴを静的グリッド表示 |
+| `logo_bar` | `scroll` | ロゴを横スクロール表示 |
+| `gallery` | `grid` | 画像をグリッド表示 |
+| `gallery` | `masonry` | 画像をメイソンリー（高さ不揃い）表示 |
+| `divider` | `gradient` | グラデーション帯 |
+| `divider` | `ornament` | 装飾ライン（ドット・ダイヤ等） |
 
 ### セクション共通構造
 
 ```
 Section
 ├── id: string (CUID)
-├── type: SectionType (8種)
+├── type: SectionType (14種)
 ├── order: number (表示順)
 ├── visible: boolean (表示/非表示)
 ├── data: JSONB (type固有のコンテンツデータ + variant)
@@ -250,6 +261,79 @@ type HeroSectionData = {
 ```
 
 variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
+
+#### 新規追加セクションのデータ型
+
+```typescript
+// 料金表（テーブル形式）
+type PricingTablePlan = {
+  name: string;
+  price: string;
+  period: string;
+  values: (string | boolean)[];  // features[] のインデックスに対応（true=◯, false=×, string=テキスト）
+  highlighted?: boolean;
+  ctaText?: string;
+  ctaUrl?: string;
+};
+type PricingTableSectionData = {
+  variant?: 'simple';
+  title: string;
+  features: string[];           // 行ラベル（「基本機能」「API連携」等）
+  plans: PricingTablePlan[];
+};
+
+// ステップ（使い方・導入フロー）
+type StepItem = {
+  title: string;
+  description: string;
+  icon?: string;                // 絵文字 or 番号
+};
+type StepsSectionData = {
+  variant?: 'horizontal' | 'vertical';
+  title: string;
+  items: StepItem[];
+};
+
+// 数字で見る実績
+type StatItem = {
+  value: string;                // "98%", "500+", "3分" 等
+  label: string;                // "顧客満足度", "導入企業数" 等
+};
+type StatsSectionData = {
+  variant?: 'row' | 'cards';
+  title?: string;
+  items: StatItem[];
+};
+
+// ロゴバー（導入企業・メディア掲載）
+type LogoItem = {
+  imageUrl: string;
+  alt: string;
+  url?: string;
+};
+type LogoBarSectionData = {
+  variant?: 'static' | 'scroll';
+  title?: string;               // "導入企業300社" 等
+  items: LogoItem[];
+};
+
+// ギャラリー
+type GalleryItem = {
+  imageUrl: string;
+  caption?: string;
+};
+type GallerySectionData = {
+  variant?: 'grid' | 'masonry';
+  title?: string;
+  items: GalleryItem[];
+};
+
+// ディバイダー（セクション間装飾）
+type DividerSectionData = {
+  variant?: 'gradient' | 'ornament';
+  text?: string;                // 1行テキスト（省略可）
+};
+```
 
 ### スタイル適用の優先順位（CSS カスケード）
 
@@ -342,11 +426,11 @@ variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
 ### テンプレートごとの defaultVariants
 
 ```
-simple:   hero=centered, features=grid, testimonials=cards, pricing=cards, faq=accordion, cta=centered, form=simple, footer=minimal
-premium:  hero=split, features=alternating, testimonials=single, pricing=cards, faq=accordion, cta=banner, form=split, footer=columns
-pop:      hero=centered, features=grid, testimonials=cards, pricing=cards, faq=two-column, cta=centered, form=simple, footer=minimal
-business: hero=split, features=alternating, testimonials=cards, pricing=cards, faq=accordion, cta=banner, form=split, footer=columns
-natural:  hero=centered, features=alternating, testimonials=single, pricing=cards, faq=accordion, cta=centered, form=simple, footer=minimal
+simple:   hero=centered, features=grid, testimonials=cards, pricing=cards, pricing_table=simple, faq=accordion, cta=centered, steps=horizontal, stats=row, logo_bar=static, gallery=grid, divider=gradient, form=simple, footer=minimal
+premium:  hero=split, features=alternating, testimonials=single, pricing=cards, pricing_table=simple, faq=accordion, cta=banner, steps=vertical, stats=cards, logo_bar=scroll, gallery=masonry, divider=ornament, form=split, footer=columns
+pop:      hero=centered, features=grid, testimonials=cards, pricing=cards, pricing_table=simple, faq=two-column, cta=centered, steps=horizontal, stats=cards, logo_bar=static, gallery=grid, divider=gradient, form=simple, footer=minimal
+business: hero=split, features=alternating, testimonials=cards, pricing=cards, pricing_table=simple, faq=accordion, cta=banner, steps=horizontal, stats=row, logo_bar=scroll, gallery=grid, divider=gradient, form=split, footer=columns
+natural:  hero=centered, features=alternating, testimonials=single, pricing=cards, pricing_table=simple, faq=accordion, cta=centered, steps=vertical, stats=row, logo_bar=static, gallery=masonry, divider=gradient, form=simple, footer=minimal
 ```
 
 ### テンプレート定義の構造

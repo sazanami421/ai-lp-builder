@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import SectionList, { SectionItem } from './SectionList';
@@ -29,6 +29,10 @@ export default function EditorShell({ project, page, initialSections }: Props) {
   const [addingSection, setAddingSection] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
   const [chatOpen, setChatOpen] = useState(false);
+  const [projectName, setProjectName] = useState(project.name);
+  const [editingName, setEditingName] = useState(false);
+  const [nameValue, setNameValue] = useState(project.name);
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const [previewSuggestion, setPreviewSuggestion] = useState<{
     sectionId: string;
     data: unknown;
@@ -62,6 +66,30 @@ export default function EditorShell({ project, page, initialSections }: Props) {
     setCssVars(newCssVars);
     saveGlobalConfig(template, newCssVars);
   }, [template, saveGlobalConfig]);
+
+  useEffect(() => {
+    if (editingName) nameInputRef.current?.select();
+  }, [editingName]);
+
+  async function saveProjectName() {
+    const trimmed = nameValue.trim();
+    if (!trimmed || trimmed === projectName) {
+      setNameValue(projectName);
+      setEditingName(false);
+      return;
+    }
+    const res = await fetch(`/api/projects/${project.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: trimmed }),
+    });
+    if (res.ok) {
+      setProjectName(trimmed);
+    } else {
+      setNameValue(projectName);
+    }
+    setEditingName(false);
+  }
 
   // debounce タイマーを sectionId ごとに管理
   const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
@@ -190,7 +218,27 @@ export default function EditorShell({ project, page, initialSections }: Props) {
             ダッシュボード
           </Link>
           <span className="text-gray-200">/</span>
-          <span className="text-sm font-semibold text-gray-900">{project.name}</span>
+          {editingName ? (
+            <input
+              ref={nameInputRef}
+              value={nameValue}
+              onChange={(e) => setNameValue(e.target.value)}
+              onBlur={saveProjectName}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveProjectName();
+                if (e.key === 'Escape') { setNameValue(projectName); setEditingName(false); }
+              }}
+              className="rounded border border-blue-400 px-1.5 py-0.5 text-sm font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-blue-300"
+            />
+          ) : (
+            <button
+              onClick={() => { setNameValue(projectName); setEditingName(true); }}
+              className="rounded px-1 text-sm font-semibold text-gray-900 transition hover:bg-gray-100"
+              title="クリックして名前を変更"
+            >
+              {projectName}
+            </button>
+          )}
           {project.submissionCount > 0 && (
             <Link
               href={`/dashboard/submissions/${project.id}`}

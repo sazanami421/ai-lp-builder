@@ -35,6 +35,14 @@ export const createProjectSchema = z.object({
     .transform((v) => v?.trim() || undefined),
 });
 
+export const updateProjectSchema = z.object({
+  name: z
+    .string({ message: 'プロジェクト名は必須です' })
+    .min(1, 'プロジェクト名は必須です')
+    .max(100, 'プロジェクト名は100文字以内で入力してください')
+    .transform((v) => v.trim()),
+});
+
 // ========================================
 // セクション
 // ========================================
@@ -43,8 +51,14 @@ export const sectionTypeEnum = z.enum([
   'features',
   'testimonials',
   'pricing',
+  'pricing_table',
   'faq',
   'cta',
+  'steps',
+  'stats',
+  'logo_bar',
+  'gallery',
+  'divider',
   'form',
   'footer',
 ]);
@@ -69,7 +83,7 @@ export const reorderSchema = z.object({
   orders: z
     .array(
       z.object({
-        id: z.string().cuid('セクションIDの形式が不正です'),
+        id: z.string().min(1),
         order: z.number().int().min(0, 'order は0以上の整数にしてください'),
       })
     )

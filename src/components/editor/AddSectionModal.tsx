@@ -7,8 +7,14 @@ const SECTION_OPTIONS: { type: SectionType; label: string; description: string; 
   { type: 'hero',         label: 'Hero',         description: 'メインビジュアル・キャッチコピー',   icon: '🖼️' },
   { type: 'features',     label: 'Features',     description: '特徴・機能の紹介カード',             icon: '✨' },
   { type: 'testimonials', label: 'Testimonials', description: 'お客様の声・レビュー',               icon: '💬' },
-  { type: 'pricing',      label: 'Pricing',      description: '料金プラン比較',                     icon: '💳' },
-  { type: 'faq',          label: 'FAQ',          description: 'よくある質問とその回答',             icon: '❓' },
+  { type: 'pricing',       label: 'Pricing',       description: '料金プラン比較',                   icon: '💳' },
+  { type: 'pricing_table', label: 'Pricing Table', description: '機能比較テーブル（◯×形式）',       icon: '📊' },
+  { type: 'steps',         label: 'Steps',         description: '使い方・導入フローのステップ表示', icon: '👣' },
+  { type: 'stats',         label: 'Stats',         description: '実績・数値のインパクト表示',       icon: '📈' },
+  { type: 'logo_bar',      label: 'Logo Bar',      description: '導入企業・メディア掲載ロゴ',       icon: '🏢' },
+  { type: 'gallery',       label: 'Gallery',       description: '画像ギャラリー・作品集',           icon: '🖼️' },
+  { type: 'divider',       label: 'Divider',       description: 'セクション間の装飾・区切り',       icon: '〰️' },
+  { type: 'faq',           label: 'FAQ',           description: 'よくある質問とその回答',           icon: '❓' },
   { type: 'cta',          label: 'CTA',          description: '行動喚起ボタン・コンバージョン',     icon: '🚀' },
   { type: 'form',         label: 'Form',         description: 'お問い合わせ・リード獲得フォーム',   icon: '📝' },
   { type: 'footer',       label: 'Footer',       description: 'フッター・著作権・リンク',           icon: '📄' },
@@ -32,8 +38,8 @@ export default function AddSectionModal({ onSelect, onClose, loading }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <div className="mb-5 flex items-center justify-between">
+      <div className="flex w-full max-w-md flex-col rounded-2xl bg-white shadow-xl" style={{ maxHeight: 'min(90vh, 640px)' }}>
+        <div className="flex shrink-0 items-center justify-between px-6 pt-6 pb-4">
           <h2 className="text-base font-bold text-gray-900">セクションを追加</h2>
           <button
             onClick={onClose}
@@ -45,6 +51,7 @@ export default function AddSectionModal({ onSelect, onClose, loading }: Props) {
           </button>
         </div>
 
+        <div className="overflow-y-auto px-6 pb-6">
         <div className="space-y-2">
           {SECTION_OPTIONS.map((option) => (
             <button
@@ -61,6 +68,7 @@ export default function AddSectionModal({ onSelect, onClose, loading }: Props) {
               {loading && <span className="ml-auto text-xs text-gray-400">追加中…</span>}
             </button>
           ))}
+        </div>
         </div>
       </div>
     </div>

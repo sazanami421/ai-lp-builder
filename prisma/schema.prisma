@@ -167,8 +167,14 @@ enum SectionType {
   features
   testimonials
   pricing
+  pricing_table
   faq
   cta
+  steps
+  stats
+  logo_bar
+  gallery
+  divider
   form
   footer
 }
