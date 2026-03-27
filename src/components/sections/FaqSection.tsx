@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FaqSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: FaqSectionData;
@@ -13,13 +14,7 @@ export default function FaqSection({ data, styleOverrides }: Props) {
   const variant = getVariant('faq', data as Record<string, unknown>);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const sectionStyle = {
-    backgroundColor: 'color-mix(in srgb, var(--bg) 93%, var(--text) 7%)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('color-mix(in srgb, var(--bg) 93%, var(--text) 7%)', styleOverrides);
 
   if (variant === 'two-column') {
     return (

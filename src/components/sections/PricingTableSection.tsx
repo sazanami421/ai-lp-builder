@@ -1,4 +1,5 @@
 import { PricingTableSectionData } from '@/types/section';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: PricingTableSectionData;
@@ -6,13 +7,7 @@ type Props = {
 };
 
 export default function PricingTableSection({ data, styleOverrides }: Props) {
-  const sectionStyle = {
-    backgroundColor: 'var(--bg)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
 
   return (
     <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FormSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: FormSectionData;
@@ -36,13 +37,7 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
     }
   };
 
-  const sectionStyle = {
-    backgroundColor: 'var(--bg)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
 
   const formContent = status === 'success' ? (
     <div

@@ -1,5 +1,6 @@
 import { FooterSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: FooterSectionData;
@@ -10,11 +11,8 @@ export default function FooterSection({ data, styleOverrides }: Props) {
   const variant = getVariant('footer', data as Record<string, unknown>);
 
   const footerStyle = {
-    backgroundColor: 'var(--text)',
-    backgroundImage: 'var(--texture)',
+    ...buildSectionStyle('var(--text)', styleOverrides),
     color: 'var(--bg)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
   };
 
   if (variant === 'columns') {

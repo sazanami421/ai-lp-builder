@@ -1,5 +1,6 @@
 import { TestimonialsSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: TestimonialsSectionData;
@@ -9,13 +10,7 @@ type Props = {
 export default function TestimonialsSection({ data, styleOverrides }: Props) {
   const variant = getVariant('testimonials', data as Record<string, unknown>);
 
-  const sectionStyle = {
-    backgroundColor: 'color-mix(in srgb, var(--bg) 93%, var(--text) 7%)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('color-mix(in srgb, var(--bg) 93%, var(--text) 7%)', styleOverrides);
 
   if (variant === 'single') {
     const item = data.items[0];

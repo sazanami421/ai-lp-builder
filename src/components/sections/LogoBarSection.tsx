@@ -2,6 +2,7 @@
 
 import { LogoBarSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: LogoBarSectionData;
@@ -44,13 +45,7 @@ function LogoItem({ imageUrl, alt, url }: { imageUrl: string; alt: string; url?:
 export default function LogoBarSection({ data, styleOverrides }: Props) {
   const variant = getVariant('logo_bar', data as Record<string, unknown>);
 
-  const sectionStyle = {
-    backgroundColor: 'var(--bg)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
 
   return (
     <section className="py-8 px-4 md:py-12 md:px-6" style={sectionStyle}>

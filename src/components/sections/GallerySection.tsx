@@ -1,5 +1,6 @@
 import { GallerySectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: GallerySectionData;
@@ -42,13 +43,7 @@ function GalleryItem({ imageUrl, caption }: { imageUrl: string; caption?: string
 export default function GallerySection({ data, styleOverrides }: Props) {
   const variant = getVariant('gallery', data as Record<string, unknown>);
 
-  const sectionStyle = {
-    backgroundColor: 'var(--bg)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
 
   return (
     <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>

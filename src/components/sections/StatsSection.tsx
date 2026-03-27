@@ -1,5 +1,6 @@
 import { StatsSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: StatsSectionData;
@@ -9,13 +10,7 @@ type Props = {
 export default function StatsSection({ data, styleOverrides }: Props) {
   const variant = getVariant('stats', data as Record<string, unknown>);
 
-  const sectionStyle = {
-    backgroundColor: 'var(--bg)',
-    backgroundImage: 'var(--texture)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
-    ...styleOverrides,
-  };
+  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
 
   if (variant === 'cards') {
     return (
