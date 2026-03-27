@@ -4,15 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-// カラートーン → テンプレートマッピング
-const COLOR_TONE_TO_TEMPLATE: Record<string, string> = {
-  minimal:  'simple',
-  blue:     'business',
-  green:    'natural',
-  orange:   'pop',
-  dark:     'premium',
-};
-
 const TEMPLATES = [
   { value: 'simple',   label: 'シンプル',   accent: '#2B2B28', bg: '#FFFFFF', desc: 'ミニマル・モノトーン' },
   { value: 'business', label: 'ビジネス',   accent: '#1E56A0', bg: '#FFFFFF', desc: 'プロフェッショナル・信頼感' },
@@ -21,9 +12,10 @@ const TEMPLATES = [
   { value: 'premium',  label: 'プレミアム', accent: '#C6A96C', bg: '#0F0F0F', desc: '高級感・ダーク' },
 ];
 
-type Mode = 'select' | 'manual' | 'ai-full' | 'ai-template';
+type Mode = 'select' | 'manual' | 'ai';
 
 type HearingAnswers = {
+  template: string;
   industry: string;
   target: string;
   usp: string;
@@ -32,16 +24,14 @@ type HearingAnswers = {
   feature3: string;
   pricingCount: string;
   ctaGoal: string;
-  colorTone: string;   // ai-full のみ使用
-  template: string;    // ai-template のみ使用
   projectName: string;
 };
 
 const EMPTY_ANSWERS: HearingAnswers = {
+  template: '',
   industry: '', target: '', usp: '',
   feature1: '', feature2: '', feature3: '',
   pricingCount: '', ctaGoal: '',
-  colorTone: '', template: '',
   projectName: '',
 };
 
@@ -50,16 +40,17 @@ export default function NewProjectPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<HearingAnswers>(EMPTY_ANSWERS);
   const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<{ message: string; isLimit: boolean } | null>(null);
   const router = useRouter();
 
-  const startAI = (m: 'ai-full' | 'ai-template') => {
+  const startAI = () => {
     setAnswers(EMPTY_ANSWERS);
-    setStep(m === 'ai-template' ? 0 : 1);
-    setMode(m);
+    setStep(0);
+    setMode('ai');
   };
 
   const goBack = () => {
-    if (step <= (mode === 'ai-template' ? 0 : 1)) {
+    if (step <= 0) {
       setMode('select');
     } else {
       setStep((s) => s - 1);
@@ -68,16 +59,13 @@ export default function NewProjectPage() {
 
   const handleGenerate = async () => {
     setGenerating(true);
-    const template = mode === 'ai-full'
-      ? COLOR_TONE_TO_TEMPLATE[answers.colorTone] ?? 'simple'
-      : answers.template;
 
     const res = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         projectName: answers.projectName,
-        template,
+        template: answers.template,
         industry: answers.industry,
         target: answers.target,
         usp: answers.usp,
@@ -90,8 +78,12 @@ export default function NewProjectPage() {
       const data = await res.json();
       router.push(`/editor/${data.pageId}`);
     } else {
+      const data = await res.json();
       setGenerating(false);
-      alert('生成に失敗しました。もう一度お試しください。');
+      setGenerateError({
+        message: data.error ?? '生成に失敗しました。もう一度お試しください。',
+        isLimit: res.status === 402,
+      });
     }
   };
 
@@ -107,9 +99,38 @@ export default function NewProjectPage() {
     return <GeneratingScreen />;
   }
 
-  // AI フロー
-  const totalSteps = mode === 'ai-template' ? 5 : 4;
-  const currentStep = mode === 'ai-template' ? step + 1 : step;
+  if (generateError) {
+    return (
+      <div className="mx-auto max-w-md px-4 py-12">
+        <div className={`rounded-xl border p-5 ${generateError.isLimit ? 'border-amber-200 bg-amber-50' : 'border-red-200 bg-red-50'}`}>
+          <p className={`font-semibold ${generateError.isLimit ? 'text-amber-800' : 'text-red-700'}`}>
+            {generateError.isLimit ? 'AIクレジットの上限に達しました' : '生成に失敗しました'}
+          </p>
+          <p className={`mt-1 text-sm ${generateError.isLimit ? 'text-amber-700' : 'text-red-600'}`}>
+            {generateError.message}
+          </p>
+          {generateError.isLimit && (
+            <a
+              href="#"
+              className="mt-3 block w-full rounded-lg bg-amber-500 py-2 text-center text-sm font-semibold text-white transition hover:bg-amber-600"
+            >
+              Proプランにアップグレード
+            </a>
+          )}
+          <button
+            onClick={() => setGenerateError(null)}
+            className="mt-2 w-full rounded-lg border border-gray-200 py-2 text-sm text-gray-600 transition hover:bg-gray-50"
+          >
+            戻る
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // AI フロー（step 0〜4）
+  const totalSteps = 5;
+  const currentStep = step + 1;
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12">
@@ -124,9 +145,7 @@ export default function NewProjectPage() {
           </svg>
           戻る
         </button>
-        <h1 className="text-xl font-bold text-gray-900">
-          {mode === 'ai-full' ? 'AIにおまかせ' : 'テンプレート＋AI生成'}
-        </h1>
+        <h1 className="text-xl font-bold text-gray-900">AIにおまかせ</h1>
         {/* プログレスバー */}
         <div className="mt-4 flex items-center gap-2">
           {Array.from({ length: totalSteps }).map((_, i) => (
@@ -141,7 +160,7 @@ export default function NewProjectPage() {
       </div>
 
       {/* ステップ内容 */}
-      {mode === 'ai-template' && step === 0 && (
+      {step === 0 && (
         <TemplateStep
           value={answers.template}
           onChange={(v) => setAnswers((a) => ({ ...a, template: v }))}
@@ -165,7 +184,6 @@ export default function NewProjectPage() {
       {step === 3 && (
         <Step3
           answers={answers}
-          showColorTone={mode === 'ai-full'}
           onChange={(k, v) => setAnswers((a) => ({ ...a, [k]: v }))}
           onNext={() => setStep(4)}
         />
@@ -222,7 +240,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   return <p className="mb-2 text-sm font-medium text-gray-700">{children}</p>;
 }
 
-// --- テンプレート選択（② のみ） ---
+// --- Step 0: テンプレート選択 ---
 
 function TemplateStep({
   value, onChange, onNext,
@@ -231,8 +249,8 @@ function TemplateStep({
 }) {
   return (
     <div>
-      <p className="mb-1 text-base font-semibold text-gray-900">テンプレートを選択</p>
-      <p className="mb-5 text-sm text-gray-500">デザインの雰囲気を選んでください。コンテンツはAIが生成します。</p>
+      <p className="mb-1 text-base font-semibold text-gray-900">デザインテンプレートを選択</p>
+      <p className="mb-5 text-sm text-gray-500">雰囲気を選んでください。コンテンツはAIが生成します。</p>
       <div className="space-y-2">
         {TEMPLATES.map((t) => (
           <button
@@ -297,7 +315,6 @@ function Step1({
           {INDUSTRIES.map((o) => (
             <SelectCard
               key={o.value}
-
               selected={answers.industry === o.value}
               onClick={() => onChange('industry', o.value)}
             >
@@ -313,7 +330,6 @@ function Step1({
           {TARGETS.map((o) => (
             <SelectCard
               key={o.value}
-
               selected={answers.target === o.value}
               onClick={() => onChange('target', o.value)}
             >
@@ -377,7 +393,7 @@ function Step2({
   );
 }
 
-// --- Step 3: 料金・CTA・カラートーン ---
+// --- Step 3: 料金・CTA ---
 
 const PRICING_OPTIONS = [
   { value: '0', label: 'なし' },
@@ -393,25 +409,13 @@ const CTA_GOALS = [
   { value: 'contact',  label: 'お問い合わせ' },
 ];
 
-const COLOR_TONES = [
-  { value: 'minimal', label: 'ミニマル', desc: '白・黒・グレー', color: '#2B2B28' },
-  { value: 'blue',    label: 'ブルー',   desc: 'ビジネス・信頼感', color: '#1E56A0' },
-  { value: 'green',   label: 'グリーン', desc: 'ナチュラル・健康', color: '#2D8A6E' },
-  { value: 'orange',  label: 'オレンジ', desc: 'ポップ・親しみやすい', color: '#FF6B35' },
-  { value: 'dark',    label: 'ダーク',   desc: '高級感', color: '#C6A96C' },
-];
-
 function Step3({
-  answers, showColorTone, onChange, onNext,
+  answers, onChange, onNext,
 }: {
   answers: HearingAnswers;
-  showColorTone: boolean;
   onChange: (k: keyof HearingAnswers, v: string) => void;
   onNext: () => void;
 }) {
-  const canNext = answers.pricingCount !== '' && answers.ctaGoal !== ''
-    && (!showColorTone || answers.colorTone !== '');
-
   return (
     <div className="space-y-6">
       <div>
@@ -420,7 +424,6 @@ function Step3({
           {PRICING_OPTIONS.map((o) => (
             <SelectCard
               key={o.value}
-
               selected={answers.pricingCount === o.value}
               onClick={() => onChange('pricingCount', o.value)}
             >
@@ -436,7 +439,6 @@ function Step3({
           {CTA_GOALS.map((o) => (
             <SelectCard
               key={o.value}
-
               selected={answers.ctaGoal === o.value}
               onClick={() => onChange('ctaGoal', o.value)}
             >
@@ -446,33 +448,10 @@ function Step3({
         </div>
       </div>
 
-      {showColorTone && (
-        <div>
-          <FieldLabel>カラートーン</FieldLabel>
-          <div className="space-y-2">
-            {COLOR_TONES.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => onChange('colorTone', o.value)}
-                className="flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition"
-                style={{
-                  borderColor: answers.colorTone === o.value ? '#111827' : '#E5E7EB',
-                  backgroundColor: answers.colorTone === o.value ? '#F9FAFB' : '#FFFFFF',
-                }}
-              >
-                <div className="h-5 w-5 shrink-0 rounded-full" style={{ backgroundColor: o.color }} />
-                <div>
-                  <span className="text-sm font-medium text-gray-900">{o.label}</span>
-                  <span className="ml-2 text-xs text-gray-500">{o.desc}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <NextButton disabled={!canNext} onClick={onNext} />
+      <NextButton
+        disabled={!answers.pricingCount || !answers.ctaGoal}
+        onClick={onNext}
+      />
     </div>
   );
 }
@@ -525,7 +504,7 @@ function ModeSelect({
   onSelectAI,
   onSelectManual,
 }: {
-  onSelectAI: (m: 'ai-full' | 'ai-template') => void;
+  onSelectAI: () => void;
   onSelectManual: () => void;
 }) {
   return (
@@ -545,9 +524,9 @@ function ModeSelect({
       </div>
 
       <div className="space-y-3">
-        {/* ① AIにおまかせ */}
+        {/* AIにおまかせ */}
         <button
-          onClick={() => onSelectAI('ai-full')}
+          onClick={onSelectAI}
           className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white p-5 text-left transition hover:border-gray-300 hover:shadow-sm"
         >
           <div className="flex items-start gap-4">
@@ -559,7 +538,7 @@ function ModeSelect({
             <div className="flex-1">
               <p className="font-semibold text-gray-900">AIにおまかせ</p>
               <p className="mt-0.5 text-sm text-gray-500">
-                デザインもコンテンツも全てAIが生成。8つの質問に答えるだけでLPが完成します。
+                テンプレートを選んで質問に答えるだけ。AIがコンテンツを自動生成してLPを完成させます。
               </p>
             </div>
             <svg className="mt-0.5 h-5 w-5 shrink-0 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -568,30 +547,7 @@ function ModeSelect({
           </div>
         </button>
 
-        {/* ② テンプレート＋AI生成 */}
-        <button
-          onClick={() => onSelectAI('ai-template')}
-          className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white p-5 text-left transition hover:border-gray-300 hover:shadow-sm"
-        >
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-              <svg className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-gray-900">テンプレート＋AI生成</p>
-              <p className="mt-0.5 text-sm text-gray-500">
-                デザインテンプレートを自分で選択。コンテンツはAIが自動生成します。
-              </p>
-            </div>
-            <svg className="mt-0.5 h-5 w-5 shrink-0 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </div>
-        </button>
-
-        {/* ③ 手動で作成 */}
+        {/* 手動で作成 */}
         <button
           onClick={onSelectManual}
           className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white p-5 text-left transition hover:border-gray-300 hover:shadow-sm"
