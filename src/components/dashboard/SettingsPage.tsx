@@ -9,6 +9,11 @@ type Props = {
   email: string;
   isOAuthUser: boolean;
   upgradeResult?: string;
+  plan: 'free' | 'pro' | 'enterprise';
+  hasStripeCustomer: boolean;
+  subscriptionStatus: string | null;
+  currentPeriodEnd: Date | null;
+  cancelAtPeriodEnd: boolean;
 };
 
 // --- 共通UIパーツ ---
@@ -182,6 +187,97 @@ function PasswordForm() {
   );
 }
 
+// --- プラン管理 ---
+
+function PlanSection({
+  plan,
+  hasStripeCustomer,
+  subscriptionStatus,
+  currentPeriodEnd,
+  cancelAtPeriodEnd,
+}: {
+  plan: 'free' | 'pro' | 'enterprise';
+  hasStripeCustomer: boolean;
+  subscriptionStatus: string | null;
+  currentPeriodEnd: Date | null;
+  cancelAtPeriodEnd: boolean;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  const handlePortal = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpgrade = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const periodEndStr = currentPeriodEnd
+    ? new Date(currentPeriodEnd).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+    : null;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-900">
+            {plan === 'free' ? '無料プラン' : plan === 'pro' ? 'Proプラン' : 'Enterpriseプラン'}
+          </p>
+          {plan === 'pro' && cancelAtPeriodEnd && periodEndStr && (
+            <p className="mt-0.5 text-xs text-amber-600">
+              {periodEndStr} に解約予定（それまでProプランを継続）
+            </p>
+          )}
+          {plan === 'pro' && subscriptionStatus === 'past_due' && (
+            <p className="mt-0.5 text-xs text-red-600">
+              支払いに失敗しています。お支払い情報を確認してください。
+            </p>
+          )}
+          {plan === 'pro' && !cancelAtPeriodEnd && periodEndStr && (
+            <p className="mt-0.5 text-xs text-gray-400">次回更新: {periodEndStr}</p>
+          )}
+        </div>
+        {plan === 'free' ? (
+          <button
+            onClick={handleUpgrade}
+            disabled={loading}
+            className="rounded-lg bg-gray-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:opacity-50"
+          >
+            {loading ? '処理中…' : 'Proにアップグレード'}
+          </button>
+        ) : hasStripeCustomer ? (
+          <button
+            onClick={handlePortal}
+            disabled={loading}
+            className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+          >
+            {loading ? '処理中…' : 'プランを管理'}
+          </button>
+        ) : null}
+      </div>
+      {plan === 'free' && (
+        <p className="text-xs text-gray-400">
+          Proプランでは AIクレジット無制限・公開LP無制限・独自ドメインが利用できます。
+        </p>
+      )}
+    </div>
+  );
+}
+
 // --- アカウント削除 ---
 
 function DeleteAccountSection() {
@@ -253,7 +349,7 @@ function DeleteAccountSection() {
 
 // --- メインページ ---
 
-export default function SettingsPage({ email, isOAuthUser, upgradeResult }: Props) {
+export default function SettingsPage({ email, isOAuthUser, upgradeResult, plan, hasStripeCustomer, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd }: Props) {
   return (
     <div className="mx-auto max-w-lg">
       <div className="mb-6">
@@ -296,6 +392,16 @@ export default function SettingsPage({ email, isOAuthUser, upgradeResult }: Prop
             <PasswordForm />
           </SectionCard>
         )}
+
+        <SectionCard title="プラン">
+          <PlanSection
+            plan={plan}
+            hasStripeCustomer={hasStripeCustomer}
+            subscriptionStatus={subscriptionStatus}
+            currentPeriodEnd={currentPeriodEnd}
+            cancelAtPeriodEnd={cancelAtPeriodEnd}
+          />
+        </SectionCard>
 
         <SectionCard title="アカウント削除">
           <p className="mb-4 text-sm text-gray-500">

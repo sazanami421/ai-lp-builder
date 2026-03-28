@@ -101,7 +101,13 @@ export default function EditorShell({ project, page, initialSections, planInfo }
   // セクションデータを state 更新 + debounce 自動保存
   const updateSectionData = useCallback((sectionId: string, newData: unknown) => {
     setSections((prev) =>
-      prev.map((s) => s.id === sectionId ? { ...s, data: newData } : s)
+      prev.map((s) => {
+        if (s.id !== sectionId) return s;
+        const newDataObj = newData as Record<string, unknown>;
+        const oldVariant = (s.data as Record<string, unknown>)?.variant ?? null;
+        const variantChanged = 'variant' in newDataObj && (newDataObj.variant ?? null) !== oldVariant;
+        return { ...s, data: newData, styleOverrides: variantChanged ? {} : s.styleOverrides };
+      })
     );
     setSaveStatus('unsaved');
 
@@ -322,6 +328,23 @@ export default function EditorShell({ project, page, initialSections, planInfo }
           </div>
         </div>
       </header>
+
+      {/* 公開LP数超過バナー */}
+      {planInfo.publishedPagesLimit !== null &&
+        planInfo.publishedPages > planInfo.publishedPagesLimit && (
+        <div className="flex shrink-0 items-center justify-between bg-amber-50 px-4 py-2 border-b border-amber-200">
+          <p className="text-xs text-amber-800">
+            <span className="font-semibold">公開LP数が上限を超えています。</span>
+            {' '}無料プランの上限は{planInfo.publishedPagesLimit}件です。{planInfo.publishedPages}件公開中のため、一部のLPが閲覧できない状態です。不要なLPを下書きに戻してください。
+          </p>
+          <a
+            href="/dashboard/settings"
+            className="ml-4 shrink-0 text-xs font-semibold text-amber-700 underline hover:text-amber-900"
+          >
+            Proにアップグレード
+          </a>
+        </div>
+      )}
 
       {/* メイン */}
       <div className="flex flex-1 overflow-hidden">

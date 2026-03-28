@@ -10,7 +10,7 @@ type Props = {
 export default function TestimonialsSection({ data, styleOverrides }: Props) {
   const variant = getVariant('testimonials', data as Record<string, unknown>);
 
-  const sectionStyle = buildSectionStyle('color-mix(in srgb, var(--bg) 93%, var(--text) 7%)', styleOverrides);
+  const sectionStyle = buildSectionStyle('var(--bg-secondary)', styleOverrides);
 
   if (variant === 'single') {
     const item = data.items[0];
