@@ -16,8 +16,16 @@ model User {
   name          String?
   image         String?
   password      String?
-  plan          Plan      @default(free)
-  createdAt     DateTime  @default(now())
+  plan               Plan      @default(free)
+  aiCreditsUsed      Int       @default(0)
+  aiCreditsResetAt   DateTime  @default(now())
+  // Stripe
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  subscriptionStatus   String?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean   @default(false)
+  createdAt          DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   accounts      Account[]
@@ -85,17 +93,19 @@ model Project {
 }
 
 model Page {
-  id           String    @id @default(cuid())
-  projectId    String
-  title        String
-  globalConfig Json      @default("{}")
-  isPublished  Boolean   @default(false)
-  publishedAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  projectId      String
+  title          String
+  globalConfig   Json      @default("{}")
+  isPublished    Boolean   @default(false)
+  publishedAt    DateTime?
+  customDomain   String?   @unique
+  domainVerified Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  sections     Section[]
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sections       Section[]
   formSubmissions FormSubmission[]
 
   @@map("pages")
@@ -167,8 +177,14 @@ enum SectionType {
   features
   testimonials
   pricing
+  pricing_table
   faq
   cta
+  steps
+  stats
+  logo_bar
+  gallery
+  divider
   form
   footer
 }

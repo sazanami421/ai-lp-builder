@@ -4,8 +4,14 @@ export type SectionType =
   | 'features'
   | 'testimonials'
   | 'pricing'
+  | 'pricing_table'
   | 'faq'
   | 'cta'
+  | 'steps'
+  | 'stats'
+  | 'logo_bar'
+  | 'gallery'
+  | 'divider'
   | 'form'
   | 'footer';
 
@@ -27,7 +33,7 @@ export type SectionBase = {
 // --- セクション固有データ型 ---
 
 export type HeroSectionData = {
-  variant?: 'centered' | 'split';
+  variant?: 'centered' | 'split' | 'fullscreen';
   headline: string;
   subheadline?: string;
   ctaText?: string;
@@ -74,9 +80,26 @@ export type PricingPlan = {
 };
 
 export type PricingSectionData = {
-  variant?: 'cards' | 'table';
+  variant?: 'cards';
   title: string;
   plans: PricingPlan[];
+};
+
+export type PricingTablePlan = {
+  name: string;
+  price: string;
+  period: string;
+  values: (string | boolean)[]; // features[] のインデックスに対応
+  highlighted?: boolean;
+  ctaText?: string;
+  ctaUrl?: string;
+};
+
+export type PricingTableSectionData = {
+  variant?: 'simple';
+  title: string;
+  features: string[];
+  plans: PricingTablePlan[];
 };
 
 export type FaqItem = {
@@ -96,6 +119,57 @@ export type CtaSectionData = {
   subheadline?: string;
   ctaText?: string;
   ctaUrl?: string;
+};
+
+export type StepItem = {
+  title: string;
+  description: string;
+  icon?: string;
+};
+
+export type StepsSectionData = {
+  variant?: 'horizontal' | 'vertical';
+  title: string;
+  items: StepItem[];
+};
+
+export type StatItem = {
+  value: string;
+  label: string;
+};
+
+export type StatsSectionData = {
+  variant?: 'row' | 'cards';
+  title?: string;
+  items: StatItem[];
+};
+
+export type LogoItem = {
+  imageUrl: string;
+  alt: string;
+  url?: string;
+};
+
+export type LogoBarSectionData = {
+  variant?: 'static' | 'scroll';
+  title?: string;
+  items: LogoItem[];
+};
+
+export type GalleryItem = {
+  imageUrl: string;
+  caption?: string;
+};
+
+export type GallerySectionData = {
+  variant?: 'grid' | 'masonry';
+  title?: string;
+  items: GalleryItem[];
+};
+
+export type DividerSectionData = {
+  variant?: 'gradient' | 'ornament';
+  text?: string;
 };
 
 export type FormField = {
@@ -134,8 +208,14 @@ export type SectionData =
   | FeaturesSectionData
   | TestimonialsSectionData
   | PricingSectionData
+  | PricingTableSectionData
   | FaqSectionData
   | CtaSectionData
+  | StepsSectionData
+  | StatsSectionData
+  | LogoBarSectionData
+  | GallerySectionData
+  | DividerSectionData
   | FormSectionData
   | FooterSectionData;
 

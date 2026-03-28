@@ -4,8 +4,14 @@ import type {
   FeaturesSectionData,
   TestimonialsSectionData,
   PricingSectionData,
+  PricingTableSectionData,
   FaqSectionData,
   CtaSectionData,
+  StepsSectionData,
+  StatsSectionData,
+  LogoBarSectionData,
+  GallerySectionData,
+  DividerSectionData,
   FormSectionData,
   FooterSectionData,
 } from '@/types/section';
@@ -13,7 +19,13 @@ import HeroSection from './HeroSection';
 import FeaturesSection from './FeaturesSection';
 import TestimonialsSection from './TestimonialsSection';
 import PricingSection from './PricingSection';
+import PricingTableSection from './PricingTableSection';
 import FaqSection from './FaqSection';
+import StepsSection from './StepsSection';
+import StatsSection from './StatsSection';
+import LogoBarSection from './LogoBarSection';
+import GallerySection from './GallerySection';
+import DividerSection from './DividerSection';
 import CtaSection from './CtaSection';
 import FormSection from './FormSection';
 import FooterSection from './FooterSection';
@@ -48,6 +60,18 @@ export default function SectionRenderer({ type, data, styleOverrides, pageId }: 
       return <TestimonialsSection data={cast<TestimonialsSectionData>(resolved)} styleOverrides={so} />;
     case 'pricing':
       return <PricingSection data={cast<PricingSectionData>(resolved)} styleOverrides={so} />;
+    case 'pricing_table':
+      return <PricingTableSection data={cast<PricingTableSectionData>(resolved)} styleOverrides={so} />;
+    case 'steps':
+      return <StepsSection data={cast<StepsSectionData>(resolved)} styleOverrides={so} />;
+    case 'stats':
+      return <StatsSection data={cast<StatsSectionData>(resolved)} styleOverrides={so} />;
+    case 'logo_bar':
+      return <LogoBarSection data={cast<LogoBarSectionData>(resolved)} styleOverrides={so} />;
+    case 'gallery':
+      return <GallerySection data={cast<GallerySectionData>(resolved)} styleOverrides={so} />;
+    case 'divider':
+      return <DividerSection data={cast<DividerSectionData>(resolved)} styleOverrides={so} />;
     case 'faq':
       return <FaqSection data={cast<FaqSectionData>(resolved)} styleOverrides={so} />;
     case 'cta':

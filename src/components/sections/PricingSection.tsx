@@ -1,4 +1,5 @@
 import { PricingSectionData } from '@/types/section';
+import { buildSectionStyle } from '@/lib/sectionStyle';
 
 type Props = {
   data: PricingSectionData;
@@ -6,22 +7,21 @@ type Props = {
 };
 
 export default function PricingSection({ data, styleOverrides }: Props) {
+  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
+
   return (
-    <section
-      className="py-20 px-6"
-      style={{ backgroundColor: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)', ...styleOverrides }}
-    >
+    <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-12 text-center text-3xl font-bold"
+        className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
-      <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
         {data.plans.map((plan, i) => (
           <div
             key={i}
-            className="border p-6"
+            className="border p-5 md:p-6"
             style={{
               borderRadius: 'var(--radius)',
               borderColor: plan.highlighted ? 'var(--accent)' : 'color-mix(in srgb, var(--text) 15%, transparent)',
@@ -29,13 +29,10 @@ export default function PricingSection({ data, styleOverrides }: Props) {
               boxShadow: plan.highlighted ? '0 4px 20px color-mix(in srgb, var(--accent) 25%, transparent)' : undefined,
             }}
           >
-            <h3
-              className="mb-2 text-xl font-bold"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
+            <h3 className="mb-2 text-xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
               {plan.name}
             </h3>
-            <p className="mb-4 text-3xl font-bold">
+            <p className="mb-4 text-2xl font-bold md:text-3xl">
               {plan.price}
               <span className="text-base font-normal" style={{ opacity: 0.6 }}>/{plan.period}</span>
             </p>
@@ -47,17 +44,12 @@ export default function PricingSection({ data, styleOverrides }: Props) {
                 </li>
               ))}
             </ul>
-            {plan.note && (
-              <p className="mb-4 text-xs" style={{ opacity: 0.55 }}>{plan.note}</p>
-            )}
+            {plan.note && <p className="mb-4 text-xs" style={{ opacity: 0.55 }}>{plan.note}</p>}
             {plan.ctaText && (
               <a
                 href={plan.ctaUrl ?? '#'}
                 className="block py-2 text-center text-sm font-semibold text-white"
-                style={{
-                  backgroundColor: 'var(--accent)',
-                  borderRadius: 'var(--radius)',
-                }}
+                style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--radius)' }}
               >
                 {plan.ctaText}
               </a>

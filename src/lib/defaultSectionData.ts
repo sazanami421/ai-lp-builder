@@ -3,8 +3,14 @@ import type {
   FeaturesSectionData,
   TestimonialsSectionData,
   PricingSectionData,
+  PricingTableSectionData,
   FaqSectionData,
   CtaSectionData,
+  StepsSectionData,
+  StatsSectionData,
+  LogoBarSectionData,
+  GallerySectionData,
+  DividerSectionData,
   FormSectionData,
   FooterSectionData,
   SectionType,
@@ -43,6 +49,15 @@ export const DEFAULT_SECTION_DATA: Record<SectionType, unknown> = {
     ],
   } satisfies PricingSectionData,
 
+  pricing_table: {
+    title: '機能比較',
+    features: ['基本機能', 'AI生成', 'カスタムドメイン', '優先サポート'],
+    plans: [
+      { name: 'Free', price: '¥0', period: '月', values: [true, '3回/月', false, false], ctaText: '無料で始める' },
+      { name: 'Pro', price: '¥2,980', period: '月', values: [true, '無制限', true, true], highlighted: true, ctaText: 'Proを試す' },
+    ],
+  } satisfies PricingTableSectionData,
+
   faq: {
     title: 'よくある質問',
     items: [
@@ -57,6 +72,52 @@ export const DEFAULT_SECTION_DATA: Record<SectionType, unknown> = {
     ctaText: '無料でアカウント作成',
     ctaUrl: '#',
   } satisfies CtaSectionData,
+
+  steps: {
+    title: 'ご利用の流れ',
+    items: [
+      { icon: '1', title: '無料登録', description: 'メールアドレスだけで簡単登録。' },
+      { icon: '2', title: 'AIに指示', description: '業種やターゲットを入力するだけ。' },
+      { icon: '3', title: '公開', description: 'ワンクリックでLPを公開できます。' },
+    ],
+  } satisfies StepsSectionData,
+
+  stats: {
+    title: '数字で見る実績',
+    items: [
+      { value: '500+', label: '導入企業数' },
+      { value: '98%', label: '顧客満足度' },
+      { value: '3分', label: '平均セットアップ時間' },
+      { value: '24h', label: 'サポート対応' },
+    ],
+  } satisfies StatsSectionData,
+
+  logo_bar: {
+    title: '導入企業',
+    items: [
+      { imageUrl: '', alt: 'Company A' },
+      { imageUrl: '', alt: 'Company B' },
+      { imageUrl: '', alt: 'Company C' },
+      { imageUrl: '', alt: 'Company D' },
+      { imageUrl: '', alt: 'Company E' },
+    ],
+  } satisfies LogoBarSectionData,
+
+  gallery: {
+    title: 'ギャラリー',
+    items: [
+      { imageUrl: '', caption: 'サンプル画像 1' },
+      { imageUrl: '', caption: 'サンプル画像 2' },
+      { imageUrl: '', caption: 'サンプル画像 3' },
+      { imageUrl: '', caption: 'サンプル画像 4' },
+      { imageUrl: '', caption: 'サンプル画像 5' },
+      { imageUrl: '', caption: 'サンプル画像 6' },
+    ],
+  } satisfies GallerySectionData,
+
+  divider: {
+    text: '',
+  } satisfies DividerSectionData,
 
   form: {
     title: 'お問い合わせ',

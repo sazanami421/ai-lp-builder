@@ -1,22 +1,33 @@
+import type { TemplateDefinition } from '@/types/template';
+
 export const naturalTemplate = {
   name: 'natural',
   label: 'ナチュラル',
   cssVars: {
     '--accent': '#2D8A6E',
+    '--accent-light': '#C8E8DF',
     '--bg': '#FAFAF7',
+    '--bg-secondary': '#F2F2EC',
     '--text': '#2C3E2D',
     '--font-heading': "'Lora', serif",
     '--font-body': "'Raleway', sans-serif",
     '--radius': '16px',
+    '--texture': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.15' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\")",
   },
   defaultVariants: {
     hero: 'centered',
     features: 'alternating',
     testimonials: 'single',
     pricing: 'cards',
+    pricing_table: 'simple',
     faq: 'accordion',
     cta: 'centered',
+    steps: 'vertical',
+    stats: 'row',
+    logo_bar: 'static',
+    gallery: 'masonry',
+    divider: 'gradient',
     form: 'simple',
     footer: 'minimal',
   },
-} as const;
+} as const satisfies TemplateDefinition;

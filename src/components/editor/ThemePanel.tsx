@@ -10,9 +10,11 @@ type Props = {
 };
 
 const COLOR_FIELDS: { key: string; label: string }[] = [
-  { key: '--accent', label: 'アクセント' },
-  { key: '--bg',     label: '背景' },
-  { key: '--text',   label: 'テキスト' },
+  { key: '--accent',       label: 'アクセント' },
+  { key: '--accent-light', label: 'アクセント薄' },
+  { key: '--bg',           label: '背景' },
+  { key: '--bg-secondary', label: '背景2' },
+  { key: '--text',         label: 'テキスト' },
 ];
 
 export default function ThemePanel({ template, cssVars, onChange }: Props) {

@@ -1,22 +1,33 @@
+import type { TemplateDefinition } from '@/types/template';
+
 export const businessTemplate = {
   name: 'business',
   label: 'ビジネス',
   cssVars: {
     '--accent': '#1E56A0',
+    '--accent-light': '#E3EEF8',
     '--bg': '#FFFFFF',
+    '--bg-secondary': '#F0F5FB',
     '--text': '#1A1A2E',
     '--font-heading': "'Plus Jakarta Sans', sans-serif",
     '--font-body': "'Plus Jakarta Sans', sans-serif",
     '--radius': '6px',
+    '--texture': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath d='M-1 1L1 -1M0 10L10 0M9 11L11 9' stroke='%231A1A2E' stroke-width='0.8' opacity='0.06'/%3E%3C/svg%3E\")",
   },
   defaultVariants: {
     hero: 'split',
     features: 'alternating',
     testimonials: 'cards',
-    pricing: 'table',
+    pricing: 'cards',
+    pricing_table: 'simple',
     faq: 'accordion',
     cta: 'banner',
+    steps: 'horizontal',
+    stats: 'row',
+    logo_bar: 'scroll',
+    gallery: 'grid',
+    divider: 'gradient',
     form: 'split',
     footer: 'columns',
   },
-} as const;
+} as const satisfies TemplateDefinition;

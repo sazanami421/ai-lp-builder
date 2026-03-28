@@ -43,6 +43,17 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     if (parsed.data.visible !== undefined) updateFields.visible = parsed.data.visible;
     if (parsed.data.styleOverrides !== undefined) updateFields.styleOverrides = parsed.data.styleOverrides as Prisma.InputJsonValue;
 
+    // variant が変更された場合、styleOverrides をリセット
+    if (parsed.data.data !== undefined) {
+      const oldData = section.data as Record<string, unknown> | null;
+      const newData = parsed.data.data as Record<string, unknown>;
+      const oldVariant = oldData?.variant ?? null;
+      const newVariant = newData?.variant ?? null;
+      if (newVariant !== oldVariant) {
+        updateFields.styleOverrides = {} as Prisma.InputJsonValue;
+      }
+    }
+
     const updated = await prisma.section.update({
       where: { id: sectionId },
       data: updateFields,

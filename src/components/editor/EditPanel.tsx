@@ -9,6 +9,12 @@ import type {
   TestimonialsSectionData,
   FaqSectionData,
   PricingSectionData,
+  PricingTableSectionData,
+  StepsSectionData,
+  StatsSectionData,
+  LogoBarSectionData,
+  GallerySectionData,
+  DividerSectionData,
   FormSectionData,
   FooterSectionData,
 } from '@/types/section';
@@ -18,6 +24,12 @@ import FeaturesForm from './forms/FeaturesForm';
 import TestimonialsForm from './forms/TestimonialsForm';
 import FaqForm from './forms/FaqForm';
 import PricingForm from './forms/PricingForm';
+import PricingTableForm from './forms/PricingTableForm';
+import StepsForm from './forms/StepsForm';
+import StatsForm from './forms/StatsForm';
+import LogoBarForm from './forms/LogoBarForm';
+import GalleryForm from './forms/GalleryForm';
+import DividerForm from './forms/DividerForm';
 import FormForm from './forms/FormForm';
 import FooterForm from './forms/FooterForm';
 import { DEFAULT_SECTION_DATA } from '@/lib/defaultSectionData';
@@ -32,8 +44,14 @@ const SECTION_LABELS: Record<SectionType, string> = {
   features: 'Features',
   testimonials: 'Testimonials',
   pricing: 'Pricing',
+  pricing_table: 'Pricing Table',
   faq: 'FAQ',
   cta: 'CTA',
+  steps: 'Steps',
+  stats: 'Stats',
+  logo_bar: 'Logo Bar',
+  gallery: 'Gallery',
+  divider: 'Divider',
   form: 'Form',
   footer: 'Footer',
 };
@@ -81,6 +99,18 @@ function SectionForm({ section, onUpdate }: { section: SectionItem; onUpdate: (d
       return <FaqForm data={data as FaqSectionData} onUpdate={onUpdate} />;
     case 'pricing':
       return <PricingForm data={data as PricingSectionData} onUpdate={onUpdate} />;
+    case 'pricing_table':
+      return <PricingTableForm data={data as PricingTableSectionData} onUpdate={onUpdate} />;
+    case 'steps':
+      return <StepsForm data={data as StepsSectionData} onUpdate={onUpdate} />;
+    case 'stats':
+      return <StatsForm data={data as StatsSectionData} onUpdate={onUpdate} />;
+    case 'logo_bar':
+      return <LogoBarForm data={data as LogoBarSectionData} onUpdate={onUpdate} />;
+    case 'gallery':
+      return <GalleryForm data={data as GallerySectionData} onUpdate={onUpdate} />;
+    case 'divider':
+      return <DividerForm data={data as DividerSectionData} onUpdate={onUpdate} />;
     case 'form':
       return <FormForm data={data as FormSectionData} onUpdate={onUpdate} />;
     case 'footer':

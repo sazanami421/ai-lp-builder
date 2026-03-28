@@ -20,6 +20,26 @@ export const registerSchema = z.object({
 });
 
 // ========================================
+// ユーザー設定
+// ========================================
+export const updateEmailSchema = z.object({
+  email: z
+    .string({ message: 'メールアドレスは必須です' })
+    .email('メールアドレスの形式が正しくありません')
+    .max(255, 'メールアドレスは255文字以内で入力してください'),
+});
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z
+    .string({ message: '現在のパスワードは必須です' })
+    .min(1, '現在のパスワードは必須です'),
+  newPassword: z
+    .string({ message: '新しいパスワードは必須です' })
+    .min(8, '新しいパスワードは8文字以上で入力してください')
+    .max(128, '新しいパスワードは128文字以内で入力してください'),
+});
+
+// ========================================
 // プロジェクト
 // ========================================
 export const createProjectSchema = z.object({
@@ -35,6 +55,14 @@ export const createProjectSchema = z.object({
     .transform((v) => v?.trim() || undefined),
 });
 
+export const updateProjectSchema = z.object({
+  name: z
+    .string({ message: 'プロジェクト名は必須です' })
+    .min(1, 'プロジェクト名は必須です')
+    .max(100, 'プロジェクト名は100文字以内で入力してください')
+    .transform((v) => v.trim()),
+});
+
 // ========================================
 // セクション
 // ========================================
@@ -43,8 +71,14 @@ export const sectionTypeEnum = z.enum([
   'features',
   'testimonials',
   'pricing',
+  'pricing_table',
   'faq',
   'cta',
+  'steps',
+  'stats',
+  'logo_bar',
+  'gallery',
+  'divider',
   'form',
   'footer',
 ]);
@@ -69,7 +103,7 @@ export const reorderSchema = z.object({
   orders: z
     .array(
       z.object({
-        id: z.string().cuid('セクションIDの形式が不正です'),
+        id: z.string().min(1),
         order: z.number().int().min(0, 'order は0以上の整数にしてください'),
       })
     )
@@ -113,6 +147,24 @@ export const aiChatSchema = z.object({
     .min(1, 'メッセージは必須です')
     .max(2000, 'メッセージは2000文字以内で入力してください')
     .transform((v) => v.trim()),
+});
+
+// ========================================
+// AI 一括LP生成
+// ========================================
+export const generateLPSchema = z.object({
+  projectName: z
+    .string({ message: 'プロジェクト名は必須です' })
+    .min(1, 'プロジェクト名は必須です')
+    .max(100, 'プロジェクト名は100文字以内で入力してください')
+    .transform((v) => v.trim()),
+  template: z.enum(['simple', 'premium', 'pop', 'business', 'natural']),
+  industry: z.string().min(1),
+  target: z.string().min(1),
+  usp: z.string().min(1).max(500),
+  features: z.array(z.string().min(1)).min(1).max(3),
+  pricingCount: z.enum(['0', '1', '2', '3']),
+  ctaGoal: z.enum(['register', 'document', 'purchase', 'contact']),
 });
 
 // ========================================

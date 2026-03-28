@@ -21,6 +21,7 @@ export const Unauthorized = (message = '認証が必要です') => new AppError(
 export const Forbidden = (message = 'アクセス権限がありません') => new AppError(403, message);
 export const NotFound = (message = 'リソースが見つかりません') => new AppError(404, message);
 export const Conflict = (message: string) => new AppError(409, message);
+export const PaymentRequired = (message: string) => new AppError(402, message);
 
 /**
  * catch ブロック用の共通エラーハンドラ
