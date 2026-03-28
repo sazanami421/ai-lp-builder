@@ -35,6 +35,9 @@ function PlanLimitScreen() {
   );
 }
 
+// revalidatePath() が呼ばれるまでキャッシュを保持（「更新を公開」ボタンで無効化）
+export const revalidate = false;
+
 export default async function PublicLPPage({ params }: Props) {
   const { slug } = await params;
 

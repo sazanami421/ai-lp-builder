@@ -10,7 +10,7 @@ type Props = {
 export default function FeaturesSection({ data, styleOverrides }: Props) {
   const variant = getVariant('features', data as Record<string, unknown>);
 
-  const sectionStyle = buildSectionStyle('var(--bg)', styleOverrides);
+  const sectionStyle = buildSectionStyle('var(--bg-secondary)', styleOverrides);
 
   const cardStyle = {
     borderRadius: 'var(--radius)',

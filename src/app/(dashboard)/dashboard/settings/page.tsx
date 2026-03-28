@@ -11,18 +11,34 @@ export default async function Page({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
   const params = await searchParams;
 
-  // Google OAuth ユーザーかどうか（パスワード変更フォームの表示制御）
-  const account = await prisma.account.findFirst({
-    where: { userId: session!.user.id, provider: 'google' },
-    select: { id: true },
-  });
-  const isOAuthUser = !!account;
+  const [account, user] = await Promise.all([
+    // Google OAuth ユーザーかどうか（パスワード変更フォームの表示制御）
+    prisma.account.findFirst({
+      where: { userId: session!.user.id, provider: 'google' },
+      select: { id: true },
+    }),
+    prisma.user.findUniqueOrThrow({
+      where: { id: session!.user.id },
+      select: {
+        plan: true,
+        stripeCustomerId: true,
+        subscriptionStatus: true,
+        currentPeriodEnd: true,
+        cancelAtPeriodEnd: true,
+      },
+    }),
+  ]);
 
   return (
     <SettingsPage
       email={session!.user.email ?? ''}
-      isOAuthUser={isOAuthUser}
+      isOAuthUser={!!account}
       upgradeResult={params.upgrade}
+      plan={user.plan}
+      hasStripeCustomer={!!user.stripeCustomerId}
+      subscriptionStatus={user.subscriptionStatus}
+      currentPeriodEnd={user.currentPeriodEnd}
+      cancelAtPeriodEnd={user.cancelAtPeriodEnd}
     />
   );
 }

@@ -14,7 +14,7 @@ export default function FaqSection({ data, styleOverrides }: Props) {
   const variant = getVariant('faq', data as Record<string, unknown>);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const sectionStyle = buildSectionStyle('color-mix(in srgb, var(--bg) 93%, var(--text) 7%)', styleOverrides);
+  const sectionStyle = buildSectionStyle('var(--bg-secondary)', styleOverrides);
 
   if (variant === 'two-column') {
     return (
