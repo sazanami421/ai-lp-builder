@@ -33,14 +33,25 @@ export async function proxy(req: NextRequest) {
       return NextResponse.next();
     }
 
-    // projects テーブルから slug を取得
+    // projects テーブルから slug と userId を取得
     const { data: project } = await supabase
       .from('projects')
-      .select('slug')
+      .select('slug, userId')
       .eq('id', page.projectId)
       .maybeSingle();
 
     if (!project?.slug) {
+      return NextResponse.next();
+    }
+
+    // Freeプランのユーザーはカスタムドメインを無効化
+    const { data: user } = await supabase
+      .from('users')
+      .select('plan')
+      .eq('id', project.userId)
+      .maybeSingle();
+
+    if (!user || user.plan === 'free') {
       return NextResponse.next();
     }
 

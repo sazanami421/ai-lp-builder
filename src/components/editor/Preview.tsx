@@ -31,6 +31,9 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
   const [pushing, setPushing] = useState(false);
   const [justPushed, setJustPushed] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  const [verifiedDomain, setVerifiedDomain] = useState<string | null>(
+    initialDomainVerified ? initialCustomDomain : null
+  );
 
   const handleStatusChange = async (publish: boolean) => {
     setUpdating(true);
@@ -63,7 +66,7 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
     }
   };
 
-  const publicUrl = `/p/${projectSlug}`;
+  const publicUrl = verifiedDomain ? `https://${verifiedDomain}` : `/p/${projectSlug}`;
 
   const visible = sections
     .filter((s) => s.visible)
@@ -107,6 +110,7 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
             plan={plan}
             initialDomain={initialCustomDomain}
             initialVerified={initialDomainVerified}
+            onVerifiedDomainChange={setVerifiedDomain}
           />
           {isPublished && (
             <a
