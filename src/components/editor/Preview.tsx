@@ -26,15 +26,22 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
   const [updating, setUpdating] = useState(false);
   const [pushing, setPushing] = useState(false);
   const [justPushed, setJustPushed] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
 
   const handleStatusChange = async (publish: boolean) => {
     setUpdating(true);
+    setPublishError(null);
     try {
-      await fetch(`/api/pages/${pageId}`, {
+      const res = await fetch(`/api/pages/${pageId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isPublished: publish }),
       });
+      if (!res.ok) {
+        const data = await res.json();
+        setPublishError(data.error ?? '公開に失敗しました');
+        return;
+      }
       setIsPublished(publish);
       setJustPushed(false);
     } finally {
@@ -112,19 +119,32 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
               {pushing ? '反映中…' : justPushed ? '反映済み ✓' : '更新を公開'}
             </button>
           )}
-          <select
-            value={isPublished ? 'published' : 'draft'}
-            disabled={updating}
-            onChange={(e) => handleStatusChange(e.target.value === 'published')}
-            className={`rounded-lg border px-3 py-1.5 text-xs font-semibold outline-none transition disabled:opacity-60 ${
-              isPublished
-                ? 'border-green-300 bg-green-50 text-green-700'
-                : 'border-gray-200 bg-white text-gray-600'
-            }`}
-          >
-            <option value="draft">下書き</option>
-            <option value="published">公開中</option>
-          </select>
+          <div className="relative">
+            <select
+              value={isPublished ? 'published' : 'draft'}
+              disabled={updating}
+              onChange={(e) => handleStatusChange(e.target.value === 'published')}
+              className={`rounded-lg border px-3 py-1.5 text-xs font-semibold outline-none transition disabled:opacity-60 ${
+                isPublished
+                  ? 'border-green-300 bg-green-50 text-green-700'
+                  : 'border-gray-200 bg-white text-gray-600'
+              }`}
+            >
+              <option value="draft">下書き</option>
+              <option value="published">公開中</option>
+            </select>
+            {publishError && (
+              <div className="absolute right-0 top-9 z-50 w-64 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 shadow-md">
+                <p className="text-xs font-medium text-amber-800">{publishError}</p>
+                <button
+                  onClick={() => setPublishError(null)}
+                  className="mt-1 text-xs text-amber-600 underline hover:text-amber-800"
+                >
+                  閉じる
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

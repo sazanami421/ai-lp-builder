@@ -6,6 +6,7 @@ import { generateLPSchema, formatZodError } from '@/lib/validations';
 import { generateLP } from '@/lib/ai';
 import { TEMPLATES } from '@/lib/templates';
 import { handleApiError, BadRequest } from '@/lib/errors';
+import { consumeAICredits, AI_CREDIT_COST } from '@/lib/plans';
 import type { SectionType } from '@/types/section';
 
 // 業種・ターゲット・CTAゴールの表示ラベルマッピング
@@ -51,6 +52,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await consumeAICredits(session.user.id, AI_CREDIT_COST.generate);
+
     const body = await req.json();
     const parsed = generateLPSchema.safeParse(body);
     if (!parsed.success) {

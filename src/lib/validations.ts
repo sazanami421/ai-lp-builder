@@ -20,6 +20,26 @@ export const registerSchema = z.object({
 });
 
 // ========================================
+// ユーザー設定
+// ========================================
+export const updateEmailSchema = z.object({
+  email: z
+    .string({ message: 'メールアドレスは必須です' })
+    .email('メールアドレスの形式が正しくありません')
+    .max(255, 'メールアドレスは255文字以内で入力してください'),
+});
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z
+    .string({ message: '現在のパスワードは必須です' })
+    .min(1, '現在のパスワードは必須です'),
+  newPassword: z
+    .string({ message: '新しいパスワードは必須です' })
+    .min(8, '新しいパスワードは8文字以上で入力してください')
+    .max(128, '新しいパスワードは128文字以内で入力してください'),
+});
+
+// ========================================
 // プロジェクト
 // ========================================
 export const createProjectSchema = z.object({

@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import { prisma } from '@/lib/prisma';
 import { handleApiError, BadRequest } from '@/lib/errors';
+import { checkStorageLimit } from '@/lib/plans';
 
 // サービスロールクライアント（Storage の RLS をバイパス）
 function getServiceClient() {
@@ -36,6 +37,9 @@ export async function POST(req: NextRequest) {
     if (file.size > MAX_SIZE) {
       throw BadRequest('ファイルサイズは5MB以下にしてください');
     }
+
+    // ストレージ容量チェック（アカウント単位）
+    await checkStorageLimit(session.user.id, file.size);
 
     // ファイル拡張子をサニタイズ（英数字のみ許可）
     const rawExt = file.name.split('.').pop() ?? 'jpg';

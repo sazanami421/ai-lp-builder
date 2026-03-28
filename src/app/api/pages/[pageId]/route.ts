@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { updatePageSchema, formatZodError } from '@/lib/validations';
 import { handleApiError, NotFound } from '@/lib/errors';
+import { checkPublishedPagesLimit } from '@/lib/plans';
 
 type Params = { params: Promise<{ pageId: string }> };
 
@@ -40,6 +41,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     if (parsed.data.globalConfig !== undefined) updateFields.globalConfig = parsed.data.globalConfig;
     if (parsed.data.title !== undefined) updateFields.title = parsed.data.title;
     if (parsed.data.isPublished !== undefined) {
+      // 新規公開時のみ上限チェック
+      if (parsed.data.isPublished && !page.isPublished) {
+        await checkPublishedPagesLimit(session.user.id);
+      }
       updateFields.isPublished = parsed.data.isPublished;
       if (parsed.data.isPublished && !page.publishedAt) {
         updateFields.publishedAt = new Date();

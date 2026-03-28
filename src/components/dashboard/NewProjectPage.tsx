@@ -536,7 +536,12 @@ function ModeSelect({
               </svg>
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-gray-900">AIにおまかせ</p>
+              <div className="flex items-center gap-2">
+                <p className="font-semibold text-gray-900">AIにおまかせ</p>
+                <span className="rounded-full bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">
+                  3pt消費
+                </span>
+              </div>
               <p className="mt-0.5 text-sm text-gray-500">
                 テンプレートを選んで質問に答えるだけ。AIがコンテンツを自動生成してLPを完成させます。
               </p>

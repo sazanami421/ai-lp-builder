@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { generateSectionEdit } from '@/lib/ai';
 import { aiChatSchema, formatZodError } from '@/lib/validations';
 import { handleApiError } from '@/lib/errors';
+import { consumeAICredits, AI_CREDIT_COST } from '@/lib/plans';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -12,6 +13,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await consumeAICredits(session.user.id, AI_CREDIT_COST.chat);
+
     const body = await req.json();
     const parsed = aiChatSchema.safeParse(body);
 
