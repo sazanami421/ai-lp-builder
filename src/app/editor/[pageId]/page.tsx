@@ -98,7 +98,7 @@ export default async function EditorPage({ params }: Props) {
   return (
     <EditorShell
       project={{ id: project.id, name: project.name, slug: project.slug, submissionCount }}
-      page={{ id: page.id, title: page.title, globalConfig: page.globalConfig, isPublished: page.isPublished }}
+      page={{ id: page.id, title: page.title, globalConfig: page.globalConfig, isPublished: page.isPublished, customDomain: page.customDomain ?? null, domainVerified: page.domainVerified }}
       initialSections={page.sections.map((s) => ({
         ...s,
         styleOverrides: (s.styleOverrides ?? {}) as Record<string, string>,

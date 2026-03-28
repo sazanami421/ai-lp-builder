@@ -5,6 +5,7 @@ import { SectionItem } from './SectionList';
 import SectionRenderer from '@/components/sections/SectionRenderer';
 import { SectionType, GlobalConfig } from '@/types/section';
 import { TEMPLATES } from '@/lib/templates';
+import CustomDomainPanel from './CustomDomainPanel';
 
 type Props = {
   sections: SectionItem[];
@@ -18,9 +19,12 @@ type Props = {
   pageId: string;
   projectSlug: string;
   initialIsPublished: boolean;
+  plan: 'free' | 'pro' | 'enterprise';
+  initialCustomDomain: string | null;
+  initialDomainVerified: boolean;
 };
 
-export default function Preview({ sections, selectedId, onSelect, onAIClick, previewSuggestion, projectName, template, cssVars, pageId, projectSlug, initialIsPublished }: Props) {
+export default function Preview({ sections, selectedId, onSelect, onAIClick, previewSuggestion, projectName, template, cssVars, pageId, projectSlug, initialIsPublished, plan, initialCustomDomain, initialDomainVerified }: Props) {
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [isPublished, setIsPublished] = useState(initialIsPublished);
   const [updating, setUpdating] = useState(false);
@@ -98,6 +102,12 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
         </div>
         <span className="text-xs text-gray-400">{projectName}</span>
         <div className="flex items-center gap-2">
+          <CustomDomainPanel
+            pageId={pageId}
+            plan={plan}
+            initialDomain={initialCustomDomain}
+            initialVerified={initialDomainVerified}
+          />
           {isPublished && (
             <a
               href={publicUrl}

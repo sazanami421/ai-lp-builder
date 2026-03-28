@@ -15,7 +15,7 @@ import { PlanMenuSection, type PlanInfo } from '@/components/shared/PlanMenuSect
 
 type Props = {
   project: { id: string; name: string; slug: string; submissionCount: number };
-  page: { id: string; title: string; globalConfig: unknown; isPublished: boolean };
+  page: { id: string; title: string; globalConfig: unknown; isPublished: boolean; customDomain: string | null; domainVerified: boolean };
   initialSections: SectionItem[];
   planInfo: PlanInfo;
 };
@@ -364,6 +364,9 @@ export default function EditorShell({ project, page, initialSections, planInfo }
             pageId={page.id}
             projectSlug={project.slug}
             initialIsPublished={page.isPublished}
+            plan={planInfo.plan}
+            initialCustomDomain={page.customDomain}
+            initialDomainVerified={page.domainVerified}
           />
           <AIChatWindow
             selectedSection={selectedSection}
