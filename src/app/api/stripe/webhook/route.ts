@@ -126,13 +126,15 @@ async function handleSubscriptionDeleted(sub: Stripe.Subscription) {
 
 // 支払い失敗 → subscriptionStatus を past_due に更新
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  if (!invoice.subscription) return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const inv = invoice as any;
+  if (!inv.subscription) return;
 
   const user = await prisma.user.findFirst({
     where: {
       OR: [
-        { stripeSubscriptionId: invoice.subscription as string },
-        { stripeCustomerId: invoice.customer as string },
+        { stripeSubscriptionId: inv.subscription as string },
+        { stripeCustomerId: inv.customer as string },
       ],
     },
     select: { id: true },
