@@ -348,7 +348,7 @@ export default function EditorShell({ project, page, initialSections, planInfo }
 
       {/* メイン */}
       <div className="flex flex-1 overflow-hidden">
-        <aside className="flex w-64 shrink-0 flex-col border-r border-gray-200 bg-white">
+        <aside className="flex w-56 shrink-0 flex-col border-r border-gray-200 bg-white">
           <ThemePanel
             template={template}
             cssVars={cssVars}
@@ -381,7 +381,6 @@ export default function EditorShell({ project, page, initialSections, planInfo }
               setChatOpen(true);
             }}
             previewSuggestion={previewSuggestion}
-            projectName={project.name}
             template={template}
             cssVars={cssVars}
             pageId={page.id}

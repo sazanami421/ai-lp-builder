@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { SectionItem } from './SectionList';
+import { SECTION_LABELS } from '@/lib/sectionLabels';
 
 type Suggestion = {
   data: Record<string, unknown>;
@@ -130,10 +131,10 @@ export default function AIChatWindow({ selectedSection, onApply, onPreview, onCl
           {/* ヘッダー */}
           <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-gray-900">AI assistant</span>
+              <span className="text-sm font-semibold text-gray-900">AIアシスタント</span>
               {selectedSection && (
                 <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-500">
-                  {selectedSection.type}
+                  {SECTION_LABELS[selectedSection.type]}
                 </span>
               )}
             </div>
@@ -158,10 +159,15 @@ export default function AIChatWindow({ selectedSection, onApply, onPreview, onCl
           {/* メッセージ一覧 */}
           <div className="flex-1 overflow-y-auto p-3 space-y-3">
             {messages.length === 0 && (
-              <div className="rounded-xl bg-gray-100 px-3 py-2 text-xs text-gray-600">
-                {selectedSection
-                  ? `${selectedSection.type} セクションが選択されています。どのような変更をしますか？`
-                  : 'セクションを選択してから指示を入力してください。'}
+              <div className="space-y-2">
+                <div className="rounded-xl bg-gray-100 px-3 py-2 text-xs text-gray-600">
+                  {selectedSection
+                    ? `「${SECTION_LABELS[selectedSection.type]}」が選択されています。どのような変更をしますか？`
+                    : 'セクションを選択してから指示を入力してください。'}
+                </div>
+                <div className="rounded-xl bg-amber-50 px-3 py-2 text-[11px] text-amber-700">
+                  テキスト・色・レイアウトの変更が得意です。画像やフォーム設定などは手動編集をご利用ください。
+                </div>
               </div>
             )}
 

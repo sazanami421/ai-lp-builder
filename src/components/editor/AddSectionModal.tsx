@@ -2,22 +2,23 @@
 
 import { useEffect } from 'react';
 import { SectionType } from '@/types/section';
+import { SECTION_LABELS } from '@/lib/sectionLabels';
 
-const SECTION_OPTIONS: { type: SectionType; label: string; description: string; icon: string }[] = [
-  { type: 'hero',         label: 'Hero',         description: 'メインビジュアル・キャッチコピー',   icon: '🖼️' },
-  { type: 'features',     label: 'Features',     description: '特徴・機能の紹介カード',             icon: '✨' },
-  { type: 'testimonials', label: 'Testimonials', description: 'お客様の声・レビュー',               icon: '💬' },
-  { type: 'pricing',       label: 'Pricing',       description: '料金プラン比較',                   icon: '💳' },
-  { type: 'pricing_table', label: 'Pricing Table', description: '機能比較テーブル（◯×形式）',       icon: '📊' },
-  { type: 'steps',         label: 'Steps',         description: '使い方・導入フローのステップ表示', icon: '👣' },
-  { type: 'stats',         label: 'Stats',         description: '実績・数値のインパクト表示',       icon: '📈' },
-  { type: 'logo_bar',      label: 'Logo Bar',      description: '導入企業・メディア掲載ロゴ',       icon: '🏢' },
-  { type: 'gallery',       label: 'Gallery',       description: '画像ギャラリー・作品集',           icon: '🖼️' },
-  { type: 'divider',       label: 'Divider',       description: 'セクション間の装飾・区切り',       icon: '〰️' },
-  { type: 'faq',           label: 'FAQ',           description: 'よくある質問とその回答',           icon: '❓' },
-  { type: 'cta',          label: 'CTA',          description: '行動喚起ボタン・コンバージョン',     icon: '🚀' },
-  { type: 'form',         label: 'Form',         description: 'お問い合わせ・リード獲得フォーム',   icon: '📝' },
-  { type: 'footer',       label: 'Footer',       description: 'フッター・著作権・リンク',           icon: '📄' },
+const SECTION_OPTIONS: { type: SectionType; description: string; icon: string }[] = [
+  { type: 'hero',         description: 'メインビジュアル・キャッチコピー',   icon: '🖼️' },
+  { type: 'features',     description: '特徴・機能の紹介カード',             icon: '✨' },
+  { type: 'testimonials', description: 'お客様の声・レビュー',               icon: '💬' },
+  { type: 'pricing',      description: '料金プラン比較',                     icon: '💳' },
+  { type: 'pricing_table',description: '機能比較テーブル（◯×形式）',         icon: '📊' },
+  { type: 'steps',        description: '使い方・導入フローのステップ表示',   icon: '👣' },
+  { type: 'stats',        description: '実績・数値のインパクト表示',         icon: '📈' },
+  { type: 'logo_bar',     description: '導入企業・メディア掲載ロゴ',         icon: '🏢' },
+  { type: 'gallery',      description: '画像ギャラリー・作品集',             icon: '🖼️' },
+  { type: 'divider',      description: 'セクション間の装飾・区切り',         icon: '〰️' },
+  { type: 'faq',          description: 'よくある質問とその回答',             icon: '❓' },
+  { type: 'cta',          description: '行動喚起ボタン・コンバージョン',     icon: '🚀' },
+  { type: 'form',         description: 'お問い合わせ・リード獲得フォーム',   icon: '📝' },
+  { type: 'footer',       description: 'フッター・著作権・リンク',           icon: '📄' },
 ];
 
 type Props = {
@@ -62,7 +63,7 @@ export default function AddSectionModal({ onSelect, onClose, loading }: Props) {
             >
               <span className="text-2xl">{option.icon}</span>
               <div>
-                <p className="text-sm font-semibold text-gray-900">{option.label}</p>
+                <p className="text-sm font-semibold text-gray-900">{SECTION_LABELS[option.type]}</p>
                 <p className="text-xs text-gray-400">{option.description}</p>
               </div>
               {loading && <span className="ml-auto text-xs text-gray-400">追加中…</span>}

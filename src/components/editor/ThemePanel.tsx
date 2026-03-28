@@ -50,7 +50,7 @@ export default function ThemePanel({ template, cssVars, onChange }: Props) {
           </button>
         )}
       </div>
-      <div className="flex gap-3">
+      <div className="grid grid-cols-3 gap-x-3 gap-y-2">
         {COLOR_FIELDS.map(({ key, label }) => (
           <label key={key} className="flex cursor-pointer flex-col items-center gap-1">
             <div className="relative h-7 w-7 rounded-full border border-gray-200 shadow-sm"
