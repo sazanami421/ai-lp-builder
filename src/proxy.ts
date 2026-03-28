@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 // 自分自身のドメイン（カスタムドメインと区別する）
 const OWN_DOMAIN_PATTERNS = ['localhost', '.vercel.app'];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const host = req.headers.get('host') ?? '';
   // ポート番号を除去
   const domain = host.split(':')[0];
