@@ -42,6 +42,6 @@ export async function GET(req: NextRequest) {
     const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000';
     return NextResponse.redirect(new URL('/dashboard/settings?upgrade=success', baseUrl));
   } catch (err) {
-    return handleApiError(err);
+    return handleApiError(err, 'GET /api/stripe/checkout/success');
   }
 }

@@ -59,6 +59,6 @@ export async function POST() {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
-    return handleApiError(err);
+    return handleApiError(err, 'POST /api/stripe/checkout');
   }
 }
