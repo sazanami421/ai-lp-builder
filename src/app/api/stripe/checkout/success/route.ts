@@ -23,7 +23,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 
-    const subscription = checkoutSession.subscription as import('stripe').Stripe.Subscription;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const subscription = checkoutSession.subscription as any;
 
     await prisma.user.update({
       where: { id: userId },
@@ -31,8 +32,10 @@ export async function GET(req: NextRequest) {
         plan: 'pro',
         stripeSubscriptionId: subscription.id,
         subscriptionStatus: subscription.status,
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+        currentPeriodEnd: subscription.current_period_end
+          ? new Date(subscription.current_period_end * 1000)
+          : null,
+        cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
         // Proアップグレード時にクレジットをリセット
         aiCreditsUsed: 0,
         aiCreditsResetAt: new Date(),

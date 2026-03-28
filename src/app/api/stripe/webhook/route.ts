@@ -85,7 +85,9 @@ async function handleSubscriptionUpdated(sub: Stripe.Subscription) {
     data: {
       stripeSubscriptionId: sub.id,
       subscriptionStatus: sub.status,
-      currentPeriodEnd: new Date(sub.current_period_end * 1000),
+      currentPeriodEnd: (sub as any).current_period_end
+        ? new Date((sub as any).current_period_end * 1000)
+        : null,
       cancelAtPeriodEnd: sub.cancel_at_period_end,
       // active / trialing ならProプランを維持、それ以外はfreeに降格
       plan: sub.status === 'active' || sub.status === 'trialing' ? 'pro' : 'free',
