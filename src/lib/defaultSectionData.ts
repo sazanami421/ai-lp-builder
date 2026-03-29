@@ -132,7 +132,7 @@ export const DEFAULT_SECTION_DATA: Record<SectionType, unknown> = {
   } satisfies FormSectionData,
 
   footer: {
-    copyright: `© ${new Date().getFullYear()} AI LP Builder. All rights reserved.`,
+    copyright: `© ${new Date().getFullYear()} Hitomazu AI-LP. All rights reserved.`,
     links: [
       { label: '利用規約', url: '#' },
       { label: 'プライバシーポリシー', url: '#' },

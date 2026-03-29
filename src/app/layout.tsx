@@ -9,7 +9,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "AI LP Builder",
+  title: "ひとまずAI-LP",
   description: "AIがLPを自動生成。チャットで指示するだけでプロ品質のランディングページが完成。",
 };
 
