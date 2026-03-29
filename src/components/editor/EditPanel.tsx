@@ -33,27 +33,11 @@ import DividerForm from './forms/DividerForm';
 import FormForm from './forms/FormForm';
 import FooterForm from './forms/FooterForm';
 import { DEFAULT_SECTION_DATA } from '@/lib/defaultSectionData';
+import { SECTION_LABELS } from '@/lib/sectionLabels';
 
 type Props = {
   section: SectionItem | null;
   onUpdate: (newData: unknown) => void;
-};
-
-const SECTION_LABELS: Record<SectionType, string> = {
-  hero: 'Hero',
-  features: 'Features',
-  testimonials: 'Testimonials',
-  pricing: 'Pricing',
-  pricing_table: 'Pricing Table',
-  faq: 'FAQ',
-  cta: 'CTA',
-  steps: 'Steps',
-  stats: 'Stats',
-  logo_bar: 'Logo Bar',
-  gallery: 'Gallery',
-  divider: 'Divider',
-  form: 'Form',
-  footer: 'Footer',
 };
 
 

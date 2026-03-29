@@ -2,23 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { SectionType } from '@/types/section';
-
-const SECTION_LABELS: Record<SectionType, string> = {
-  hero: 'Hero',
-  features: 'Features',
-  testimonials: 'Testimonials',
-  pricing: 'Pricing',
-  pricing_table: 'Pricing Table',
-  faq: 'FAQ',
-  cta: 'CTA',
-  steps: 'Steps',
-  stats: 'Stats',
-  logo_bar: 'Logo Bar',
-  gallery: 'Gallery',
-  divider: 'Divider',
-  form: 'Form',
-  footer: 'Footer',
-};
+import { SECTION_LABELS } from '@/lib/sectionLabels';
 
 export type SectionItem = {
   id: string;
@@ -73,9 +57,9 @@ export default function SectionList({ sections, selectedId, onSelect, onAddClick
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-        <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Sections</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">セクション</span>
         <button
           onClick={onAddClick}
           className="flex h-6 w-6 items-center justify-center rounded-md text-lg leading-none text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
@@ -85,7 +69,7 @@ export default function SectionList({ sections, selectedId, onSelect, onAddClick
         </button>
       </div>
 
-      <div className="overflow-y-auto py-1.5">
+      <div className="flex-1 overflow-y-auto py-1.5">
         {sections.length === 0 ? (
           <button
             onClick={onAddClick}
@@ -139,7 +123,7 @@ export default function SectionList({ sections, selectedId, onSelect, onAddClick
                   >
                     {i + 1}
                   </span>
-                  <span className={`text-sm ${!section.visible ? 'text-gray-400' : ''}`}>
+                  <span className={`text-xs ${!section.visible ? 'text-gray-400' : ''}`}>
                     {SECTION_LABELS[section.type]}
                   </span>
                 </button>

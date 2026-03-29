@@ -13,7 +13,6 @@ type Props = {
   onSelect: (id: string) => void;
   onAIClick: (sectionId: string) => void;
   previewSuggestion: { sectionId: string; data: unknown; styleOverrides: Record<string, string> } | null;
-  projectName: string;
   template: GlobalConfig['template'];
   cssVars: Record<string, string>;
   pageId: string;
@@ -24,7 +23,7 @@ type Props = {
   initialDomainVerified: boolean;
 };
 
-export default function Preview({ sections, selectedId, onSelect, onAIClick, previewSuggestion, projectName, template, cssVars, pageId, projectSlug, initialIsPublished, plan, initialCustomDomain, initialDomainVerified }: Props) {
+export default function Preview({ sections, selectedId, onSelect, onAIClick, previewSuggestion, template, cssVars, pageId, projectSlug, initialIsPublished, plan, initialCustomDomain, initialDomainVerified }: Props) {
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [isPublished, setIsPublished] = useState(initialIsPublished);
   const [updating, setUpdating] = useState(false);
@@ -99,11 +98,21 @@ export default function Preview({ sections, selectedId, onSelect, onAIClick, pre
                   : 'text-gray-500 hover:bg-gray-100'
               }`}
             >
-              {d === 'desktop' ? 'Desktop' : 'Mobile'}
+              {d === 'desktop' ? (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <path d="M8 21h8M12 17v4" />
+                </svg>
+              ) : (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <rect x="5" y="2" width="14" height="20" rx="2" />
+                  <circle cx="12" cy="18" r="1" fill="currentColor" stroke="none" />
+                </svg>
+              )}
             </button>
           ))}
         </div>
-        <span className="text-xs text-gray-400">{projectName}</span>
+
         <div className="flex items-center gap-2">
           <CustomDomainPanel
             pageId={pageId}
