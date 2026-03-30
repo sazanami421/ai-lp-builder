@@ -27,7 +27,7 @@ export default function Header({ userName, userEmail, userImage, planInfo }: Pro
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gray-950">
             <span className="text-xs font-bold text-white">AI</span>
           </div>
-          <span className="text-sm font-semibold tracking-tight text-gray-900">LP Builder</span>
+          <span className="text-sm font-semibold tracking-tight text-gray-900">ひとまずAI-LP</span>
         </Link>
 
         {/* ユーザーメニュー */}

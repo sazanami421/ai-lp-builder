@@ -16,7 +16,7 @@ export default async function RegisterPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
             <span className="text-sm font-bold text-gray-950">AI</span>
           </div>
-          <span className="font-semibold tracking-tight">LP Builder</span>
+          <span className="font-semibold tracking-tight">ひとまずAI-LP</span>
         </div>
 
         <div className="space-y-8">
@@ -40,7 +40,7 @@ export default async function RegisterPage() {
         </div>
 
         <p className="text-xs text-gray-600">
-          © 2026 AI LP Builder. All rights reserved.
+          © 2026 Hitomazu AI-LP. All rights reserved.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export default async function RegisterPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-950">
               <span className="text-sm font-bold text-white">AI</span>
             </div>
-            <span className="font-semibold tracking-tight">LP Builder</span>
+            <span className="font-semibold tracking-tight">ひとまずAI-LP</span>
           </div>
 
           <div className="mb-8">

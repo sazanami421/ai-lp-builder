@@ -16,7 +16,7 @@ export default async function LoginPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
             <span className="text-sm font-bold text-gray-950">AI</span>
           </div>
-          <span className="font-semibold tracking-tight">LP Builder</span>
+          <span className="font-semibold tracking-tight">ひとまずAI-LP</span>
         </div>
 
         <div>
@@ -54,7 +54,7 @@ export default async function LoginPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-950">
               <span className="text-sm font-bold text-white">AI</span>
             </div>
-            <span className="font-semibold tracking-tight">LP Builder</span>
+            <span className="font-semibold tracking-tight">ひとまずAI-LP</span>
           </div>
 
           <div className="mb-8">
