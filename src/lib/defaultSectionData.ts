@@ -136,7 +136,6 @@ export const DEFAULT_SECTION_DATA: Record<SectionType, unknown> = {
     links: [
       { label: '利用規約', url: '#' },
       { label: 'プライバシーポリシー', url: '#' },
-      { label: '特定商取引法に基づく表記', url: '/tokusho' },
     ],
   } satisfies FooterSectionData,
 };
