@@ -20,6 +20,7 @@ export default async function Page({ searchParams }: Props) {
     prisma.user.findUniqueOrThrow({
       where: { id: session!.user.id },
       select: {
+        companyName: true,
         plan: true,
         stripeCustomerId: true,
         subscriptionStatus: true,
@@ -32,6 +33,7 @@ export default async function Page({ searchParams }: Props) {
   return (
     <SettingsPage
       email={session!.user.email ?? ''}
+      companyName={user.companyName ?? ''}
       isOAuthUser={!!account}
       upgradeResult={params.upgrade}
       plan={user.plan}

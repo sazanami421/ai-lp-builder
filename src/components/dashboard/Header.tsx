@@ -63,6 +63,27 @@ export default function Header({ userName, userEmail, userImage, planInfo }: Pro
                   >
                     アカウント設定
                   </Link>
+                  <Link
+                    href="/terms"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
+                  >
+                    利用規約
+                  </Link>
+                  <Link
+                    href="/privacy"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
+                  >
+                    プライバシーポリシー
+                  </Link>
+                  <Link
+                    href="/tokusho"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
+                  >
+                    特定商取引法に基づく表記
+                  </Link>
                   <button
                     onClick={() => signOut({ callbackUrl: '/login' })}
                     className="flex w-full items-center px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"

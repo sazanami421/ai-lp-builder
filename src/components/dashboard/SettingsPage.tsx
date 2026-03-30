@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 type Props = {
   email: string;
+  companyName: string;
   isOAuthUser: boolean;
   upgradeResult?: string;
   plan: 'free' | 'pro' | 'enterprise';
@@ -66,6 +67,53 @@ function SubmitButton({ loading, label }: { loading: boolean; label: string }) {
     >
       {loading ? '保存中…' : label}
     </button>
+  );
+}
+
+// --- 会社名変更 ---
+
+function CompanyNameForm({ currentCompanyName }: { currentCompanyName: string }) {
+  const [companyName, setCompanyName] = useState(currentCompanyName);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess('');
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch('/api/users/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ companyName: companyName || null }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? '更新に失敗しました');
+      } else {
+        setSuccess('会社名を更新しました');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <FormField label="会社名（任意）">
+        <Input
+          type="text"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+          placeholder="株式会社〇〇"
+        />
+      </FormField>
+      {success && <SuccessMessage message={success} />}
+      {error && <ErrorMessage message={error} />}
+      <SubmitButton loading={loading} label="変更を保存" />
+    </form>
   );
 }
 
@@ -349,7 +397,7 @@ function DeleteAccountSection() {
 
 // --- メインページ ---
 
-export default function SettingsPage({ email, isOAuthUser, upgradeResult, plan, hasStripeCustomer, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd }: Props) {
+export default function SettingsPage({ email, companyName, isOAuthUser, upgradeResult, plan, hasStripeCustomer, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd }: Props) {
   return (
     <div className="mx-auto max-w-lg">
       <div className="mb-6">
@@ -377,6 +425,10 @@ export default function SettingsPage({ email, isOAuthUser, upgradeResult, plan, 
       )}
 
       <div className="space-y-4">
+        <SectionCard title="会社名">
+          <CompanyNameForm currentCompanyName={companyName} />
+        </SectionCard>
+
         <SectionCard title="メールアドレス">
           <EmailForm currentEmail={email} />
         </SectionCard>
