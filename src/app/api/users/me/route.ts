@@ -72,6 +72,15 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ message: 'メールアドレスを更新しました' });
     }
 
+    // 会社名変更
+    if ('companyName' in body) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { companyName: body.companyName ?? null },
+      });
+      return NextResponse.json({ message: '会社名を更新しました' });
+    }
+
     // パスワード変更
     if ('currentPassword' in body) {
       const result = updatePasswordSchema.safeParse(body);

@@ -163,14 +163,14 @@ export default function FooterForm({ data, onUpdate }: Props) {
                   type="text"
                   value={link.label}
                   onChange={(e) => updateLink(i, 'label', e.target.value)}
-                  placeholder="ラベル"
+                  placeholder="例：利用規約"
                   className={inputClass}
                 />
                 <input
                   type="url"
                   value={link.url}
                   onChange={(e) => updateLink(i, 'url', e.target.value)}
-                  placeholder="URL"
+                  placeholder="https://example.com/terms"
                   className={inputClass}
                 />
                 <button

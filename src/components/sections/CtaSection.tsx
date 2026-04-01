@@ -24,7 +24,7 @@ export default function CtaSection({ data, styleOverrides }: Props) {
               {data.headline}
             </h2>
             {data.subheadline && (
-              <p className="mt-2 text-sm" style={{ opacity: 0.7 }}>
+              <p className="mt-2 whitespace-pre-wrap text-sm" style={{ opacity: 0.7 }}>
                 {data.subheadline}
               </p>
             )}
@@ -57,7 +57,7 @@ export default function CtaSection({ data, styleOverrides }: Props) {
         {data.headline}
       </h2>
       {data.subheadline && (
-        <p className="mb-6 text-base md:mb-8 md:text-lg" style={{ opacity: 0.7 }}>
+        <p className="mb-6 whitespace-pre-wrap text-base md:mb-8 md:text-lg" style={{ opacity: 0.7 }}>
           {data.subheadline}
         </p>
       )}
