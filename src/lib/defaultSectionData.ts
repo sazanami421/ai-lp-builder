@@ -18,7 +18,7 @@ import type {
 
 export const DEFAULT_SECTION_DATA: Record<SectionType, unknown> = {
   hero: {
-    headline: 'あなたのビジネスを次のレベルへ',
+    headline: 'すげぇLP出すらしいじゃん',
     subheadline: 'AIが最適なLPを自動生成。数分で公開できます。',
     ctaText: '無料で始める',
     ctaUrl: '#',
@@ -133,9 +133,6 @@ export const DEFAULT_SECTION_DATA: Record<SectionType, unknown> = {
 
   footer: {
     copyright: `© ${new Date().getFullYear()} Hitomazu AI-LP. All rights reserved.`,
-    links: [
-      { label: '利用規約', url: '#' },
-      { label: 'プライバシーポリシー', url: '#' },
-    ],
+    links: [],
   } satisfies FooterSectionData,
 };

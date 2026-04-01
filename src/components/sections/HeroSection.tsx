@@ -55,7 +55,7 @@ export default function HeroSection({ data, styleOverrides }: Props) {
               {data.headline}
             </h1>
             {data.subheadline && (
-              <p className="mt-4 text-base leading-relaxed md:mt-5 md:text-lg" style={{ color: '#ffffff', opacity: 0.8 }}>
+              <p className="mt-4 whitespace-pre-wrap text-base leading-relaxed md:mt-5 md:text-lg" style={{ color: '#ffffff', opacity: 0.8 }}>
                 {data.subheadline}
               </p>
             )}
@@ -117,7 +117,7 @@ export default function HeroSection({ data, styleOverrides }: Props) {
               {data.headline}
             </h1>
             {data.subheadline && (
-              <p className="mt-4 text-base leading-relaxed md:mt-5 md:text-lg" style={{ opacity: 0.75 }}>
+              <p className="mt-4 whitespace-pre-wrap text-base leading-relaxed md:mt-5 md:text-lg" style={{ opacity: 0.75 }}>
                 {data.subheadline}
               </p>
             )}
@@ -173,7 +173,7 @@ export default function HeroSection({ data, styleOverrides }: Props) {
           {data.headline}
         </h1>
         {data.subheadline && (
-          <p className="mt-4 text-base leading-relaxed md:mt-5 md:text-xl" style={{ opacity: 0.75 }}>
+          <p className="mt-4 whitespace-pre-wrap text-base leading-relaxed md:mt-5 md:text-xl" style={{ opacity: 0.75 }}>
             {data.subheadline}
           </p>
         )}

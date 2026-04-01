@@ -39,7 +39,7 @@ export default function FaqSection({ data, styleOverrides }: Props) {
               <p className="mb-2 font-semibold" style={{ color: 'var(--accent)' }}>
                 Q. {item.question}
               </p>
-              <p className="text-sm" style={{ opacity: 0.75 }}>
+              <p className="whitespace-pre-wrap text-sm" style={{ opacity: 0.75 }}>
                 {item.answer}
               </p>
             </div>
@@ -78,7 +78,7 @@ export default function FaqSection({ data, styleOverrides }: Props) {
             </button>
             {openIndex === i && (
               <div
-                className="border-t px-5 py-4 text-sm"
+                className="whitespace-pre-wrap border-t px-5 py-4 text-sm"
                 style={{
                   borderColor: 'color-mix(in srgb, var(--text) 10%, transparent)',
                   opacity: 0.75,

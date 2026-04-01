@@ -54,7 +54,7 @@ export default function StepsSection({ data, styleOverrides }: Props) {
                 >
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ opacity: 0.7 }}>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed" style={{ opacity: 0.7 }}>
                   {item.description}
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function StepsSection({ data, styleOverrides }: Props) {
               >
                 {item.title}
               </h3>
-              <p className="text-sm leading-relaxed" style={{ opacity: 0.7 }}>
+              <p className="whitespace-pre-wrap text-sm leading-relaxed" style={{ opacity: 0.7 }}>
                 {item.description}
               </p>
             </div>

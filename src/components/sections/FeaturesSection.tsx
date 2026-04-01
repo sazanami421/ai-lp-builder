@@ -73,7 +73,7 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
                 >
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed md:text-base" style={{ opacity: 0.75 }}>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed md:text-base" style={{ opacity: 0.75 }}>
                   {item.description}
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
             <h3 className="mb-2 font-semibold" style={{ fontFamily: 'var(--font-heading)' }}>
               {item.title}
             </h3>
-            <p className="text-sm" style={{ opacity: 0.7 }}>
+            <p className="whitespace-pre-wrap text-sm" style={{ opacity: 0.7 }}>
               {item.description}
             </p>
           </div>

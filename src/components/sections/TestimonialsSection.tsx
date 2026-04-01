@@ -27,7 +27,7 @@ export default function TestimonialsSection({ data, styleOverrides }: Props) {
           <svg className="mx-auto mb-4 h-8 w-8 opacity-20 md:mb-6 md:h-10 md:w-10" viewBox="0 0 24 24" fill="currentColor">
             <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.626.41-2.223.315-.598.803-1.163 1.457-1.693.324-.27.34-.73.046-1.02-.295-.286-.763-.286-1.06-.003-.965.84-1.67 1.718-2.113 2.634-.444.917-.666 1.888-.666 2.914 0 1.01.24 1.832.72 2.468.48.637 1.12.956 1.92.956.8 0 1.45-.305 1.95-.915.5-.61.752-1.39.752-2.343v.329zm8 0c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.626.41-2.223.315-.598.803-1.163 1.457-1.693.324-.27.34-.73.046-1.02-.295-.286-.763-.286-1.06-.003-.965.84-1.67 1.718-2.113 2.634-.444.917-.666 1.888-.666 2.914 0 1.01.24 1.832.72 2.468.48.637 1.12.956 1.92.956.8 0 1.45-.305 1.95-.915.5-.61.752-1.39.752-2.343v.329z" />
           </svg>
-          <p className="mb-8 text-base leading-relaxed md:mb-10 md:text-xl" style={{ opacity: 0.85 }}>
+          <p className="mb-8 whitespace-pre-wrap text-base leading-relaxed md:mb-10 md:text-xl" style={{ opacity: 0.85 }}>
             {item.body}
           </p>
           <div className="flex items-center justify-center gap-3 md:gap-4">
@@ -60,7 +60,7 @@ export default function TestimonialsSection({ data, styleOverrides }: Props) {
             className="p-5 shadow-sm md:p-6"
             style={{ backgroundColor: 'var(--bg)', borderRadius: 'var(--radius)' }}
           >
-            <p className="mb-4 text-sm md:text-base" style={{ opacity: 0.8 }}>&ldquo;{item.body}&rdquo;</p>
+            <p className="mb-4 whitespace-pre-wrap text-sm md:text-base" style={{ opacity: 0.8 }}>&ldquo;{item.body}&rdquo;</p>
             <div className="flex items-center gap-3">
               {item.avatarUrl && (
                 <img src={item.avatarUrl} alt={item.name} className="h-10 w-10 rounded-full object-cover" />
