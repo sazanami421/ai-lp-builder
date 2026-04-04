@@ -7,9 +7,9 @@ import { PaymentRequired } from '@/lib/errors';
 
 export const PLAN_LIMITS = {
   free: {
-    aiCreditsPerMonth: 20,
-    publishedPages: 2,
-    storageBytes: 50 * 1024 * 1024, // 50MB
+    aiCreditsPerMonth: 25,
+    publishedPages: 1,
+    storageBytes: 15 * 1024 * 1024, // 15MB
   },
   pro: {
     aiCreditsPerMonth: Infinity,
