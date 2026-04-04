@@ -8,7 +8,7 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://hitomazu-ai-lp.vercel.app';
+const siteUrl = process.env.NEXTAUTH_URL ?? 'https://hitomazu-ai-lp.vercel.app';
 
 export const metadata: Metadata = {
   title: {
