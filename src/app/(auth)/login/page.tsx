@@ -11,22 +11,20 @@ export default async function LoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* 左パネル：ブランディング */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between bg-gray-950 p-12 text-white">
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12" style={{ background: 'linear-gradient(135deg, #dbeafe, #ffedd5)' }}>
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-            <span className="text-sm font-bold text-gray-950">AI</span>
-          </div>
-          <span className="font-semibold tracking-tight">ひとまずAI-LP</span>
+          <img src="/hitomazu-logo.png" alt="" style={{ height: '28px', width: 'auto' }} />
+          <span className="font-semibold tracking-tight text-gray-800">ひとまずAI-LP</span>
         </div>
 
         <div>
           <blockquote className="space-y-4">
-            <p className="text-2xl font-light leading-relaxed text-gray-100">
+            <p className="text-2xl font-light leading-relaxed text-gray-800">
               AIに指示するだけで、<br />
               プロ品質のLPが<br />
               数分で完成します。
             </p>
-            <footer className="text-sm text-gray-400">
+            <footer className="text-sm text-gray-600">
               チャット＋フォームで指示 → セクション単位で編集 → そのまま公開
             </footer>
           </blockquote>
@@ -39,8 +37,8 @@ export default async function LoginPage() {
             { value: '無制限', label: 'セクション編集' },
           ].map((stat) => (
             <div key={stat.label}>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <div className="mt-1 text-xs text-gray-400">{stat.label}</div>
+              <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
+              <div className="mt-1 text-xs text-gray-600">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -51,10 +49,8 @@ export default async function LoginPage() {
         <div className="w-full max-w-sm">
           {/* モバイル用ロゴ */}
           <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-950">
-              <span className="text-sm font-bold text-white">AI</span>
-            </div>
-            <span className="font-semibold tracking-tight">ひとまずAI-LP</span>
+            <img src="/hitomazu-logo.png" alt="" style={{ height: '28px', width: 'auto' }} />
+            <span className="font-semibold tracking-tight text-gray-900">ひとまずAI-LP</span>
           </div>
 
           <div className="mb-8">
@@ -74,18 +70,18 @@ export default async function LoginPage() {
           {/* 区切り線 */}
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-gray-200" />
-            <span className="text-xs text-gray-400">またはメールアドレスでログイン</span>
+            <span className="text-xs text-gray-500">またはメールアドレスでログイン</span>
             <div className="h-px flex-1 bg-gray-200" />
           </div>
 
           {/* メール+パスワード ログインフォーム */}
           <LoginForm />
 
-          <p className="mt-6 text-center text-xs text-gray-400">
+          <p className="mt-6 text-center text-xs text-gray-500">
             ログインすることで
-            <a href="#" className="underline hover:text-gray-600">利用規約</a>
+            <a href="/terms" className="underline transition-colors duration-200 hover:text-gray-700">利用規約</a>
             および
-            <a href="#" className="underline hover:text-gray-600">プライバシーポリシー</a>
+            <a href="/privacy" className="underline transition-colors duration-200 hover:text-gray-700">プライバシーポリシー</a>
             に同意したものとみなします。
           </p>
         </div>
