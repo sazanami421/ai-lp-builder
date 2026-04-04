@@ -8,9 +8,30 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://hitomazu-ai-lp.vercel.app';
+
 export const metadata: Metadata = {
-  title: "ひとまずAI-LP",
-  description: "AIがLPを自動生成。チャットで指示するだけでプロ品質のランディングページが完成。",
+  title: {
+    default: 'ひとまずAI-LP',
+    template: '%s | ひとまずAI-LP',
+  },
+  description: 'AIがLPを自動生成。チャットで指示するだけでプロ品質のランディングページが完成。',
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    type: 'website',
+    locale: 'ja_JP',
+    url: siteUrl,
+    siteName: 'ひとまずAI-LP',
+    title: 'ひとまずAI-LP',
+    description: 'AIがLPを自動生成。チャットで指示するだけでプロ品質のランディングページが完成。',
+    images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ひとまずAI-LP',
+    description: 'AIがLPを自動生成。チャットで指示するだけでプロ品質のランディングページが完成。',
+    images: ['/og-image.webp'],
+  },
 };
 
 export default function RootLayout({

@@ -24,9 +24,8 @@ export default function Header({ userName, userEmail, userImage, planInfo }: Pro
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* ロゴ */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gray-950">
-            <span className="text-xs font-bold text-white">AI</span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/hitomazu-logo.png" alt="" style={{ height: '28px', width: 'auto' }} />
           <span className="text-sm font-semibold tracking-tight text-gray-900">ひとまずAI-LP</span>
         </Link>
 
