@@ -20,7 +20,7 @@ export default function PrivacyPage() {
             トップへ戻る
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">プライバシーポリシー</h1>
-          <p className="mt-2 text-sm text-gray-500">施行日：2026年○月○日</p>
+          <p className="mt-2 text-sm text-gray-500">施行日：2026年4月4日</p>
         </div>
 
         <div className="space-y-8 rounded-xl border border-gray-200 bg-white px-8 py-10 text-sm leading-relaxed text-gray-700">
