@@ -21,7 +21,7 @@ export default function DividerSection({ data, styleOverrides }: Props) {
       >
         <div className="mx-auto flex max-w-2xl items-center gap-4">
           <div className="flex-1 border-t" style={{ borderColor: 'color-mix(in srgb, var(--text) 20%, transparent)' }} />
-          <div className="flex items-center gap-1.5 text-sm" style={{ color: 'var(--accent)', opacity: 0.6 }}>
+          <div className="flex items-center gap-1.5 text-xl" style={{ color: 'var(--accent)', opacity: 0.6 }}>
             {data.text ? (
               <span>{data.text}</span>
             ) : (
