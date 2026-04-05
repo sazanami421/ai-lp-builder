@@ -54,7 +54,7 @@ export default function DividerSection({ data, styleOverrides }: Props) {
       }}
     >
       {data.text && (
-        <p className="text-sm font-semibold" style={{ opacity: 0.8 }}>
+        <p className="text-xl font-semibold" style={{ opacity: 0.8 }}>
           {data.text}
         </p>
       )}
