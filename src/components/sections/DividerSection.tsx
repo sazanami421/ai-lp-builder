@@ -12,7 +12,7 @@ export default function DividerSection({ data, styleOverrides }: Props) {
   if (variant === 'ornament') {
     return (
       <section
-        className="py-4 px-4 md:py-6"
+        className="py-8 px-4 md:py-12"
         style={{
           color: 'var(--text)',
           fontFamily: 'var(--font-body)',
@@ -43,11 +43,11 @@ export default function DividerSection({ data, styleOverrides }: Props) {
     <section
       style={{
         background: 'linear-gradient(135deg, var(--accent-light), color-mix(in srgb, var(--accent) 35%, var(--accent-light)), var(--accent-light))',
-        minHeight: '80px',
+        minHeight: '160px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem 1rem',
+        padding: '3rem 1rem',
         color: 'var(--text)',
         fontFamily: 'var(--font-body)',
         ...styleOverrides,
