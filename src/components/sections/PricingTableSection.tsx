@@ -18,7 +18,10 @@ export default function PricingTableSection({ data, styleOverrides }: Props) {
         {data.title}
       </h2>
 
-      <div className="mx-auto max-w-5xl overflow-x-auto">
+      <div
+        className="mx-auto max-w-5xl overflow-x-auto"
+        style={{ borderRadius: 'var(--radius)', border: 'var(--card-border)', boxShadow: 'var(--card-shadow)' }}
+      >
         <table className="w-full min-w-[480px] border-collapse text-sm">
           <thead>
             <tr>

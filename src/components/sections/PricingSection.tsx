@@ -21,12 +21,12 @@ export default function PricingSection({ data, styleOverrides }: Props) {
         {data.plans.map((plan, i) => (
           <div
             key={i}
-            className="border p-5 md:p-6"
+            className="p-5 md:p-6"
             style={{
               borderRadius: 'var(--radius)',
-              borderColor: plan.highlighted ? 'var(--accent)' : 'color-mix(in srgb, var(--text) 15%, transparent)',
+              border: plan.highlighted ? '2px solid var(--accent)' : 'var(--card-border)',
               backgroundColor: 'color-mix(in srgb, var(--bg) 95%, var(--text) 5%)',
-              boxShadow: plan.highlighted ? '0 4px 20px color-mix(in srgb, var(--accent) 25%, transparent)' : undefined,
+              boxShadow: plan.highlighted ? '0 4px 20px color-mix(in srgb, var(--accent) 25%, transparent)' : 'var(--card-shadow)',
             }}
           >
             <h3 className="mb-2 text-xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>

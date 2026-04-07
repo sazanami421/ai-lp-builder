@@ -27,11 +27,12 @@ export default function StatsSection({ data, styleOverrides }: Props) {
           {data.items.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center rounded p-5 text-center"
+              className="flex flex-col items-center justify-center p-5 text-center"
               style={{
                 borderRadius: 'var(--radius)',
                 backgroundColor: 'color-mix(in srgb, var(--accent) 8%, transparent)',
-                border: '1px solid color-mix(in srgb, var(--accent) 20%, transparent)',
+                border: 'var(--card-border)',
+                boxShadow: 'var(--card-shadow)',
               }}
             >
               <span

@@ -57,8 +57,8 @@ export default function TestimonialsSection({ data, styleOverrides }: Props) {
         {data.items.map((item, i) => (
           <div
             key={i}
-            className="p-5 shadow-sm md:p-6"
-            style={{ backgroundColor: 'var(--bg)', borderRadius: 'var(--radius)' }}
+            className="p-5 md:p-6"
+            style={{ backgroundColor: 'var(--bg)', borderRadius: 'var(--radius)', border: 'var(--card-border)', boxShadow: 'var(--card-shadow)' }}
           >
             <p className="mb-4 whitespace-pre-wrap text-sm md:text-base" style={{ opacity: 0.8 }}>&ldquo;{item.body}&rdquo;</p>
             <div className="flex items-center gap-3">
