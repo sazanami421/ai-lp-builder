@@ -13,6 +13,13 @@ export const naturalTemplate = {
     '--font-body': "'Raleway', sans-serif",
     '--radius': '16px',
     '--texture': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.15' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\")",
+    '--card-shadow': '0 4px 20px rgba(0,0,0,0.05)',
+    '--card-border': '1px solid rgba(0,0,0,0.06)',
+    '--button-shadow': 'none',
+    '--button-radius': '9999px',
+    '--heading-accent': 'none',
+    '--section-divider': 'none',
+    '--hover-lift': '-2px',
   },
   defaultVariants: {
     hero: 'centered',

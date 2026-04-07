@@ -13,6 +13,13 @@ export const businessTemplate = {
     '--font-body': "'Plus Jakarta Sans', sans-serif",
     '--radius': '6px',
     '--texture': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath d='M-1 1L1 -1M0 10L10 0M9 11L11 9' stroke='%231A1A2E' stroke-width='0.8' opacity='0.06'/%3E%3C/svg%3E\")",
+    '--card-shadow': '0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)',
+    '--card-border': '1px solid rgba(0,0,0,0.12)',
+    '--button-shadow': '0 1px 2px rgba(0,0,0,0.1)',
+    '--button-radius': '8px',
+    '--heading-accent': '2px solid var(--accent)',
+    '--section-divider': '1px solid rgba(0,0,0,0.06)',
+    '--hover-lift': '-2px',
   },
   defaultVariants: {
     hero: 'split',

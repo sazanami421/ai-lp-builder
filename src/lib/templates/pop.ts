@@ -13,6 +13,13 @@ export const popTemplate = {
     '--font-body': "'DM Sans', sans-serif",
     '--radius': '12px',
     '--texture': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.5' fill='%231A1A1A' opacity='0.07'/%3E%3C/svg%3E\")",
+    '--card-shadow': '4px 4px 0 #000000',
+    '--card-border': '3px solid #000000',
+    '--button-shadow': '4px 4px 0 #000000',
+    '--button-radius': '0px',
+    '--heading-accent': '4px solid #000000',
+    '--section-divider': '3px dashed #000000',
+    '--hover-lift': '-6px',
   },
   defaultVariants: {
     hero: 'centered',
