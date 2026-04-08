@@ -35,7 +35,8 @@ export default function CtaSection({ data, styleOverrides }: Props) {
               className="shrink-0 font-semibold text-white"
               style={{
                 backgroundColor: 'var(--accent)',
-                borderRadius: 'var(--radius)',
+                borderRadius: 'var(--button-radius)',
+                boxShadow: 'var(--button-shadow)',
                 padding: '0.875rem 2rem',
               }}
             >
@@ -67,7 +68,8 @@ export default function CtaSection({ data, styleOverrides }: Props) {
           className="inline-block font-semibold text-white"
           style={{
             backgroundColor: 'var(--accent)',
-            borderRadius: 'var(--radius)',
+            borderRadius: 'var(--button-radius)',
+            boxShadow: 'var(--button-shadow)',
             padding: '1rem 2.5rem',
           }}
         >

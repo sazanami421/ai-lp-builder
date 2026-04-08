@@ -18,7 +18,8 @@ export default function HeroSection({ data, styleOverrides }: Props) {
       className="inline-block font-semibold text-white transition-opacity duration-200 hover:opacity-90 cursor-pointer"
       style={{
         backgroundColor: 'var(--accent)',
-        borderRadius: 'var(--radius)',
+        borderRadius: 'var(--button-radius)',
+        boxShadow: 'var(--button-shadow)',
         padding: '0.875rem 2rem',
       }}
     >
@@ -67,7 +68,8 @@ export default function HeroSection({ data, styleOverrides }: Props) {
                   style={{
                     backgroundColor: '#ffffff',
                     color: 'var(--accent)',
-                    borderRadius: 'var(--radius)',
+                    borderRadius: 'var(--button-radius)',
+                    boxShadow: 'var(--button-shadow)',
                     padding: '0.875rem 2rem',
                   }}
                 >

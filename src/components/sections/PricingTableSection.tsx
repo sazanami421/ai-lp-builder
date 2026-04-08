@@ -118,7 +118,8 @@ export default function PricingTableSection({ data, styleOverrides }: Props) {
                         className="inline-block px-4 py-2 text-xs font-semibold text-white transition"
                         style={{
                           backgroundColor: 'var(--accent)',
-                          borderRadius: 'var(--radius)',
+                          borderRadius: 'var(--button-radius)',
+                          boxShadow: 'var(--button-shadow)',
                         }}
                       >
                         {plan.ctaText}

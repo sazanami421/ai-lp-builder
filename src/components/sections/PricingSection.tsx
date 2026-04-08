@@ -49,7 +49,7 @@ export default function PricingSection({ data, styleOverrides }: Props) {
               <a
                 href={plan.ctaUrl ?? '#'}
                 className="block py-2 text-center text-sm font-semibold text-white"
-                style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--radius)' }}
+                style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--button-radius)', boxShadow: 'var(--button-shadow)' }}
               >
                 {plan.ctaText}
               </a>
