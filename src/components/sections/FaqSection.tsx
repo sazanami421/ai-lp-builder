@@ -20,12 +20,13 @@ export default function FaqSection({ data, styleOverrides }: Props) {
     return (
       <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
         <h2
-          className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
+          className="mb-3 text-center text-2xl font-bold md:text-3xl"
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {data.title}
         </h2>
-        <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+        <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+        <div className="mx-auto mt-8 grid max-w-4xl gap-6 sm:grid-cols-2 md:mt-12">
           {data.items.map((item, i) => (
             <div
               key={i}
@@ -53,12 +54,13 @@ export default function FaqSection({ data, styleOverrides }: Props) {
   return (
     <section className="py-20 px-6" style={sectionStyle}>
       <h2
-        className="mb-12 text-center text-3xl font-bold"
+        className="mb-3 text-center text-3xl font-bold"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
-      <div className="mx-auto max-w-2xl space-y-3">
+      <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+      <div className="mx-auto mt-12 max-w-2xl space-y-3">
         {data.items.map((item, i) => (
           <div
             key={i}

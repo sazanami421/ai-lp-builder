@@ -12,12 +12,13 @@ export default function PricingSection({ data, styleOverrides }: Props) {
   return (
     <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
+        className="mb-3 text-center text-2xl font-bold md:text-3xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
-      <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+      <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+      <div className="mx-auto mt-8 grid max-w-4xl gap-4 sm:grid-cols-2 md:mt-12 md:gap-6 lg:grid-cols-3">
         {data.plans.map((plan, i) => (
           <div
             key={i}

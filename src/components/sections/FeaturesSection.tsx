@@ -23,12 +23,13 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
     return (
       <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
         <h2
-          className="mb-10 text-center text-2xl font-bold md:mb-16 md:text-3xl"
+          className="mb-3 text-center text-2xl font-bold md:text-3xl"
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {data.title}
         </h2>
-        <div className="mx-auto max-w-5xl space-y-10 md:space-y-16">
+        <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+        <div className="mx-auto mt-10 max-w-5xl space-y-10 md:mt-16 md:space-y-16">
           {data.items.map((item, i) => (
             <div
               key={i}
@@ -89,12 +90,13 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
   return (
     <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
+        className="mb-3 text-center text-2xl font-bold md:text-3xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
-      <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
+      <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+      <div className="mx-auto mt-8 grid max-w-5xl gap-6 sm:grid-cols-2 md:mt-12 md:gap-8 lg:grid-cols-3">
         {data.items.map((item, i) => (
           <div key={i} className="p-5 md:p-6" style={cardStyle}>
             {item.icon && <div className="mb-2 text-2xl md:mb-3 md:text-3xl">{item.icon}</div>}

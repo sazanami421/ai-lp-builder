@@ -16,12 +16,15 @@ export default function StatsSection({ data, styleOverrides }: Props) {
     return (
       <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
         {data.title && (
-          <h2
-            className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            {data.title}
-          </h2>
+          <>
+            <h2
+              className="mb-3 text-center text-2xl font-bold md:text-3xl"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              {data.title}
+            </h2>
+            <div className="mx-auto mt-3 mb-8 w-12 md:mb-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+          </>
         )}
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
           {data.items.map((item, i) => (
