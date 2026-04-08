@@ -19,6 +19,7 @@ export function buildSectionStyle(
       background,
       color: 'var(--text)',
       fontFamily: 'var(--font-body)',
+      borderBottom: 'var(--section-divider)',
       ...rest,
     };
   }
@@ -28,6 +29,7 @@ export function buildSectionStyle(
     backgroundImage: 'var(--texture)',
     color: 'var(--text)',
     fontFamily: 'var(--font-body)',
+    borderBottom: 'var(--section-divider)',
     ...rest,
   };
 }

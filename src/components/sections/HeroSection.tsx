@@ -15,10 +15,11 @@ export default function HeroSection({ data, styleOverrides }: Props) {
   const ctaButton = data.ctaText && (
     <a
       href={data.ctaUrl ?? '#'}
-      className="inline-block font-semibold text-white transition-opacity duration-200 hover:opacity-90 cursor-pointer"
+      className="hover-lift inline-block font-semibold text-white transition-opacity duration-200 hover:opacity-90 cursor-pointer"
       style={{
         backgroundColor: 'var(--accent)',
-        borderRadius: 'var(--radius)',
+        borderRadius: 'var(--button-radius)',
+        boxShadow: 'var(--button-shadow)',
         padding: '0.875rem 2rem',
       }}
     >
@@ -63,11 +64,12 @@ export default function HeroSection({ data, styleOverrides }: Props) {
               <div className="mt-6 md:mt-8">
                 <a
                   href={data.ctaUrl ?? '#'}
-                  className="inline-block font-semibold transition-opacity duration-200 hover:opacity-90 cursor-pointer"
+                  className="hover-lift inline-block font-semibold transition-opacity duration-200 hover:opacity-90 cursor-pointer"
                   style={{
                     backgroundColor: '#ffffff',
                     color: 'var(--accent)',
-                    borderRadius: 'var(--radius)',
+                    borderRadius: 'var(--button-radius)',
+                    boxShadow: 'var(--button-shadow)',
                     padding: '0.875rem 2rem',
                   }}
                 >

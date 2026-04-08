@@ -32,10 +32,11 @@ export default function CtaSection({ data, styleOverrides }: Props) {
           {data.ctaText && (
             <a
               href={data.ctaUrl ?? '#'}
-              className="shrink-0 font-semibold text-white"
+              className="hover-lift shrink-0 font-semibold text-white"
               style={{
                 backgroundColor: 'var(--accent)',
-                borderRadius: 'var(--radius)',
+                borderRadius: 'var(--button-radius)',
+                boxShadow: 'var(--button-shadow)',
                 padding: '0.875rem 2rem',
               }}
             >
@@ -51,23 +52,25 @@ export default function CtaSection({ data, styleOverrides }: Props) {
   return (
     <section className="py-12 px-4 text-center md:py-24 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-3 text-2xl font-bold md:mb-4 md:text-4xl"
+        className="mb-3 text-2xl font-bold md:text-4xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.headline}
       </h2>
+      <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
       {data.subheadline && (
-        <p className="mb-6 whitespace-pre-wrap text-base md:mb-8 md:text-lg" style={{ opacity: 0.7 }}>
+        <p className="mb-6 mt-4 whitespace-pre-wrap text-base md:mb-8 md:text-lg" style={{ opacity: 0.7 }}>
           {data.subheadline}
         </p>
       )}
       {data.ctaText && (
         <a
           href={data.ctaUrl ?? '#'}
-          className="inline-block font-semibold text-white"
+          className="hover-lift mt-6 inline-block font-semibold text-white"
           style={{
             backgroundColor: 'var(--accent)',
-            borderRadius: 'var(--radius)',
+            borderRadius: 'var(--button-radius)',
+            boxShadow: 'var(--button-shadow)',
             padding: '1rem 2.5rem',
           }}
         >

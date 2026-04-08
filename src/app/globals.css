@@ -17,3 +17,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.hover-lift {
+  transition: transform 200ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(var(--hover-lift));
+}
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift:hover {
+    transform: none;
+  }
+}

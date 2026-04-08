@@ -13,6 +13,13 @@ export const simpleTemplate = {
     '--font-body': "'Outfit', sans-serif",
     '--radius': '4px',
     '--texture': 'none',
+    '--card-shadow': 'none',
+    '--card-border': '1px solid rgba(0,0,0,0.08)',
+    '--button-shadow': 'none',
+    '--button-radius': '6px',
+    '--heading-accent': 'none',
+    '--section-divider': 'none',
+    '--hover-lift': '0px',
   },
   defaultVariants: {
     hero: 'centered',

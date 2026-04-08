@@ -16,22 +16,26 @@ export default function StatsSection({ data, styleOverrides }: Props) {
     return (
       <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
         {data.title && (
-          <h2
-            className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            {data.title}
-          </h2>
+          <>
+            <h2
+              className="mb-3 text-center text-2xl font-bold md:text-3xl"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              {data.title}
+            </h2>
+            <div className="mx-auto mt-3 mb-8 w-12 md:mb-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+          </>
         )}
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
           {data.items.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center rounded p-5 text-center"
+              className="hover-lift flex flex-col items-center justify-center p-5 text-center"
               style={{
                 borderRadius: 'var(--radius)',
                 backgroundColor: 'color-mix(in srgb, var(--accent) 8%, transparent)',
-                border: '1px solid color-mix(in srgb, var(--accent) 20%, transparent)',
+                border: 'var(--card-border)',
+                boxShadow: 'var(--card-shadow)',
               }}
             >
               <span

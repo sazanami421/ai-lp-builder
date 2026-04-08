@@ -20,12 +20,13 @@ export default function StepsSection({ data, styleOverrides }: Props) {
     return (
       <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
         <h2
-          className="mb-10 text-center text-2xl font-bold md:mb-14 md:text-3xl"
+          className="mb-3 text-center text-2xl font-bold md:text-3xl"
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {data.title}
         </h2>
-        <div className="mx-auto max-w-2xl space-y-0">
+        <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+        <div className="mx-auto mt-10 max-w-2xl space-y-0 md:mt-14">
           {data.items.map((item, i) => (
             <div key={i} className="relative flex gap-5">
               {/* 左：アイコン + 縦線 */}
@@ -69,12 +70,13 @@ export default function StepsSection({ data, styleOverrides }: Props) {
   return (
     <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-10 text-center text-2xl font-bold md:mb-14 md:text-3xl"
+        className="mb-3 text-center text-2xl font-bold md:text-3xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
+      <div className="mx-auto mt-10 max-w-4xl md:mt-14">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-4">
           {data.items.map((item, i) => (
             <div key={i} className="relative flex flex-col items-center text-center">

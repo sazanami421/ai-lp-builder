@@ -12,13 +12,17 @@ export default function PricingTableSection({ data, styleOverrides }: Props) {
   return (
     <section className="py-12 px-4 md:py-20 md:px-6" style={sectionStyle}>
       <h2
-        className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl"
+        className="mb-3 text-center text-2xl font-bold md:text-3xl"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {data.title}
       </h2>
+      <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
 
-      <div className="mx-auto max-w-5xl overflow-x-auto">
+      <div
+        className="mx-auto mt-8 max-w-5xl overflow-x-auto md:mt-12"
+        style={{ borderRadius: 'var(--radius)', border: 'var(--card-border)', boxShadow: 'var(--card-shadow)' }}
+      >
         <table className="w-full min-w-[480px] border-collapse text-sm">
           <thead>
             <tr>
@@ -112,10 +116,11 @@ export default function PricingTableSection({ data, styleOverrides }: Props) {
                     {plan.ctaText && (
                       <a
                         href={plan.ctaUrl ?? '#'}
-                        className="inline-block px-4 py-2 text-xs font-semibold text-white transition"
+                        className="hover-lift inline-block px-4 py-2 text-xs font-semibold text-white transition"
                         style={{
                           backgroundColor: 'var(--accent)',
-                          borderRadius: 'var(--radius)',
+                          borderRadius: 'var(--button-radius)',
+                          boxShadow: 'var(--button-shadow)',
                         }}
                       >
                         {plan.ctaText}
