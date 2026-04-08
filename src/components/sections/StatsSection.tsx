@@ -30,7 +30,7 @@ export default function StatsSection({ data, styleOverrides }: Props) {
           {data.items.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center p-5 text-center"
+              className="hover-lift flex flex-col items-center justify-center p-5 text-center"
               style={{
                 borderRadius: 'var(--radius)',
                 backgroundColor: 'color-mix(in srgb, var(--accent) 8%, transparent)',

@@ -22,7 +22,7 @@ export default function PricingSection({ data, styleOverrides }: Props) {
         {data.plans.map((plan, i) => (
           <div
             key={i}
-            className="p-5 md:p-6"
+            className="hover-lift p-5 md:p-6"
             style={{
               borderRadius: 'var(--radius)',
               border: plan.highlighted ? '2px solid var(--accent)' : 'var(--card-border)',
@@ -49,7 +49,7 @@ export default function PricingSection({ data, styleOverrides }: Props) {
             {plan.ctaText && (
               <a
                 href={plan.ctaUrl ?? '#'}
-                className="block py-2 text-center text-sm font-semibold text-white"
+                className="hover-lift block py-2 text-center text-sm font-semibold text-white"
                 style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--button-radius)', boxShadow: 'var(--button-shadow)' }}
               >
                 {plan.ctaText}

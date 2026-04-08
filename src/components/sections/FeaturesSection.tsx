@@ -98,7 +98,7 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
       <div className="mx-auto mt-3 w-12" style={{ borderBottom: 'var(--heading-accent)' }} />
       <div className="mx-auto mt-8 grid max-w-5xl gap-6 sm:grid-cols-2 md:mt-12 md:gap-8 lg:grid-cols-3">
         {data.items.map((item, i) => (
-          <div key={i} className="p-5 md:p-6" style={cardStyle}>
+          <div key={i} className="hover-lift p-5 md:p-6" style={cardStyle}>
             {item.icon && <div className="mb-2 text-2xl md:mb-3 md:text-3xl">{item.icon}</div>}
             <h3 className="mb-2 font-semibold" style={{ fontFamily: 'var(--font-heading)' }}>
               {item.title}

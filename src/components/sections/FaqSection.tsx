@@ -30,7 +30,7 @@ export default function FaqSection({ data, styleOverrides }: Props) {
           {data.items.map((item, i) => (
             <div
               key={i}
-              className="p-5"
+              className="hover-lift p-5"
               style={{
                 borderRadius: 'var(--radius)',
                 backgroundColor: 'var(--bg)',

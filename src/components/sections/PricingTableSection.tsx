@@ -116,7 +116,7 @@ export default function PricingTableSection({ data, styleOverrides }: Props) {
                     {plan.ctaText && (
                       <a
                         href={plan.ctaUrl ?? '#'}
-                        className="inline-block px-4 py-2 text-xs font-semibold text-white transition"
+                        className="hover-lift inline-block px-4 py-2 text-xs font-semibold text-white transition"
                         style={{
                           backgroundColor: 'var(--accent)',
                           borderRadius: 'var(--button-radius)',

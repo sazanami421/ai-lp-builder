@@ -32,7 +32,7 @@ export default function CtaSection({ data, styleOverrides }: Props) {
           {data.ctaText && (
             <a
               href={data.ctaUrl ?? '#'}
-              className="shrink-0 font-semibold text-white"
+              className="hover-lift shrink-0 font-semibold text-white"
               style={{
                 backgroundColor: 'var(--accent)',
                 borderRadius: 'var(--button-radius)',
@@ -66,7 +66,7 @@ export default function CtaSection({ data, styleOverrides }: Props) {
       {data.ctaText && (
         <a
           href={data.ctaUrl ?? '#'}
-          className="mt-6 inline-block font-semibold text-white"
+          className="hover-lift mt-6 inline-block font-semibold text-white"
           style={{
             backgroundColor: 'var(--accent)',
             borderRadius: 'var(--button-radius)',

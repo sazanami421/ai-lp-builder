@@ -96,7 +96,7 @@ export default function FormSection({ data, styleOverrides, pageId }: Props) {
       <button
         type="submit"
         disabled={!pageId || status === 'submitting'}
-        className="w-full py-3 text-sm font-semibold text-white transition disabled:opacity-60"
+        className="hover-lift w-full py-3 text-sm font-semibold text-white transition disabled:opacity-60"
         style={{ backgroundColor: 'var(--accent)', borderRadius: 'var(--button-radius)', boxShadow: 'var(--button-shadow)' }}
       >
         {status === 'submitting' ? '送信中…' : pageId ? data.submitText : `${data.submitText}（プレビュー）`}
