@@ -18,7 +18,7 @@ export const popTemplate = {
     '--button-shadow': '4px 4px 0 #000000',
     '--button-radius': '0px',
     '--heading-accent': '4px solid #000000',
-    '--section-divider': '3px dashed #000000',
+    '--section-divider': 'none',
     '--hover-lift': '-6px',
   },
   defaultVariants: {
