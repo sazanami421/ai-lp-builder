@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { FeaturesSectionData, FeatureItem } from '@/types/section';
 import { getVariant } from '@/lib/variants';
+import IconPicker from '@/components/editor/IconPicker';
 
 type Props = {
   data: FeaturesSectionData;
@@ -106,12 +107,9 @@ export default function FeaturesForm({ data, onUpdate }: Props) {
                 </button>
               </div>
               <div className="space-y-2">
-                <input
-                  type="text"
-                  value={item.icon ?? ''}
-                  onChange={(e) => updateItem(i, 'icon', e.target.value)}
-                  placeholder="アイコン（絵文字可: ⚡）"
-                  className={inputClass}
+                <IconPicker
+                  value={item.icon}
+                  onChange={(name) => updateItem(i, 'icon', name)}
                 />
                 <input
                   type="text"

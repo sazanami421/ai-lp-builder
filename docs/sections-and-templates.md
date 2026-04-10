@@ -72,6 +72,53 @@ grid / alternating 両 variant 共通:
 
 grid variant の画像表示: `aspect-video` ラッパー内に `object-contain` で全体表示。余白背景は `var(--bg)`。縦長・横長どちらの画像も切り抜かずに表示される。
 
+### アイコンシステム
+
+`FeatureItem.icon` と `StepItem.icon` は Lucide アイコン名（例: `"zap"`, `"shield"`）で保存する。
+
+- **ICON_SET**: 30個の厳選 Lucide アイコン（`src/lib/icons.ts`）
+- **後方互換**: 既存の絵文字データも表示可能（`EMOJI_TO_ICON` で自動マッピング）
+- **不明なアイコン**: 非表示（デフォルトアイコンは表示しない）
+- **色**: `currentColor` で親要素から継承（通常は `var(--accent)`）
+- **レンダリング**: `<Icon name={item.icon} />`（`src/components/Icon.tsx`）
+- **編集UI**: `<IconPicker />` コンポーネントで30個から選択（`src/components/editor/IconPicker.tsx`）
+- **AI生成**: プロンプトで30個のアイコン名を列挙し、AI はその中から選択する
+
+#### 30個のアイコン一覧
+
+| アイコン名 | 用途 |
+|-----------|------|
+| `zap` | 高速・パワー |
+| `rocket` | 起動・スタート |
+| `shield` | セキュリティ・保護 |
+| `gem` | プレミアム・品質 |
+| `sparkles` | 新機能・マジック |
+| `bar-chart` | 分析・データ |
+| `target` | 目標・精度 |
+| `japanese-yen` | 料金・お金・収益（円マーク） |
+| `smartphone` | モバイル |
+| `star` | 評価・お気に入り |
+| `heart` | 好き・愛 |
+| `lock` | セキュリティ・鍵 |
+| `check-circle` | 完了・承認 |
+| `users` | チーム・コミュニティ |
+| `clock` | 時間・スケジュール |
+| `trending-up` | 成長・上昇 |
+| `globe` | グローバル・Web |
+| `message-circle` | チャット・コミュニケーション |
+| `mail` | メール・連絡 |
+| `settings` | 設定・ツール |
+| `search` | 検索・発見 |
+| `bell` | 通知 |
+| `calendar` | 予定・イベント |
+| `book-open` | 学習・ドキュメント |
+| `award` | 実績・表彰 |
+| `gift` | 特典・プレゼント |
+| `lightbulb` | アイデア・ひらめき |
+| `thumbs-up` | いいね・承認 |
+| `briefcase` | ビジネス・仕事 |
+| `headphones` | サポート・オーディオ |
+
 ### 新規追加セクションのデータ型
 
 ```typescript

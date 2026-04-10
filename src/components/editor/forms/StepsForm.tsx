@@ -2,6 +2,7 @@
 
 import { StepsSectionData, StepItem } from '@/types/section';
 import { SECTION_VARIANTS } from '@/lib/variants';
+import IconPicker from '@/components/editor/IconPicker';
 
 type Props = {
   data: StepsSectionData;
@@ -22,10 +23,9 @@ export default function StepsForm({ data, onUpdate }: Props) {
   };
 
   const addItem = () => {
-    const n = data.items.length + 1;
     onUpdate({
       ...data,
-      items: [...data.items, { icon: String(n), title: '', description: '' }],
+      items: [...data.items, { icon: '', title: '', description: '' }],
     });
   };
 
@@ -90,12 +90,9 @@ export default function StepsForm({ data, onUpdate }: Props) {
                 </button>
               </div>
               <div className="space-y-2">
-                <input
-                  type="text"
-                  value={item.icon ?? ''}
-                  onChange={(e) => updateItem(i, 'icon', e.target.value)}
-                  placeholder="アイコン（数字または絵文字）"
-                  className={inputClass}
+                <IconPicker
+                  value={item.icon}
+                  onChange={(name) => updateItem(i, 'icon', name)}
                 />
                 <input
                   type="text"

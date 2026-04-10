@@ -1,6 +1,8 @@
 import { FeaturesSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
 import { buildSectionStyle } from '@/lib/sectionStyle';
+import { resolveIcon } from '@/lib/icons';
+import Icon from '@/components/Icon';
 
 type Props = {
   data: FeaturesSectionData;
@@ -54,8 +56,10 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
                       borderRadius: 'var(--radius)',
                     }}
                   >
-                    {item.icon ? (
-                      <span className="text-4xl md:text-5xl">{item.icon}</span>
+                    {resolveIcon(item.icon) ? (
+                      <div style={{ color: 'var(--accent)' }}>
+                        <Icon name={item.icon} size={56} />
+                      </div>
                     ) : (
                       <svg className="h-10 w-10 opacity-25 md:h-12 md:w-12" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
@@ -66,9 +70,6 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
               </div>
               {/* テキスト */}
               <div className="w-full md:w-1/2">
-                {item.icon && !item.image && (
-                  <div className="mb-2 text-2xl md:mb-3 md:text-3xl">{item.icon}</div>
-                )}
                 <h3
                   className="mb-2 text-xl font-bold md:mb-3 md:text-2xl"
                   style={{ fontFamily: 'var(--font-heading)' }}
@@ -112,8 +113,10 @@ export default function FeaturesSection({ data, styleOverrides }: Props) {
               </div>
             )}
             <div className="p-5 md:p-6">
-              {!item.image && item.icon && (
-                <div className="mb-2 text-2xl md:mb-3 md:text-3xl">{item.icon}</div>
+              {!item.image && (
+                <div className="mb-2 md:mb-3" style={{ color: 'var(--accent)' }}>
+                  <Icon name={item.icon} size={32} />
+                </div>
               )}
               <h3 className="mb-2 font-semibold" style={{ fontFamily: 'var(--font-heading)' }}>
                 {item.title}
