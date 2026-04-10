@@ -7,7 +7,7 @@
 | `hero` | `centered` | テキスト・CTAを中央配置 |
 | `hero` | `split` | 左テキスト＋右画像の2カラム |
 | `hero` | `fullscreen` | 100vh グラデーション背景・左テキスト＋右装飾 |
-| `features` | `grid` | カード型グリッド（2-3カラム） |
+| `features` | `grid` | カード型グリッド（2-3カラム・画像はカード上部ヘッダー、object-contain で全体表示） |
 | `features` | `alternating` | 左右交互レイアウト（画像+テキスト） |
 | `testimonials` | `cards` | カード型並び |
 | `testimonials` | `single` | 1件ずつ大きく表示 |
@@ -62,6 +62,15 @@ type HeroSectionData = {
 ```
 
 variant 未指定時は `DEFAULT_VARIANTS[type]` にフォールバック。
+
+### Features セクションの画像/アイコン表示ルール
+
+grid / alternating 両 variant 共通:
+- `item.image` あり → 画像のみ表示（アイコンは無視）
+- `item.image` なし、`item.icon` あり → アイコンのみ表示
+- 両方なし → alternating はプレースホルダー SVG、grid はタイトル・説明のみ
+
+grid variant の画像表示: `aspect-video` ラッパー内に `object-contain` で全体表示。余白背景は `var(--bg)`。縦長・横長どちらの画像も切り抜かずに表示される。
 
 ### 新規追加セクションのデータ型
 

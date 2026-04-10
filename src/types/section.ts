@@ -44,7 +44,7 @@ export type HeroSectionData = {
 
 export type FeatureItem = {
   icon?: string;
-  image?: string; // alternating variant: 各アイテムの画像
+  image?: string; // 各アイテムの画像（grid / alternating 両対応・画像優先）
   title: string;
   description: string;
 };
