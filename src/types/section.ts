@@ -43,7 +43,7 @@ export type HeroSectionData = {
 };
 
 export type FeatureItem = {
-  icon?: string;
+  icon?: string; // Lucide アイコン名 (例: "zap", "shield")。後方互換: 絵文字も受け付ける
   image?: string; // 各アイテムの画像（grid / alternating 両対応・画像優先）
   title: string;
   description: string;
@@ -124,7 +124,7 @@ export type CtaSectionData = {
 export type StepItem = {
   title: string;
   description: string;
-  icon?: string;
+  icon?: string; // Lucide アイコン名 (例: "zap")。後方互換: 絵文字も受け付ける
 };
 
 export type StepsSectionData = {

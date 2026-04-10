@@ -1,6 +1,8 @@
 import { StepsSectionData } from '@/types/section';
 import { getVariant } from '@/lib/variants';
 import { buildSectionStyle } from '@/lib/sectionStyle';
+import { resolveIcon } from '@/lib/icons';
+import Icon from '@/components/Icon';
 
 type Props = {
   data: StepsSectionData;
@@ -9,6 +11,12 @@ type Props = {
 
 function isNumeric(str?: string) {
   return str !== undefined && /^\d+$/.test(str.trim());
+}
+
+function StepIconContent({ icon, fallback }: { icon?: string; fallback: string }) {
+  if (isNumeric(icon)) return <>{icon}</>;
+  if (resolveIcon(icon)) return <Icon name={icon} size={20} />;
+  return <>{fallback}</>;
 }
 
 export default function StepsSection({ data, styleOverrides }: Props) {
@@ -35,7 +43,7 @@ export default function StepsSection({ data, styleOverrides }: Props) {
                   className="flex h-10 w-10 shrink-0 items-center justify-center text-sm font-bold text-white"
                   style={{ backgroundColor: 'var(--accent)', borderRadius: '50%' }}
                 >
-                  {isNumeric(item.icon) ? item.icon : (item.icon ?? String(i + 1))}
+                  <StepIconContent icon={item.icon} fallback={String(i + 1)} />
                 </div>
                 {i < data.items.length - 1 && (
                   <div
@@ -94,7 +102,7 @@ export default function StepsSection({ data, styleOverrides }: Props) {
                 className="mb-4 flex h-12 w-12 items-center justify-center text-lg font-bold text-white"
                 style={{ backgroundColor: 'var(--accent)', borderRadius: '50%' }}
               >
-                {isNumeric(item.icon) ? item.icon : (item.icon ?? String(i + 1))}
+                <StepIconContent icon={item.icon} fallback={String(i + 1)} />
               </div>
               <h3
                 className="mb-2 text-base font-semibold md:text-lg"
