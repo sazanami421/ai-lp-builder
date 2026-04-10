@@ -1,5 +1,5 @@
 import {
-  Zap, Rocket, Shield, Gem, Sparkles, BarChart, Target, DollarSign,
+  Zap, Rocket, Shield, Gem, Sparkles, BarChart, Target, JapaneseYen,
   Smartphone, Star, Heart, Lock, CheckCircle, Users, Clock, TrendingUp,
   Globe, MessageCircle, Mail, Settings, Search, Bell, Calendar, BookOpen,
   Award, Gift, Lightbulb, ThumbsUp, Briefcase, Headphones,
@@ -8,7 +8,7 @@ import {
 
 export type IconName =
   | 'zap' | 'rocket' | 'shield' | 'gem' | 'sparkles' | 'bar-chart'
-  | 'target' | 'dollar-sign' | 'smartphone' | 'star' | 'heart' | 'lock'
+  | 'target' | 'japanese-yen' | 'smartphone' | 'star' | 'heart' | 'lock'
   | 'check-circle' | 'users' | 'clock' | 'trending-up' | 'globe'
   | 'message-circle' | 'mail' | 'settings' | 'search' | 'bell'
   | 'calendar' | 'book-open' | 'award' | 'gift' | 'lightbulb'
@@ -27,7 +27,7 @@ export const ICON_SET: Record<IconName, IconEntry> = {
   'sparkles':       { component: Sparkles,       labels: ['新機能', 'キラキラ', 'マジック'] },
   'bar-chart':      { component: BarChart,       labels: ['分析', 'データ', 'グラフ'] },
   'target':         { component: Target,         labels: ['目標', '精度', 'ターゲット'] },
-  'dollar-sign':    { component: DollarSign,     labels: ['料金', 'お金', '収益'] },
+  'japanese-yen':   { component: JapaneseYen,    labels: ['料金', 'お金', '収益', '円'] },
   'smartphone':     { component: Smartphone,     labels: ['モバイル', 'スマホ'] },
   'star':           { component: Star,           labels: ['評価', '星', 'お気に入り'] },
   'heart':          { component: Heart,          labels: ['好き', '愛', 'ハート'] },
@@ -61,8 +61,8 @@ export const EMOJI_TO_ICON: Record<string, IconName> = {
   '✨': 'sparkles', '🌟': 'sparkles',
   '📊': 'bar-chart', '📉': 'bar-chart',
   '🎯': 'target', '🏹': 'target',
-  '💰': 'dollar-sign', '💵': 'dollar-sign', '💴': 'dollar-sign',
-  '💶': 'dollar-sign', '💷': 'dollar-sign',
+  '💰': 'japanese-yen', '💵': 'japanese-yen', '💴': 'japanese-yen',
+  '💶': 'japanese-yen', '💷': 'japanese-yen',
   '📱': 'smartphone', '📲': 'smartphone',
   '⭐': 'star',
   '❤️': 'heart', '💖': 'heart', '💕': 'heart',
