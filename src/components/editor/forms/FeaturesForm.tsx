@@ -127,8 +127,7 @@ export default function FeaturesForm({ data, onUpdate }: Props) {
                   placeholder="説明文"
                   className={`${inputClass} resize-none`}
                 />
-                {variant === 'alternating' && (
-                  <div>
+                <div>
                     {item.image ? (
                       <div className="space-y-1">
                         <img src={item.image} alt="" className="h-20 w-full rounded-lg object-cover" />
@@ -157,8 +156,7 @@ export default function FeaturesForm({ data, onUpdate }: Props) {
                         />
                       </>
                     )}
-                  </div>
-                )}
+                </div>
               </div>
             </div>
           ))}
