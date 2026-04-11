@@ -7,14 +7,32 @@ const anthropic = new Anthropic({
 
 const MODEL = 'claude-sonnet-4-20250514';
 
+export type BusinessModel = 'btob' | 'btoc' | 'c2c' | 'btog';
+export type GenderTarget = 'male' | 'female' | 'any';
+export type AgeGroup = 'teens' | '20-30s' | '40-50s' | '60s' | 'any';
+
 export type GenerateLPInput = {
   projectName: string;
-  industry: string;
-  target: string;
-  usp: string;
-  features: string[];
-  pricingCount: number; // 0-3
+
+  // Step 2
+  businessModel: string;    // route.ts 側で日本語ラベルに変換して渡す
+  gender: string;           // 同上
+  ageGroup: string;         // 同上
+  targetDescription?: string;
   ctaGoal: string;
+
+  // Step 3
+  tagline: string;
+  problems: string[];         // 選択された課題のラベル（日本語）
+  problemsOther?: string;     // その他自由記述
+  valueFeatures: string[];    // 強み・価値の箇条書き（最大5つ）
+
+  // Step 4
+  includePricing: boolean;
+  includeTestimonials: boolean;
+
+  // Step 5
+  additionalNotes?: string;
 };
 
 export type GeneratedSectionData = {
@@ -49,9 +67,17 @@ const VARIANT_INFO: Record<SectionType, string> = {
  * ヒアリング情報を元に全セクションのコンテンツを一括生成する
  */
 export async function generateLP(input: GenerateLPInput): Promise<GeneratedSectionData[]> {
-  const includePricing = input.pricingCount > 0;
+  const testimonialsSchema = input.includeTestimonials ? `
+  "testimonials": {
+    "title": "お客様の声",
+    "items": [
+      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" },
+      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" },
+      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" }
+    ]
+  },` : '';
 
-  const pricingSchema = includePricing ? `
+  const pricingSchema = input.includePricing ? `
   "pricing": {
     "title": "料金プラン",
     "plans": [
@@ -63,7 +89,6 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
         "ctaText": "ボタンテキスト",
         "highlighted": false
       }
-      // pricingCount の数だけ生成
     ]
   },` : '';
 
@@ -83,32 +108,26 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
     '  "features": {',
     '    "title": "セクション見出し",',
     '    "items": [',
-    '      { "icon": "アイコン名", "title": "特徴タイトル", "description": "説明文（30-50字）" }',
-    '      // features の数だけ生成（最大3件）',
+    '      { "icon": "アイコン名", "title": "特徴タイトル", "description": "説明文（80-100字）" }',
+    '      // 強み・価値の数だけ生成（最大3件）',
     '    ]',
     '  },',
-    '  "testimonials": {',
-    '    "title": "お客様の声",',
-    '    "items": [',
-    '      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" },',
-    '      { "body": "利用者の感想（40-80字）", "name": "氏名", "role": "職種・会社" }',
-    '    ]',
-    '  },',
+    testimonialsSchema,
     pricingSchema,
     '  "steps": {',
     '    "title": "ご利用の流れ",',
     '    "items": [',
-    '      { "icon": "アイコン名", "title": "ステップタイトル", "description": "説明文（20-40字）" },',
-    '      { "icon": "アイコン名", "title": "ステップタイトル", "description": "説明文（20-40字）" },',
-    '      { "icon": "アイコン名", "title": "ステップタイトル", "description": "説明文（20-40字）" }',
+    '      { "icon": "アイコン名", "title": "ステップタイトル", "description": "説明文（40-60字）" },',
+    '      { "icon": "アイコン名", "title": "ステップタイトル", "description": "説明文（40-60字）" },',
+    '      { "icon": "アイコン名", "title": "ステップタイトル", "description": "説明文（40-60字）" }',
     '    ]',
     '  },',
     '  "faq": {',
     '    "title": "よくある質問",',
     '    "items": [',
-    '      { "question": "質問文", "answer": "回答文（40-80字）" },',
-    '      { "question": "質問文", "answer": "回答文（40-80字）" },',
-    '      { "question": "質問文", "answer": "回答文（40-80字）" }',
+    '      { "question": "質問文", "answer": "回答文（60-100字）" },',
+    '      { "question": "質問文", "answer": "回答文（60-100字）" },',
+    '      { "question": "質問文", "answer": "回答文（60-100字）" }',
     '    ]',
     '  },',
     '  "cta": {',
@@ -137,11 +156,25 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
     '  }',
     '}',
     '',
-    '## 注意事項',
-    '- 全て日本語で生成してください',
-    '- testimonials は実在しない架空のユーザー情報で問題ありません',
-    '- ctaUrl はすべて "#" にしてください',
-    '- hero の headline は短くキャッチーに（20字前後）',
+    '## コピーライティングの方針',
+    '- ヘッドライン: 「解決する課題」を起点にキャッチーに（20字前後）',
+    '- サブヘッドライン: 「提供する価値」を具体的に（40-60字）',
+    '- CTA文言: 「CTAのゴール」に沿って具体的に',
+    '- BtoB（法人向け）の場合: 論理・ROI・実績を重視、フォーマルな文体',
+    '- BtoC（個人向け）の場合: 感情・体験・共感を重視、親しみやすい文体',
+    '- 女性中心の場合: 柔らかい語尾、温度感のある言葉',
+    '- 若年層（10-30代）: カジュアル。シニア層（60代以上）: 丁寧・明快',
+    '- 「です・ます」調で統一',
+    '- 誇大表現（最高・業界No.1・絶対）は避ける',
+    '',
+    '## 各セクションの指示',
+    '- testimonials: 架空のペルソナで構わない。ターゲット像に合致する一般的な日本人名（田中・山田・佐藤等）',
+    '- faq: 「解決する課題」と「強み・価値」から、購入前によくある疑問を抽出',
+    '- steps: 「強み・価値」を時系列のユーザー体験として記述',
+    '- footer: copyright のみ生成、連絡先は空欄でOK',
+    '- cta: ctaUrl はすべて "#" で固定',
+    '',
+    '## アイコン指定',
     '- features と steps の "icon" は以下の30個から選んで名前で指定してください（絵文字は使わない）:',
     '  zap (高速・パワー), rocket (起動・スタート), shield (セキュリティ), gem (プレミアム),',
     '  sparkles (新機能), bar-chart (分析・データ), target (目標), japanese-yen (料金),',
@@ -155,13 +188,31 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
   ].join('\n');
 
   const userMessage = [
-    `サービス名: ${input.projectName}`,
-    `業種: ${input.industry}`,
-    `ターゲット: ${input.target}`,
-    `強み: ${input.usp}`,
-    `主な機能・特徴: ${input.features.join('、')}`,
-    `料金プラン数: ${input.pricingCount === 0 ? 'なし' : `${input.pricingCount}プラン`}`,
-    `CTAのゴール: ${input.ctaGoal}`,
+    `# プロジェクト: ${input.projectName}`,
+    ``,
+    `## サービス概要`,
+    input.tagline,
+    ``,
+    `## ターゲット像`,
+    `- ビジネスモデル: ${input.businessModel}`,
+    `- 主な性別: ${input.gender}`,
+    `- 年代: ${input.ageGroup}`,
+    ...(input.targetDescription ? [`- 特徴: ${input.targetDescription}`] : []),
+    ``,
+    `## 解決する課題`,
+    ...input.problems.map((p) => `- ${p}`),
+    ...(input.problemsOther ? [`- ${input.problemsOther}`] : []),
+    ``,
+    `## 強み・提供する価値`,
+    ...input.valueFeatures.map((v, i) => `${i + 1}. ${v}`),
+    ``,
+    `## CTAのゴール`,
+    input.ctaGoal,
+    ...(input.additionalNotes ? [
+      ``,
+      `## その他の要望・補足情報`,
+      input.additionalNotes,
+    ] : []),
   ].join('\n');
 
   const response = await anthropic.messages.create({
@@ -183,8 +234,10 @@ export async function generateLP(input: GenerateLPInput): Promise<GeneratedSecti
   }
 
   const sectionTypes: SectionType[] = [
-    'hero', 'features', 'testimonials',
-    ...(includePricing ? ['pricing' as SectionType] : []),
+    'hero',
+    'features',
+    ...(input.includeTestimonials ? ['testimonials' as SectionType] : []),
+    ...(input.includePricing ? ['pricing' as SectionType] : []),
     'steps', 'faq', 'cta', 'form', 'footer',
   ];
 
