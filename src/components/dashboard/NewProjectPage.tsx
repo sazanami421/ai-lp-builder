@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { PROBLEM_PRESETS } from '@/lib/problemPresets';
+import { PROBLEM_PRESETS, getProblemLabel } from '@/lib/problemPresets';
 
 const TEMPLATES = [
   { value: 'simple',   label: 'シンプル',   accent: '#2B2B28', bg: '#FFFFFF', desc: 'ミニマル・モノトーン' },
@@ -82,7 +82,6 @@ export default function NewProjectPage() {
   const handleGenerate = async () => {
     setGenerating(true);
 
-    // TODO: Step 10 で新仕様のリクエストボディに更新
     const res = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -95,7 +94,7 @@ export default function NewProjectPage() {
         targetDescription: answers.targetDescription || undefined,
         ctaGoal: answers.ctaGoal,
         tagline: answers.tagline,
-        problems: answers.problems,
+        problems: answers.problems.map((v) => getProblemLabel(v) ?? v),
         problemsOther: answers.problemsOther || undefined,
         valueFeatures: answers.valueFeatures.filter((v) => v.trim()),
         includePricing: answers.includePricing,

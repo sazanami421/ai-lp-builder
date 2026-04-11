@@ -9,21 +9,25 @@ import { handleApiError, BadRequest } from '@/lib/errors';
 import { consumeAICredits, AI_CREDIT_COST } from '@/lib/plans';
 import type { SectionType } from '@/types/section';
 
-// 業種・ターゲット・CTAゴールの表示ラベルマッピング
-const INDUSTRY_LABELS: Record<string, string> = {
-  saas:    'SaaS・ソフトウェア',
-  ec:      'EC・物販',
-  law:     '士業・コンサル',
-  food:    '飲食・カフェ',
-  health:  '医療・美容・健康',
-  other:   'その他',
+const BUSINESS_MODEL_LABELS: Record<string, string> = {
+  btob: '法人向け（BtoB）',
+  btoc: '個人向け（BtoC）',
+  c2c:  '個人間取引（C2C）',
+  btog: '行政機関向け（BtoG）',
 };
 
-const TARGET_LABELS: Record<string, string> = {
-  personal:   '個人向け',
-  smb:        '中小企業向け',
-  enterprise: '大企業向け',
-  broad:      '幅広く',
+const GENDER_LABELS: Record<string, string> = {
+  male:   '男性中心',
+  female: '女性中心',
+  any:    '問わない',
+};
+
+const AGE_GROUP_LABELS: Record<string, string> = {
+  teens:   '10代',
+  '20-30s': '20-30代',
+  '40-50s': '40-50代',
+  '60s':    '60代以上',
+  any:      '幅広く',
 };
 
 const CTA_GOAL_LABELS: Record<string, string> = {
@@ -60,17 +64,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
     }
 
-    const { projectName, template, industry, target, usp, features, pricingCount, ctaGoal } = parsed.data;
+    const {
+      projectName,
+      template,
+      businessModel,
+      gender,
+      ageGroup,
+      targetDescription,
+      ctaGoal,
+      tagline,
+      problems,
+      problemsOther,
+      valueFeatures,
+      includePricing,
+      includeTestimonials,
+      additionalNotes,
+    } = parsed.data;
 
     // ラベルに変換してAIに渡す
     const sections = await generateLP({
       projectName,
-      industry:     INDUSTRY_LABELS[industry]  ?? industry,
-      target:       TARGET_LABELS[target]       ?? target,
-      usp,
-      features,
-      pricingCount: parseInt(pricingCount, 10),
-      ctaGoal:      CTA_GOAL_LABELS[ctaGoal]   ?? ctaGoal,
+      businessModel:    BUSINESS_MODEL_LABELS[businessModel] ?? businessModel,
+      gender:           GENDER_LABELS[gender]                ?? gender,
+      ageGroup:         AGE_GROUP_LABELS[ageGroup]           ?? ageGroup,
+      targetDescription,
+      ctaGoal:          CTA_GOAL_LABELS[ctaGoal]             ?? ctaGoal,
+      tagline,
+      problems,
+      problemsOther,
+      valueFeatures,
+      includePricing,
+      includeTestimonials,
+      additionalNotes,
     });
 
     if (sections.length === 0) {
