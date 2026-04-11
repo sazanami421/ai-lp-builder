@@ -7,14 +7,32 @@ const anthropic = new Anthropic({
 
 const MODEL = 'claude-sonnet-4-20250514';
 
+export type BusinessModel = 'btob' | 'btoc' | 'c2c' | 'btog';
+export type GenderTarget = 'male' | 'female' | 'any';
+export type AgeGroup = 'teens' | '20-30s' | '40-50s' | '60s' | 'any';
+
 export type GenerateLPInput = {
   projectName: string;
-  industry: string;
-  target: string;
-  usp: string;
-  features: string[];
-  pricingCount: number; // 0-3
+
+  // Step 2
+  businessModel: string;    // route.ts 側で日本語ラベルに変換して渡す
+  gender: string;           // 同上
+  ageGroup: string;         // 同上
+  targetDescription?: string;
   ctaGoal: string;
+
+  // Step 3
+  tagline: string;
+  problems: string[];         // 選択された課題のラベル（日本語）
+  problemsOther?: string;     // その他自由記述
+  valueFeatures: string[];    // 強み・価値の箇条書き（最大5つ）
+
+  // Step 4
+  includePricing: boolean;
+  includeTestimonials: boolean;
+
+  // Step 5
+  additionalNotes?: string;
 };
 
 export type GeneratedSectionData = {

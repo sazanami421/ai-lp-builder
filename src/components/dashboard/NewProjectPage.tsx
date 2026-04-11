@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { PROBLEM_PRESETS } from '@/lib/problemPresets';
 
 const TEMPLATES = [
   { value: 'simple',   label: 'シンプル',   accent: '#2B2B28', bg: '#FFFFFF', desc: 'ミニマル・モノトーン' },
@@ -16,23 +17,44 @@ type Mode = 'select' | 'manual' | 'ai';
 
 type HearingAnswers = {
   template: string;
-  industry: string;
-  target: string;
-  usp: string;
-  feature1: string;
-  feature2: string;
-  feature3: string;
-  pricingCount: string;
-  ctaGoal: string;
   projectName: string;
+
+  // Step 2
+  businessModel: '' | 'btob' | 'btoc' | 'c2c' | 'btog';
+  gender: '' | 'male' | 'female' | 'any';
+  ageGroup: '' | 'teens' | '20-30s' | '40-50s' | '60s' | 'any';
+  targetDescription: string;
+  ctaGoal: '' | 'register' | 'document' | 'purchase' | 'contact';
+
+  // Step 3
+  tagline: string;
+  problems: string[];
+  problemsOther: string;
+  valueFeatures: string[];
+
+  // Step 4
+  includePricing: boolean;
+  includeTestimonials: boolean;
+
+  // Step 5
+  additionalNotes: string;
 };
 
 const EMPTY_ANSWERS: HearingAnswers = {
   template: '',
-  industry: '', target: '', usp: '',
-  feature1: '', feature2: '', feature3: '',
-  pricingCount: '', ctaGoal: '',
   projectName: '',
+  businessModel: '',
+  gender: '',
+  ageGroup: '',
+  targetDescription: '',
+  ctaGoal: '',
+  tagline: '',
+  problems: [],
+  problemsOther: '',
+  valueFeatures: [''],
+  includePricing: false,
+  includeTestimonials: false,
+  additionalNotes: '',
 };
 
 export default function NewProjectPage() {
@@ -60,18 +82,25 @@ export default function NewProjectPage() {
   const handleGenerate = async () => {
     setGenerating(true);
 
+    // TODO: Step 10 で新仕様のリクエストボディに更新
     const res = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         projectName: answers.projectName,
         template: answers.template,
-        industry: answers.industry,
-        target: answers.target,
-        usp: answers.usp,
-        features: [answers.feature1, answers.feature2, answers.feature3].filter(Boolean),
-        pricingCount: answers.pricingCount,
+        businessModel: answers.businessModel,
+        gender: answers.gender,
+        ageGroup: answers.ageGroup,
+        targetDescription: answers.targetDescription || undefined,
         ctaGoal: answers.ctaGoal,
+        tagline: answers.tagline,
+        problems: answers.problems,
+        problemsOther: answers.problemsOther || undefined,
+        valueFeatures: answers.valueFeatures.filter((v) => v.trim()),
+        includePricing: answers.includePricing,
+        includeTestimonials: answers.includeTestimonials,
+        additionalNotes: answers.additionalNotes || undefined,
       }),
     });
     if (res.ok) {
@@ -170,28 +199,28 @@ export default function NewProjectPage() {
       {step === 1 && (
         <Step1
           answers={answers}
-          onChange={(k, v) => setAnswers((a) => ({ ...a, [k]: v }))}
+          onChange={<K extends keyof HearingAnswers>(k: K, v: HearingAnswers[K]) => setAnswers((a) => ({ ...a, [k]: v }))}
           onNext={() => setStep(2)}
         />
       )}
       {step === 2 && (
         <Step2
           answers={answers}
-          onChange={(k, v) => setAnswers((a) => ({ ...a, [k]: v }))}
+          setAnswers={setAnswers}
           onNext={() => setStep(3)}
         />
       )}
       {step === 3 && (
         <Step3
           answers={answers}
-          onChange={(k, v) => setAnswers((a) => ({ ...a, [k]: v }))}
+          setAnswers={setAnswers}
           onNext={() => setStep(4)}
         />
       )}
       {step === 4 && (
         <Step4
           answers={answers}
-          onChange={(k, v) => setAnswers((a) => ({ ...a, [k]: v }))}
+          setAnswers={setAnswers}
           onGenerate={handleGenerate}
         />
       )}
@@ -282,124 +311,27 @@ function TemplateStep({
   );
 }
 
-// --- Step 1: 業種・ターゲット ---
+// --- Step 1: サービスとターゲット ---
 
-const INDUSTRIES = [
-  { value: 'saas',    label: 'SaaS・ソフトウェア' },
-  { value: 'ec',      label: 'EC・物販' },
-  { value: 'law',     label: '士業・コンサル' },
-  { value: 'food',    label: '飲食・カフェ' },
-  { value: 'health',  label: '医療・美容・健康' },
-  { value: 'other',   label: 'その他' },
+const BUSINESS_MODELS = [
+  { value: 'btob', label: '法人向け（BtoB）' },
+  { value: 'btoc', label: '個人向け（BtoC）' },
+  { value: 'c2c',  label: '個人間取引（C2C）' },
+  { value: 'btog', label: '行政機関向け（BtoG）' },
 ];
 
-const TARGETS = [
-  { value: 'personal', label: '個人向け' },
-  { value: 'smb',      label: '中小企業向け' },
-  { value: 'enterprise', label: '大企業向け' },
-  { value: 'broad',    label: '幅広く' },
+const GENDERS = [
+  { value: 'male',   label: '男性中心' },
+  { value: 'female', label: '女性中心' },
+  { value: 'any',    label: '問わない' },
 ];
 
-function Step1({
-  answers, onChange, onNext,
-}: {
-  answers: HearingAnswers;
-  onChange: (k: keyof HearingAnswers, v: string) => void;
-  onNext: () => void;
-}) {
-  return (
-    <div className="space-y-6">
-      <div>
-        <FieldLabel>業種・カテゴリ</FieldLabel>
-        <div className="grid grid-cols-2 gap-2">
-          {INDUSTRIES.map((o) => (
-            <SelectCard
-              key={o.value}
-              selected={answers.industry === o.value}
-              onClick={() => onChange('industry', o.value)}
-            >
-              {o.label}
-            </SelectCard>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <FieldLabel>ターゲット</FieldLabel>
-        <div className="grid grid-cols-2 gap-2">
-          {TARGETS.map((o) => (
-            <SelectCard
-              key={o.value}
-              selected={answers.target === o.value}
-              onClick={() => onChange('target', o.value)}
-            >
-              {o.label}
-            </SelectCard>
-          ))}
-        </div>
-      </div>
-
-      <NextButton
-        disabled={!answers.industry || !answers.target}
-        onClick={onNext}
-      />
-    </div>
-  );
-}
-
-// --- Step 2: 強み・機能 ---
-
-function Step2({
-  answers, onChange, onNext,
-}: {
-  answers: HearingAnswers;
-  onChange: (k: keyof HearingAnswers, v: string) => void;
-  onNext: () => void;
-}) {
-  return (
-    <div className="space-y-5">
-      <div>
-        <FieldLabel>一番の強み</FieldLabel>
-        <textarea
-          rows={3}
-          placeholder="例：AIを使って10分でLPを自動生成できる"
-          value={answers.usp}
-          onChange={(e) => onChange('usp', e.target.value)}
-          className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-        />
-      </div>
-
-      <div>
-        <FieldLabel>主な特徴・機能（3つ）</FieldLabel>
-        <div className="space-y-2">
-          {(['feature1', 'feature2', 'feature3'] as const).map((key, i) => (
-            <input
-              key={key}
-              type="text"
-              placeholder={`特徴・機能 ${i + 1}`}
-              value={answers[key]}
-              onChange={(e) => onChange(key, e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-            />
-          ))}
-        </div>
-      </div>
-
-      <NextButton
-        disabled={!answers.usp || !answers.feature1}
-        onClick={onNext}
-      />
-    </div>
-  );
-}
-
-// --- Step 3: 料金・CTA ---
-
-const PRICING_OPTIONS = [
-  { value: '0', label: 'なし' },
-  { value: '1', label: '1プラン' },
-  { value: '2', label: '2プラン' },
-  { value: '3', label: '3プラン' },
+const AGE_GROUPS = [
+  { value: 'teens',  label: '10代' },
+  { value: '20-30s', label: '20-30代' },
+  { value: '40-50s', label: '40-50代' },
+  { value: '60s',    label: '60代以上' },
+  { value: 'any',    label: '幅広く' },
 ];
 
 const CTA_GOALS = [
@@ -409,23 +341,47 @@ const CTA_GOALS = [
   { value: 'contact',  label: 'お問い合わせ' },
 ];
 
-function Step3({
+function Step1({
   answers, onChange, onNext,
 }: {
   answers: HearingAnswers;
-  onChange: (k: keyof HearingAnswers, v: string) => void;
+  onChange: <K extends keyof HearingAnswers>(k: K, v: HearingAnswers[K]) => void;
   onNext: () => void;
 }) {
+  const inputClass = 'w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100';
+
+  const canNext = !!(
+    answers.projectName.trim() &&
+    answers.businessModel &&
+    answers.gender &&
+    answers.ageGroup &&
+    answers.ctaGoal
+  );
+
   return (
     <div className="space-y-6">
+      {/* プロジェクト名 */}
       <div>
-        <FieldLabel>料金プランの数</FieldLabel>
-        <div className="grid grid-cols-4 gap-2">
-          {PRICING_OPTIONS.map((o) => (
+        <FieldLabel>プロジェクト名 <span className="text-red-500">*</span></FieldLabel>
+        <input
+          type="text"
+          autoFocus
+          placeholder="例：新サービスのランディングページ"
+          value={answers.projectName}
+          onChange={(e) => onChange('projectName', e.target.value)}
+          className={inputClass}
+        />
+      </div>
+
+      {/* ビジネスモデル */}
+      <div>
+        <FieldLabel>ビジネスモデル <span className="text-red-500">*</span></FieldLabel>
+        <div className="grid grid-cols-2 gap-2">
+          {BUSINESS_MODELS.map((o) => (
             <SelectCard
               key={o.value}
-              selected={answers.pricingCount === o.value}
-              onClick={() => onChange('pricingCount', o.value)}
+              selected={answers.businessModel === o.value}
+              onClick={() => onChange('businessModel', o.value as HearingAnswers['businessModel'])}
             >
               {o.label}
             </SelectCard>
@@ -433,14 +389,59 @@ function Step3({
         </div>
       </div>
 
+      {/* 性別 */}
       <div>
-        <FieldLabel>CTAのゴール</FieldLabel>
+        <FieldLabel>ターゲットの性別 <span className="text-red-500">*</span></FieldLabel>
+        <div className="grid grid-cols-3 gap-2">
+          {GENDERS.map((o) => (
+            <SelectCard
+              key={o.value}
+              selected={answers.gender === o.value}
+              onClick={() => onChange('gender', o.value as HearingAnswers['gender'])}
+            >
+              {o.label}
+            </SelectCard>
+          ))}
+        </div>
+      </div>
+
+      {/* 年代 */}
+      <div>
+        <FieldLabel>ターゲットの年代 <span className="text-red-500">*</span></FieldLabel>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+          {AGE_GROUPS.map((o) => (
+            <SelectCard
+              key={o.value}
+              selected={answers.ageGroup === o.value}
+              onClick={() => onChange('ageGroup', o.value as HearingAnswers['ageGroup'])}
+            >
+              {o.label}
+            </SelectCard>
+          ))}
+        </div>
+      </div>
+
+      {/* ターゲットの特徴（任意） */}
+      <div>
+        <FieldLabel>ターゲットの特徴 <span className="text-xs font-normal text-gray-400">（任意）</span></FieldLabel>
+        <input
+          type="text"
+          placeholder="例: Web制作初心者のフリーランス"
+          value={answers.targetDescription}
+          onChange={(e) => onChange('targetDescription', e.target.value)}
+          className={inputClass}
+        />
+      </div>
+
+      {/* CTAのゴール */}
+      <div>
+        <FieldLabel>CTAのゴール <span className="text-red-500">*</span></FieldLabel>
         <div className="grid grid-cols-2 gap-2">
           {CTA_GOALS.map((o) => (
             <SelectCard
               key={o.value}
               selected={answers.ctaGoal === o.value}
-              onClick={() => onChange('ctaGoal', o.value)}
+              onClick={() => onChange('ctaGoal', o.value as HearingAnswers['ctaGoal'])}
             >
               {o.label}
             </SelectCard>
@@ -448,40 +449,208 @@ function Step3({
         </div>
       </div>
 
-      <NextButton
-        disabled={!answers.pricingCount || !answers.ctaGoal}
-        onClick={onNext}
-      />
+      <NextButton disabled={!canNext} onClick={onNext} />
     </div>
   );
 }
 
-// --- Step 4: プロジェクト名 ---
+// --- Step 2: サービスの価値 ---
 
-function Step4({
-  answers, onChange, onGenerate,
+function Step2({
+  answers,
+  setAnswers,
+  onNext,
 }: {
   answers: HearingAnswers;
-  onChange: (k: keyof HearingAnswers, v: string) => void;
+  setAnswers: React.Dispatch<React.SetStateAction<HearingAnswers>>;
+  onNext: () => void;
+}) {
+  const inputClass = 'w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100';
+
+  const categories = answers.businessModel ? PROBLEM_PRESETS[answers.businessModel] : [];
+
+  const toggleProblem = (value: string) => {
+    setAnswers((a) => ({
+      ...a,
+      problems: a.problems.includes(value)
+        ? a.problems.filter((v) => v !== value)
+        : [...a.problems, value],
+    }));
+  };
+
+  const updateValueFeature = (index: number, value: string) => {
+    setAnswers((a) => {
+      const next = [...a.valueFeatures];
+      next[index] = value;
+      return { ...a, valueFeatures: next };
+    });
+  };
+
+  const addValueFeature = () => {
+    setAnswers((a) => ({ ...a, valueFeatures: [...a.valueFeatures, ''] }));
+  };
+
+  const removeValueFeature = (index: number) => {
+    setAnswers((a) => ({
+      ...a,
+      valueFeatures: a.valueFeatures.filter((_, i) => i !== index),
+    }));
+  };
+
+  const canNext = !!(
+    answers.tagline.trim() &&
+    answers.problems.length >= 1 &&
+    answers.valueFeatures.filter((v) => v.trim()).length >= 1
+  );
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="mb-1 text-base font-semibold text-gray-900">サービスの価値</p>
+        <p className="text-sm text-gray-500">AIがコピーを書くための素材を教えてください。</p>
+      </div>
+
+      {/* 一言で言うと */}
+      <div>
+        <FieldLabel>一言で言うと？ <span className="text-red-500">*</span></FieldLabel>
+        <input
+          type="text"
+          placeholder="例: 5分でLPが作れるSaaS"
+          value={answers.tagline}
+          onChange={(e) => setAnswers((a) => ({ ...a, tagline: e.target.value }))}
+          className={inputClass}
+        />
+      </div>
+
+      {/* 解決する課題 */}
+      <div>
+        <FieldLabel>解決する課題 <span className="text-red-500">*</span><span className="ml-1 text-xs font-normal text-gray-400">（複数選択可）</span></FieldLabel>
+        <div className="space-y-4">
+          {categories.map((category) => (
+            <div key={category.label}>
+              <p className="mb-1.5 text-xs font-medium text-gray-500">
+                {category.icon && <span className="mr-1">{category.icon}</span>}
+                {category.label}
+              </p>
+              <div className="space-y-1.5">
+                {category.items.map((item) => {
+                  const checked = answers.problems.includes(item.value);
+                  return (
+                    <label
+                      key={item.value}
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2 text-sm transition"
+                      style={{
+                        borderColor: checked ? '#111827' : '#E5E7EB',
+                        backgroundColor: checked ? '#F9FAFB' : '#FFFFFF',
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleProblem(item.value)}
+                        className="h-4 w-4 rounded accent-gray-900"
+                      />
+                      <span className="text-gray-800">{item.label}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* その他 */}
+        <div className="mt-3">
+          <p className="mb-1 text-xs font-medium text-gray-500">その他・自由記述</p>
+          <input
+            type="text"
+            placeholder="例: 納期が読めない、品質が安定しない"
+            value={answers.problemsOther}
+            onChange={(e) => setAnswers((a) => ({ ...a, problemsOther: e.target.value }))}
+            className={inputClass}
+          />
+        </div>
+      </div>
+
+      {/* 強み・価値 */}
+      <div>
+        <FieldLabel>
+          強み・価値を箇条書きで <span className="text-red-500">*</span>
+          <span className="ml-1 text-xs font-normal text-gray-400">（最大5つ）</span>
+        </FieldLabel>
+        <div className="space-y-2">
+          {answers.valueFeatures.map((feat, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder={`例: ${['導入3分、クレカ不要で即スタート', 'AIが業界別の最適コピーを自動生成', '公開URLを共有するだけでLP完成'][i % 3]}`}
+                value={feat}
+                onChange={(e) => updateValueFeature(i, e.target.value)}
+                className={inputClass}
+              />
+              {answers.valueFeatures.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeValueFeature(i)}
+                  className="shrink-0 rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+                  aria-label="削除"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        {answers.valueFeatures.length < 5 && (
+          <button
+            type="button"
+            onClick={addValueFeature}
+            className="mt-2 inline-flex items-center gap-1 text-sm text-gray-500 transition hover:text-gray-700"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            追加
+          </button>
+        )}
+      </div>
+
+      <NextButton disabled={!canNext} onClick={onNext} />
+    </div>
+  );
+}
+
+// --- Step 3: 含めるセクション選択（Step 6 で実装）---
+
+function Step3({
+  onNext,
+}: {
+  answers: HearingAnswers;
+  setAnswers: React.Dispatch<React.SetStateAction<HearingAnswers>>;
+  onNext: () => void;
+}) {
+  return (
+    <div>
+      <p className="text-sm text-gray-500">（Step 6 で実装予定）</p>
+      <NextButton onClick={onNext} />
+    </div>
+  );
+}
+
+// --- Step 4: その他伝えたいこと（Step 7 で実装）---
+
+function Step4({
+  onGenerate,
+}: {
+  answers: HearingAnswers;
+  setAnswers: React.Dispatch<React.SetStateAction<HearingAnswers>>;
   onGenerate: () => void;
 }) {
   return (
     <div>
-      <p className="mb-1 text-base font-semibold text-gray-900">最後に、プロジェクト名を入力してください</p>
-      <p className="mb-5 text-sm text-gray-500">あとでエディターから変更できます。</p>
-      <input
-        type="text"
-        autoFocus
-        placeholder="例：新サービスのランディングページ"
-        value={answers.projectName}
-        onChange={(e) => onChange('projectName', e.target.value)}
-        className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-      />
-      <NextButton
-        disabled={!answers.projectName.trim()}
-        onClick={onGenerate}
-        label="LPを生成する"
-      />
+      <p className="text-sm text-gray-500">（Step 7 で実装予定）</p>
+      <NextButton onClick={onGenerate} label="LPを生成する" />
     </div>
   );
 }

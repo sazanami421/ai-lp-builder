@@ -159,12 +159,26 @@ export const generateLPSchema = z.object({
     .max(100, 'プロジェクト名は100文字以内で入力してください')
     .transform((v) => v.trim()),
   template: z.enum(['simple', 'premium', 'pop', 'business', 'natural']),
-  industry: z.string().min(1),
-  target: z.string().min(1),
-  usp: z.string().min(1).max(500),
-  features: z.array(z.string().min(1)).min(1).max(3),
-  pricingCount: z.enum(['0', '1', '2', '3']),
+
+  // Step 2
+  businessModel: z.enum(['btob', 'btoc', 'c2c', 'btog']),
+  gender: z.enum(['male', 'female', 'any']),
+  ageGroup: z.enum(['teens', '20-30s', '40-50s', '60s', 'any']),
+  targetDescription: z.string().max(200).optional(),
   ctaGoal: z.enum(['register', 'document', 'purchase', 'contact']),
+
+  // Step 3
+  tagline: z.string().min(1, 'キャッチコピーは必須です').max(100),
+  problems: z.array(z.string()).min(1, '課題を1つ以上選択してください'),
+  problemsOther: z.string().max(300).optional(),
+  valueFeatures: z.array(z.string().min(1)).min(1, '強み・価値を1つ以上入力してください').max(5),
+
+  // Step 4
+  includePricing: z.boolean(),
+  includeTestimonials: z.boolean(),
+
+  // Step 5
+  additionalNotes: z.string().max(5000).optional(),
 });
 
 // ========================================
