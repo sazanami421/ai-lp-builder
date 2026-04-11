@@ -169,7 +169,7 @@ export const generateLPSchema = z.object({
 
   // Step 3
   tagline: z.string().min(1, 'キャッチコピーは必須です').max(100),
-  problems: z.array(z.string()).min(1, '課題を1つ以上選択してください'),
+  problems: z.array(z.string()).default([]),
   problemsOther: z.string().max(300).optional(),
   valueFeatures: z.array(z.string().min(1)).min(1, '強み・価値を1つ以上入力してください').max(5),
 
@@ -179,7 +179,10 @@ export const generateLPSchema = z.object({
 
   // Step 5
   additionalNotes: z.string().max(5000).optional(),
-});
+}).refine(
+  (obj) => obj.problems.length > 0 || (obj.problemsOther?.trim().length ?? 0) > 0,
+  { message: '課題を1つ以上選択するか、自由記述欄に入力してください', path: ['problems'] }
+);
 
 // ========================================
 // ヘルパー: Zod エラーを整形して返す

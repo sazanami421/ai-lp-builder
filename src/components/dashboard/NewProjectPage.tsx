@@ -198,7 +198,7 @@ export default function NewProjectPage() {
       {step === 1 && (
         <Step1
           answers={answers}
-          onChange={<K extends keyof HearingAnswers>(k: K, v: HearingAnswers[K]) => setAnswers((a) => ({ ...a, [k]: v }))}
+          setAnswers={setAnswers}
           onNext={() => setStep(2)}
         />
       )}
@@ -341,10 +341,10 @@ const CTA_GOALS = [
 ];
 
 function Step1({
-  answers, onChange, onNext,
+  answers, setAnswers, onNext,
 }: {
   answers: HearingAnswers;
-  onChange: <K extends keyof HearingAnswers>(k: K, v: HearingAnswers[K]) => void;
+  setAnswers: React.Dispatch<React.SetStateAction<HearingAnswers>>;
   onNext: () => void;
 }) {
   const inputClass = 'w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100';
@@ -367,7 +367,7 @@ function Step1({
           autoFocus
           placeholder="例：新サービスのランディングページ"
           value={answers.projectName}
-          onChange={(e) => onChange('projectName', e.target.value)}
+          onChange={(e) => setAnswers((a) => ({ ...a, projectName: e.target.value }))}
           className={inputClass}
         />
       </div>
@@ -380,7 +380,7 @@ function Step1({
             <SelectCard
               key={o.value}
               selected={answers.businessModel === o.value}
-              onClick={() => onChange('businessModel', o.value as HearingAnswers['businessModel'])}
+              onClick={() => setAnswers((a) => ({ ...a, businessModel: o.value as HearingAnswers['businessModel'] }))}
             >
               {o.label}
             </SelectCard>
@@ -396,7 +396,7 @@ function Step1({
             <SelectCard
               key={o.value}
               selected={answers.gender === o.value}
-              onClick={() => onChange('gender', o.value as HearingAnswers['gender'])}
+              onClick={() => setAnswers((a) => ({ ...a, gender: o.value as HearingAnswers['gender'] }))}
             >
               {o.label}
             </SelectCard>
@@ -412,7 +412,7 @@ function Step1({
             <SelectCard
               key={o.value}
               selected={answers.ageGroup === o.value}
-              onClick={() => onChange('ageGroup', o.value as HearingAnswers['ageGroup'])}
+              onClick={() => setAnswers((a) => ({ ...a, ageGroup: o.value as HearingAnswers['ageGroup'] }))}
             >
               {o.label}
             </SelectCard>
@@ -427,7 +427,7 @@ function Step1({
           type="text"
           placeholder="例: Web制作初心者のフリーランス"
           value={answers.targetDescription}
-          onChange={(e) => onChange('targetDescription', e.target.value)}
+          onChange={(e) => setAnswers((a) => ({ ...a, targetDescription: e.target.value }))}
           className={inputClass}
         />
       </div>
@@ -440,7 +440,7 @@ function Step1({
             <SelectCard
               key={o.value}
               selected={answers.ctaGoal === o.value}
-              onClick={() => onChange('ctaGoal', o.value as HearingAnswers['ctaGoal'])}
+              onClick={() => setAnswers((a) => ({ ...a, ctaGoal: o.value as HearingAnswers['ctaGoal'] }))}
             >
               {o.label}
             </SelectCard>
@@ -498,7 +498,7 @@ function Step2({
 
   const canNext = !!(
     answers.tagline.trim() &&
-    answers.problems.length >= 1 &&
+    (answers.problems.length >= 1 || answers.problemsOther.trim()) &&
     answers.valueFeatures.filter((v) => v.trim()).length >= 1
   );
 
