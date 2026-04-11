@@ -621,26 +621,80 @@ function Step2({
   );
 }
 
-// --- Step 3: 含めるセクション選択（Step 6 で実装）---
+// --- Step 3: 含めるセクション選択 ---
 
 function Step3({
+  answers,
+  setAnswers,
   onNext,
 }: {
   answers: HearingAnswers;
   setAnswers: React.Dispatch<React.SetStateAction<HearingAnswers>>;
   onNext: () => void;
 }) {
+  const SECTION_OPTIONS = [
+    {
+      key: 'includePricing' as const,
+      label: '料金プラン',
+      desc: '価格・プランをLPに掲載する',
+    },
+    {
+      key: 'includeTestimonials' as const,
+      label: 'お客様の声',
+      desc: '導入事例・レビューをLPに掲載する',
+    },
+  ];
+
   return (
-    <div>
-      <p className="text-sm text-gray-500">（Step 6 で実装予定）</p>
+    <div className="space-y-6">
+      <div>
+        <p className="mb-1 text-base font-semibold text-gray-900">含めるセクション</p>
+        <p className="text-sm text-gray-500">LPに含めたいセクションにチェックを入れてください。どちらも任意です。</p>
+      </div>
+
+      <div className="space-y-3">
+        {SECTION_OPTIONS.map(({ key, label, desc }) => {
+          const checked = answers[key];
+          return (
+            <div key={key}>
+              <label
+                className="flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3.5 transition"
+                style={{
+                  borderColor: checked ? '#111827' : '#E5E7EB',
+                  backgroundColor: checked ? '#F9FAFB' : '#FFFFFF',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) => setAnswers((a) => ({ ...a, [key]: e.target.checked }))}
+                  className="mt-0.5 h-4 w-4 rounded accent-gray-900"
+                />
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{label}</p>
+                  <p className="text-xs text-gray-500">{desc}</p>
+                </div>
+              </label>
+              {checked && (
+                <div className="mt-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                  サンプルのダミーデータが入ります。公開前に実際の情報に編集してください。
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
       <NextButton onClick={onNext} />
     </div>
   );
 }
 
-// --- Step 4: その他伝えたいこと（Step 7 で実装）---
+// --- Step 4: その他伝えたいこと ---
 
 function Step4({
+  answers,
+  setAnswers,
   onGenerate,
 }: {
   answers: HearingAnswers;
@@ -648,8 +702,23 @@ function Step4({
   onGenerate: () => void;
 }) {
   return (
-    <div>
-      <p className="text-sm text-gray-500">（Step 7 で実装予定）</p>
+    <div className="space-y-6">
+      <div>
+        <p className="mb-1 text-base font-semibold text-gray-900">その他、伝えたいこと</p>
+        <p className="text-sm text-gray-500">AIに追加で伝えたい情報があれば入力してください。省略してもLPは生成できます。</p>
+      </div>
+
+      <div>
+        <textarea
+          rows={10}
+          placeholder={`例:\n・競合他社との違いを強調してほしい\n・「初期費用0円・月額9,800円〜」という料金を使ってほしい\n・トーンは親しみやすく、専門用語は避けてほしい\n・サービス仕様書（Markdown可）をそのまま貼り付けてもOKです`}
+          value={answers.additionalNotes}
+          onChange={(e) => setAnswers((a) => ({ ...a, additionalNotes: e.target.value }))}
+          className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+        />
+        <p className="mt-1 text-right text-xs text-gray-400">{answers.additionalNotes.length} / 5000</p>
+      </div>
+
       <NextButton onClick={onGenerate} label="LPを生成する" />
     </div>
   );
