@@ -141,10 +141,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const pageId = project.pages[0]?.id;
-    if (!pageId) throw new Error('ページの作成に失敗しました');
+    if (!project.pages[0]?.id) throw new Error('ページの作成に失敗しました');
 
-    return NextResponse.json({ pageId }, { status: 201 });
+    // エディターのルートはプロジェクトIDを受け取るため、project.id を返す
+    return NextResponse.json({ pageId: project.id }, { status: 201 });
   } catch (err) {
     return handleApiError(err, 'POST /api/ai/generate');
   }
